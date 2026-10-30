@@ -231,7 +231,10 @@ export function Footer() {
       </div>
       <div className="wrap ftr__base">
         <span>© {new Date().getFullYear()} Connected Tulum · Tulum, Quintana Roo, México</span>
-        <a href="https://vauraagency.com" target="_blank" rel="noopener" className="ftr__vaura">Site by VAURA</a>
+        <a href="https://vauraagency.com" target="_blank" rel="noopener" className="ftr__vaura" aria-label="Powered by VAURA Digital Branding & Marketing">
+          <img src={u("/assets/vaura-logo.svg")} alt="VAURA" width={88} height={19} />
+          <span>Powered by VAURA Digital Branding &amp; Marketing</span>
+        </a>
       </div>
     </footer>
   );
