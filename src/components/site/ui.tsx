@@ -73,7 +73,7 @@ export function Header({ overlay = false }: { overlay?: boolean }) {
   }, [open]);
   const dark = overlay && !scrolled && !open;
   return (
-    <header className={`hdr ${dark ? "hdr--overlay" : ""} ${scrolled ? "hdr--solid" : ""}`}>
+    <header className={`hdr ${dark ? "hdr--overlay" : ""} ${scrolled ? "hdr--solid" : ""} ${open ? "hdr--open" : ""}`}>
       <a href="#main" className="skip">Skip to content</a>
       <div className="hdr__in">
         <Brand dark={dark} />
@@ -232,7 +232,7 @@ export function Footer() {
       <div className="wrap ftr__base">
         <span>© {new Date().getFullYear()} Connected Tulum · Tulum, Quintana Roo, México</span>
         <a href="https://vauraagency.com" target="_blank" rel="noopener" className="ftr__vaura" aria-label="Powered by VAURA Digital Branding & Marketing">
-          <img src={u("/assets/vaura-logo.svg")} alt="VAURA" width={88} height={19} />
+          <img src={u("/assets/vaura-logo.png")} alt="VAURA" width={52} height={34} />
           <span>Powered by VAURA Digital Branding &amp; Marketing</span>
         </a>
       </div>
