@@ -88,7 +88,7 @@ function ServicePage({ s }: { s: Service }) {
           {s.included.length > 0 && <p className="mono svcp__inc">{s.included.join(" · ")}</p>}
           <p className="sub">{s.intro}</p>
           <div className="hero__ctas">
-            <a className="cta-wa" href={waLink(waTemplate(s.title))} target="_blank" rel="noopener"><WaGlyph /> Get matched on WhatsApp</a>
+            <a className="cta-wa" href={waLink(waTemplate(s.title))} target="_blank" rel="noopener"><WaGlyph /> WhatsApp {site.whatsappDisplay}</a>
           </div>
         </div>
         <img className="svcp__img" src={s.image} alt={s.title} width={1200} height={900} />
