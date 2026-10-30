@@ -122,7 +122,7 @@ a:hover .arr, button:hover .arr { transform: translateX(4px); }
 .hero__h .accent { font-size: 1.08em; }
 .hero__lead { margin-top: 20px; max-width: 46ch; color: rgba(255,255,255,.82); font-size: 17.5px; }
 .hero__ctas { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
-.hero .hero__trust { display: flex; flex-wrap: wrap; gap: 10px 22px; margin-top: clamp(64px, 9vh, 88px); color: rgba(255,255,255,.62); }
+.hero .hero__trust { display: flex; flex-wrap: wrap; gap: 10px 22px; margin-top: clamp(32px, 4.5vh, 44px); color: rgba(255,255,255,.62); }
 .hero__trust li::before { content: "● "; color: var(--g-green); }
 
 /* ---------- CTAs (each with its own identity) */
@@ -425,7 +425,8 @@ a:hover .arr, button:hover .arr { transform: translateX(4px); }
   .svc, .vgrid, .items, .rev, .stay, .guide, .how, .tiles, .notes, .cform__grid { grid-template-columns: 1fr; }
   .rest { grid-template-columns: 1fr 1fr; gap: 12px; }
   .hero__corner { display: none; }
-  .hero__logo { top: 28%; }
+  .hero { flex-direction: column; align-items: stretch; justify-content: flex-start; padding-top: 96px; }
+  .hero__logo { position: relative; z-index: 1; left: auto; top: auto; transform: none; margin: 10px auto 22px; width: min(210px, 52vw); }
   .hero__ctas > a { flex: 1 1 100%; justify-content: center; }
   .gal { grid-template-columns: 1fr; grid-auto-rows: 220px; }
   .gal__main { grid-row: auto; }
