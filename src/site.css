@@ -350,7 +350,7 @@ a:hover .arr, button:hover .arr { transform: translateX(4px); }
 .ev__b h3 { font-family: var(--f-display); font-size: 20px; letter-spacing: -.015em; }
 .ev__lu { color: var(--muted); font-size: 14px; }
 .ev__ctas { display: flex; align-items: center; gap: 16px; margin-top: auto; padding-top: 12px; font-size: 14px; }
-.cta-ticket { display: inline-flex; gap: 8px; align-items: center; background: var(--black); color: #fff; padding: 11px 16px; border-radius: 12px; font-weight: 500; transition: color .3s, box-shadow .3s; }
+.cta-ticket { display: inline-flex; gap: 8px; align-items: center; background: var(--black); color: var(--g-green); box-shadow: 0 0 0 3px rgba(16,240,74,.25); padding: 11px 16px; border-radius: 12px; font-weight: 500; transition: color .3s, box-shadow .3s; }
 .cta-ticket:hover { color: var(--g-green); box-shadow: 0 0 0 3px rgba(16,240,74,.25); }
 
 /* ---------- landing */
