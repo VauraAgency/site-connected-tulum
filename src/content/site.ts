@@ -1,3 +1,4 @@
+import { u } from "../lib/url";
 /*
  * CONNECTED TULUM — SITE CONTENT
  * ------------------------------------------------------------------
@@ -38,18 +39,18 @@ export const waTemplate = (topic: string) =>
 
 /* ------------------------------------------------------------------ IMAGES */
 export const img = {
-  hero: "/assets/hero-canopy.webp",
-  villaJungle: "/assets/villa-jungle.webp",
-  villaModern: "/assets/villa-modern.webp",
-  villaBeach: "/assets/villa-beach.webp",
-  beachClub: "/assets/beach-club.webp",
-  festival: "/assets/festival.webp",
-  boat: "/assets/boat.webp",
-  cenote: "/assets/cenote.webp",
-  chef: "/assets/chef.webp",
-  spa: "/assets/spa.webp",
-  transport: "/assets/transport.webp",
-  party: "/assets/party.webp",
+  hero: u("/assets/hero-canopy.webp"),
+  villaJungle: u("/assets/villa-jungle.webp"),
+  villaModern: u("/assets/villa-modern.webp"),
+  villaBeach: u("/assets/villa-beach.webp"),
+  beachClub: u("/assets/beach-club.webp"),
+  festival: u("/assets/festival.webp"),
+  boat: u("/assets/boat.webp"),
+  cenote: u("/assets/cenote.webp"),
+  chef: u("/assets/chef.webp"),
+  spa: u("/assets/spa.webp"),
+  transport: u("/assets/transport.webp"),
+  party: u("/assets/party.webp"),
 };
 
 /* ------------------------------------------------------------------ VILLAS

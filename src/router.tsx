@@ -2,5 +2,11 @@ import { createRouter } from "@tanstack/react-router";
 import { routeTree } from "./routeTree.gen";
 
 export function getRouter() {
-  return createRouter({ routeTree, scrollRestoration: true, defaultPreload: "intent" });
+  const base = (import.meta.env.BASE_URL || "/").replace(/\/$/, "");
+  return createRouter({
+    routeTree,
+    basepath: base || "/",
+    scrollRestoration: true,
+    defaultPreload: "intent",
+  });
 }

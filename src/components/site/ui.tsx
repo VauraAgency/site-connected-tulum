@@ -1,3 +1,4 @@
+import { u } from "../../lib/url";
 import { Link } from "@tanstack/react-router";
 import { useEffect, useState, type ReactNode } from "react";
 import {
@@ -39,7 +40,7 @@ export { Arrow };
 export function Brand({ dark = false }: { dark?: boolean }) {
   return (
     <Link to="/" className={`brand ${dark ? "brand--dark" : ""}`} aria-label="Connected Tulum home">
-      <img src="/assets/logo-mark.svg" alt="" width={40} height={40} className="brand__mark" />
+      <img src={u("/assets/logo-mark.svg")} alt="" width={40} height={40} className="brand__mark" />
       <span className="brand__text">
         <span className="brand__word">connected</span>
         <span className="brand__sub">TULUM · CONCIERGE</span>
@@ -78,10 +79,10 @@ export function Header({ overlay = false }: { overlay?: boolean }) {
         <Brand dark={dark} />
         <nav className="hdr__nav" aria-label="Main">
           {nav.map((n) => (
-            <a key={n.label} href={n.to}>{n.label}</a>
+            <a key={n.label} href={u(n.to)}>{n.label}</a>
           ))}
         </nav>
-        <a className="cta-call" href="/contact">
+        <a className="cta-call" href={u("/contact")}>
           Schedule your call <Arrow />
         </a>
         <button className="hdr__burger" aria-label={open ? "Close menu" : "Open menu"} aria-expanded={open} onClick={() => setOpen(!open)}>
@@ -91,7 +92,7 @@ export function Header({ overlay = false }: { overlay?: boolean }) {
       {open && (
         <div className="mnav" role="dialog" aria-label="Menu">
           {nav.map((n, i) => (
-            <a key={n.label} href={n.to} onClick={() => setOpen(false)}>
+            <a key={n.label} href={u(n.to)} onClick={() => setOpen(false)}>
               <span className="mono">0{i + 1}</span> {n.label}
             </a>
           ))}
@@ -129,7 +130,7 @@ export function ClosingCTA({ a = "Tell us who's coming,", b = "and it's handled"
           <a className="cta-wa" href={waLink(waTemplate(topic))} target="_blank" rel="noopener">
             <WaGlyph /> {label}
           </a>
-          <a className="cta-ghost" href="/contact">Book a call <Arrow /></a>
+          <a className="cta-ghost" href={u("/contact")}>Book a call <Arrow /></a>
         </div>
         <a className="closing__mail" href={`mailto:${site.email}`}>{site.email}</a>
       </div>
@@ -150,7 +151,7 @@ export function FloatDock() {
   return (
     <div className="dock" aria-label="Quick contact">
       <a className="dock__b dock__wa" href={waLink(waTemplate("Planning a Tulum trip"))} target="_blank" rel="noopener" aria-label="WhatsApp"><WaGlyph /></a>
-      <a className="dock__b dock__cal" href="/contact" aria-label="Book a call"><Icon name="calendar" size={18} /></a>
+      <a className="dock__b dock__cal" href={u("/contact")} aria-label="Book a call"><Icon name="calendar" size={18} /></a>
       <a className="dock__b dock__mail" href={`mailto:${site.email}`} aria-label="Email"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2" /><path d="M3 7l9 6 9-6" /></svg></a>
       <a className="dock__b dock__ig" href={site.socials.instagram} target="_blank" rel="noopener" aria-label="Instagram"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" /><circle cx="12" cy="12" r="4" /><circle cx="17.5" cy="6.5" r="1" fill="currentColor" /></svg></a>
     </div>
@@ -185,7 +186,7 @@ export function NotifyModal() {
         }}
       >
         <button type="button" className="modal__x" onClick={close} aria-label="Close">×</button>
-        <img src="/assets/logo-mark.svg" alt="" width={48} height={48} />
+        <img src={u("/assets/logo-mark.svg")} alt="" width={48} height={48} />
         <p className="mono">Tulum High Season 2027</p>
         <h3 id="nm-h">Be first to know what drops next.</h3>
         <label className="sr" htmlFor="nm-email">Email</label>
@@ -212,18 +213,18 @@ export function Footer() {
         </div>
         <div>
           <h4>Plan your trip</h4>
-          <ul>{footerPlan.map((l) => <li key={l.to}><a href={l.to}>{l.label}</a></li>)}</ul>
+          <ul>{footerPlan.map((l) => <li key={l.to}><a href={u(l.to)}>{l.label}</a></li>)}</ul>
         </div>
         <div>
           <h4>Explore</h4>
-          <ul>{footerExplore.map((l) => <li key={l.to}><a href={l.to}>{l.label}</a></li>)}</ul>
+          <ul>{footerExplore.map((l) => <li key={l.to}><a href={u(l.to)}>{l.label}</a></li>)}</ul>
         </div>
         <div>
           <h4>Concierge</h4>
           <ul>
             <li><a href={waLink(waTemplate("Planning a Tulum trip"))} target="_blank" rel="noopener">WhatsApp {site.whatsappDisplay}</a></li>
             <li><a href={`mailto:${site.email}`}>{site.email}</a></li>
-            <li><a href="/contact">Book a call</a></li>
+            <li><a href={u("/contact")}>Book a call</a></li>
           </ul>
           <p className="ftr__hours">{site.callHours}</p>
         </div>

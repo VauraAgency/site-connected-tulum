@@ -1,3 +1,4 @@
+import { u } from "../../lib/url";
 import { createFileRoute } from "@tanstack/react-router";
 import { site, villas } from "../../content/site";
 import { Shell, Eyebrow, H2, ClosingCTA, useReveal } from "../../components/site/ui";
@@ -19,7 +20,7 @@ function VillasPage() {
   return (
     <Shell>
       <section className="page-head wrap">
-        <nav className="crumbs mono" aria-label="Breadcrumb"><a href="/">Connected</a> / Villas</nav>
+        <nav className="crumbs mono" aria-label="Breadcrumb"><a href={u("/")}>Connected</a> / Villas</nav>
         <Eyebrow>The portfolio</Eyebrow>
         <h1 className="h1">Luxury villas in Tulum <em className="accent">({villas.length})</em></h1>
         <p className="sub">Jungle, beach and modern stays for groups. Every villa comes with the full concierge: chef, transport, tables and festival nights.</p>

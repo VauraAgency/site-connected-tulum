@@ -1,3 +1,4 @@
+import { u } from "../../lib/url";
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import { site, villas, waLink } from "../../content/site";
 import { Shell, Eyebrow, H2, Arrow, WaGlyph } from "../../components/site/ui";
@@ -34,7 +35,7 @@ function VillaPage() {
   return (
     <Shell>
       <section className="page-head wrap">
-        <a href="/villas" className="back mono">← Back to all villas</a>
+        <a href={u("/villas")} className="back mono">← Back to all villas</a>
         <p className="eyebrow"><span className="eyebrow__rule" />{v.area}</p>
         <h1 className="h1">{v.name} <em className="accent">Tulum</em></h1>
         <dl className="specs">
@@ -76,9 +77,9 @@ function VillaPage() {
         </div>
       </section>
       <nav className="wrap pager" aria-label="More villas">
-        <a href={`/villas/${prev.slug}`}><span className="mono">Previous</span>{prev.name}</a>
-        <a href="/villas" className="pager__all">All villas</a>
-        <a href={`/villas/${next.slug}`} className="pager__next"><span className="mono">Next villa</span>{next.name}</a>
+        <a href={u(`/villas/${prev.slug}`)}><span className="mono">Previous</span>{prev.name}</a>
+        <a href={u("/villas")} className="pager__all">All villas</a>
+        <a href={u(`/villas/${next.slug}`)} className="pager__next"><span className="mono">Next villa</span>{next.name}</a>
       </nav>
     </Shell>
   );

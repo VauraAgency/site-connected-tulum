@@ -1,3 +1,4 @@
+import { u } from "../lib/url";
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import {
   site, events, festivalPages, landingPages, serviceBySlug, services, villas, fmtDate, waLink, waTemplate, img,
@@ -65,7 +66,7 @@ function RestOfTrip({ skip }: { skip: string }) {
       <Eyebrow>Plan the rest of the trip</Eyebrow>
       <div className="rest">
         {list.map((s) => (
-          <a key={s.slug} href={`/${s.slug}`} className="rest__c" data-rise>
+          <a key={s.slug} href={u(`/${s.slug}`)} className="rest__c" data-rise>
             <img src={s.image} alt="" loading="lazy" width={600} height={450} />
             <span><Icon name={s.icon} size={16} /> {s.title}</span>
           </a>
@@ -81,7 +82,7 @@ function ServicePage({ s }: { s: Service }) {
     <>
       <section className="page-head wrap svcp">
         <div>
-          <nav className="crumbs mono" aria-label="Breadcrumb"><a href="/">Connected</a> / {s.title}</nav>
+          <nav className="crumbs mono" aria-label="Breadcrumb"><a href={u("/")}>Connected</a> / {s.title}</nav>
           <h1 className="h1">{s.h1} <em className="accent">({s.items.length})</em></h1>
           <p className="sub">{s.short}</p>
           {s.included.length > 0 && <p className="mono svcp__inc">{s.included.join(" · ")}</p>}
@@ -238,7 +239,7 @@ function Landing({ p }: { p: LandingPage }) {
           <p className="fhero__lead">{p.lead}</p>
           <div className="hero__ctas">
             <a className="cta-hero" href="#plan">See the plan ↓</a>
-            <a className="cta-ghost" href="/tulum-festival-season">High Season 2027 dates <Arrow /></a>
+            <a className="cta-ghost" href={u("/tulum-festival-season")}>High Season 2027 dates <Arrow /></a>
           </div>
         </div>
       </section>
@@ -269,7 +270,7 @@ function Landing({ p }: { p: LandingPage }) {
         <Eyebrow>03 · The stay</Eyebrow>
         <div className="stay">
           {villas.slice(0, 3).map((v) => (
-            <a key={v.slug} href={`/villas/${v.slug}`} className="stay__c" data-rise>
+            <a key={v.slug} href={u(`/villas/${v.slug}`)} className="stay__c" data-rise>
               <img src={v.images[0]} alt={v.name} loading="lazy" width={800} height={600} />
               <b>{v.name}</b><span>{v.area} · {v.guests ? `Up to ${v.guests}` : "Capacity on request"}</span>
             </a>

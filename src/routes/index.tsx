@@ -1,3 +1,4 @@
+import { u } from "../lib/url";
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef } from "react";
 import {
@@ -56,7 +57,7 @@ function Hero() {
         </h1>
         <p className="hero__lead">Private villas, VIP tables, high season festivals and a 24/7 concierge. One contact for the whole trip.</p>
         <div className="hero__ctas">
-          <a className="cta-hero" href="/contact">Get your custom plan <Arrow /></a>
+          <a className="cta-hero" href={u("/contact")}>Get your custom plan <Arrow /></a>
           <a className="cta-wa" href={waLink(waTemplate("24/7 VIP Concierge"))} target="_blank" rel="noopener"><WaGlyph /> Concierge 24/7</a>
         </div>
         <ul className="hero__trust mono">
@@ -70,7 +71,7 @@ function Hero() {
 function Marquee() {
   const row = [...marquee, ...marquee];
   return (
-    <a className="marq" href="/tulum-festival-season" aria-label="High Season 2027 lineup">
+    <a className="marq" href={u("/tulum-festival-season")} aria-label="High Season 2027 lineup">
       <div className="marq__track">
         {row.map((m, i) => (
           <span key={i} className="marq__i"><em>{m}</em><span className="marq__dot" aria-hidden="true">✦</span></span>
@@ -88,7 +89,7 @@ function Services() {
       <p className="sub">From the airport pickup to the last table of the night, you deal with one person.</p>
       <div className="svc">
         {services.map((s, i) => (
-          <a key={s.slug} href={`/${s.slug}`} className={`svc__c ${i % 3 === 0 ? "svc__c--up" : ""}`} data-rise>
+          <a key={s.slug} href={u(`/${s.slug}`)} className={`svc__c ${i % 3 === 0 ? "svc__c--up" : ""}`} data-rise>
             <span className="mono svc__k">{s.num} / {s.kicker}</span>
             <span className="svc__ic"><Icon name={s.icon} /></span>
             <h3>{s.title}</h3>
@@ -107,7 +108,7 @@ function Portfolio() {
       <Eyebrow>The portfolio</Eyebrow>
       <div className="pf__head">
         <div id="pf-h"><H2 a="Villas we manage." b="And access to the ones we don't" /></div>
-        <a href="/villas" className="cta-pill">All villas <Arrow /></a>
+        <a href={u("/villas")} className="cta-pill">All villas <Arrow /></a>
       </div>
       <p className="sub">Starting with our signature stay and growing every week. Found a villa somewhere else? We'll book that one too.</p>
       <div className="vgrid">
@@ -140,7 +141,7 @@ function Venues() {
             <h3>{v.name}</h3>
             <ul>{v.points.map((p) => <li key={p}>{p}</li>)}</ul>
             {v.page ? (
-              <a href={v.page} className="ven__go">Open the night page <Arrow /></a>
+              <a href={u(v.page)} className="ven__go">Open the night page <Arrow /></a>
             ) : (
               <a href={waLink(waTemplate(`Table at ${v.name}`))} target="_blank" rel="noopener" className="ven__go">Book a table <Arrow /></a>
             )}
@@ -158,7 +159,7 @@ function Upcoming() {
       <Eyebrow>High Season 2027</Eyebrow>
       <div className="pf__head">
         <div id="up-h"><H2 a="NYE to Day Zero." b="Pick your nights" /></div>
-        <a href="/tulum-festival-season" className="cta-pill">Full calendar <Arrow /></a>
+        <a href={u("/tulum-festival-season")} className="cta-pill">Full calendar <Arrow /></a>
       </div>
       <ol className="up">
         {list.map((e, i) => {
@@ -225,7 +226,7 @@ function How() {
       </ol>
       <div className="how__cta">
         <p>Want it all mapped out? Get a personalized schedule for your trip.</p>
-        <a className="cta-hero" href="/contact">Get my schedule <Arrow /></a>
+        <a className="cta-hero" href={u("/contact")}>Get my schedule <Arrow /></a>
       </div>
     </section>
   );

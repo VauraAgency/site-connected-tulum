@@ -1,3 +1,4 @@
+import { u } from "../lib/url";
 import {
   Outlet,
   createRootRoute,
@@ -21,8 +22,8 @@ type AppMeta = {
 const appMeta: AppMeta = {
   og_title: "Connected Tulum",
   og_description: "Villas, VIP tables, High Season 2027 festivals, yachts and a 24/7 concierge in Tulum.",
-  og_image_url: "/assets/og.jpg",
-  favicon_url: "/assets/logo-mark.svg",
+  og_image_url: u("/assets/og.jpg"),
+  favicon_url: u("/assets/logo-mark.svg"),
 };
 
 const FONTS =
@@ -31,7 +32,7 @@ const FONTS =
 function buildHead(meta: AppMeta) {
   const title = meta.og_title ?? "Connected Tulum";
   const description = meta.og_description ?? "Villas, VIP tables, festivals and 24/7 concierge in Tulum.";
-  const ogImage = meta.og_image_url ?? "/assets/og.jpg";
+  const ogImage = meta.og_image_url ?? u("/assets/og.jpg");
   return {
     meta: [
       { charSet: "utf-8" },
@@ -52,9 +53,9 @@ function buildHead(meta: AppMeta) {
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" as const },
       { rel: "stylesheet", href: FONTS },
       { rel: "stylesheet", href: siteCss },
-      { rel: "icon", type: "image/svg+xml", href: meta.favicon_url ?? "/assets/logo-mark.svg" },
-      { rel: "icon", type: "image/png", sizes: "64x64", href: "/assets/favicon.png" },
-      { rel: "apple-touch-icon", href: "/assets/apple-touch-icon.png" },
+      { rel: "icon", type: "image/svg+xml", href: meta.favicon_url ?? u("/assets/logo-mark.svg") },
+      { rel: "icon", type: "image/png", sizes: "64x64", href: u("/assets/favicon.png") },
+      { rel: "apple-touch-icon", href: u("/assets/apple-touch-icon.png") },
     ],
   };
 }
@@ -66,7 +67,7 @@ function NotFoundComponent() {
         <p className="eyebrow"><span className="eyebrow__rule" />404</p>
         <h1 className="h1">Lost in the <em className="accent">jungle</em>.</h1>
         <p className="sub">That page doesn't exist. Head back home or message the concierge.</p>
-        <div className="hero__ctas"><a className="cta-hero" href="/">Back to home →</a></div>
+        <div className="hero__ctas"><a className="cta-hero" href={u("/")}>Back to home →</a></div>
       </section>
     </Shell>
   );
@@ -83,7 +84,7 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
       <p className="sub">Try again, or head back home.</p>
       <div className="hero__ctas">
         <button className="cta-hero" onClick={() => { router.invalidate(); reset(); }}>Try again</button>
-        <a className="cta-ghost cta-ghost--dark" href="/">Go home</a>
+        <a className="cta-ghost cta-ghost--dark" href={u("/")}>Go home</a>
       </div>
     </section>
   );

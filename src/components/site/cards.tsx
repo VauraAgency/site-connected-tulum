@@ -1,8 +1,9 @@
+import { u } from "../../lib/url";
 import type { Villa } from "../../content/site";
 
 export function VillaCard({ v }: { v: Villa }) {
   return (
-    <a href={`/villas/${v.slug}`} className="vcard" data-rise>
+    <a href={u(`/villas/${v.slug}`)} className="vcard" data-rise>
       <div className="vcard__img">
         <img src={v.images[0]} alt={`${v.name}, ${v.area}`} loading="lazy" width={800} height={600} />
         {v.owned && <span className="vcard__tag mono">Connected</span>}

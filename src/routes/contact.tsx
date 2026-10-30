@@ -1,3 +1,4 @@
+import { u } from "../lib/url";
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { site, waLink } from "../content/site";
@@ -62,7 +63,7 @@ function Contact() {
   return (
     <Shell>
       <section className="page-head wrap contact">
-        <a href="/" className="back mono">← Back to home</a>
+        <a href={u("/")} className="back mono">← Back to home</a>
         <h1 className="h1">Plan your Tulum trip, <em className="accent">connected</em>.</h1>
         <p className="sub">A free call to map out villas, transport, tables, festivals, boats and anything else. Answer a few quick questions so we can fast track it.</p>
 
