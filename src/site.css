@@ -426,7 +426,10 @@ a:hover .arr, button:hover .arr { transform: translateX(4px); }
   .svc, .vgrid, .items, .rev, .stay, .guide, .how, .tiles, .notes, .cform__grid { grid-template-columns: 1fr; }
   .rest { grid-template-columns: 1fr 1fr; gap: 12px; }
   .hero__corner { display: none; }
-  .hero { flex-direction: column; align-items: stretch; justify-content: flex-start; padding-top: 96px; }
+  .hero { flex-direction: column; align-items: stretch; justify-content: flex-start; padding-top: 96px; min-height: 0; }
+  .hero__in { padding-bottom: 40px; }
+  .ct .up { margin-top: 36px; }
+  .pf__head { gap: 22px; }
   .hero__logo { position: relative; z-index: 1; left: auto; top: auto; transform: none; margin: 10px auto 22px; width: min(210px, 52vw); }
   .hero__ctas > a { flex: 1 1 100%; justify-content: center; }
   .gal { grid-template-columns: 1fr; grid-auto-rows: 220px; }
