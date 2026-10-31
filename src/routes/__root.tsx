@@ -1,4 +1,4 @@
-import { u } from "../lib/url";
+import { u, VARIANT } from "../lib/url";
 import {
   Outlet,
   createRootRoute,
@@ -21,17 +21,17 @@ type AppMeta = {
 };
 const appMeta: AppMeta = {
   og_title: "Connected Tulum",
-  og_description: "Villas, VIP tables, High Season 2027 festivals, yachts and a 24/7 concierge in Tulum.",
+  og_description: "Tickets and VIP tables for Tulum High Season 2027: Zamna, Tehmplo, Day Zero and every night.",
   og_image_url: u("/assets/og.jpg"),
   favicon_url: u("/assets/logo-mark.svg"),
 };
 
 const FONTS =
-  "https://fonts.googleapis.com/css2?family=Inter+Tight:wght@500;600;700&family=Inter:wght@400;500;600&family=Instrument+Serif:ital@1&family=JetBrains+Mono:wght@400&family=Montserrat:wght@300;400&display=swap";
+  "https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Inter+Tight:wght@500;600;700&family=Inter:wght@400;500;600&family=Instrument+Serif:ital@1&family=JetBrains+Mono:wght@400&family=Montserrat:wght@300;400&display=swap";
 
 function buildHead(meta: AppMeta) {
   const title = meta.og_title ?? "Connected Tulum";
-  const description = meta.og_description ?? "Villas, VIP tables, festivals and 24/7 concierge in Tulum.";
+  const description = meta.og_description ?? "Tickets and VIP tables for Tulum High Season 2027.";
   const ogImage = meta.og_image_url ?? u("/assets/og.jpg");
   return {
     meta: [
@@ -66,7 +66,7 @@ function NotFoundComponent() {
       <section className="page-head wrap" style={{ minHeight: "60vh" }}>
         <p className="eyebrow"><span className="eyebrow__rule" />404</p>
         <h1 className="h1">Lost in the <em className="accent">jungle</em>.</h1>
-        <p className="sub">That page doesn't exist. Head back home or message the concierge.</p>
+        <p className="sub">That page doesn't exist. Head back home or message us.</p>
         <div className="hero__ctas"><a className="cta-hero" href={u("/")}>Back to home →</a></div>
       </section>
     </Shell>
@@ -104,7 +104,7 @@ function RootShell({ children }: { children: ReactNode }) {
       <head>
         <HeadContent />
       </head>
-      <body className="ct">
+      <body className={`ct ${VARIANT === "dark" ? "theme-dark" : ""}`}>
         {children}
         <Scripts />
       </body>

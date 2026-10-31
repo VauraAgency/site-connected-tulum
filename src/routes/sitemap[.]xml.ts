@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { site, services, festivalPages, landingPages, villas } from "../content/site";
+import { site, services, festivalPages, landingPages } from "../content/site";
 
 export const Route = createFileRoute("/sitemap.xml")({
   server: {
@@ -8,7 +8,6 @@ export const Route = createFileRoute("/sitemap.xml")({
         const today = new Date().toISOString().split("T")[0];
         const paths = [
           "/", "/villas", "/contact",
-          ...villas.map((v) => `/villas/${v.slug}`),
           ...services.filter((s) => s.items.length).map((s) => `/${s.slug}`),
           ...festivalPages.map((p) => `/${p.slug}`),
           ...landingPages.map((p) => `/${p.slug}`),

@@ -1,39 +1,57 @@
 import { u } from "../../lib/url";
 import { createFileRoute } from "@tanstack/react-router";
-import { site, villas } from "../../content/site";
-import { Shell, Eyebrow, H2, ClosingCTA, useReveal } from "../../components/site/ui";
-import { VillaCard } from "../../components/site/cards";
+import { site, img, waLink, waTemplate } from "../../content/site";
+import { Shell, Eyebrow, H2, ClosingCTA, Arrow, WaGlyph, useReveal } from "../../components/site/ui";
 
 export const Route = createFileRoute("/villas/")({
   head: () => ({
     meta: [
-      { title: "Luxury Villas in Tulum | Connected Tulum" },
-      { name: "description", content: "Private luxury villas in Tulum for groups, bachelor and bachelorette parties and high season. Direct rates with Connected Tulum." },
+      { title: "Villas in Tulum | Connected Tulum" },
+      { name: "description", content: `Private villas in Tulum for groups and high season, booked through our partner ${site.villaPartner}. Pair your stay with tickets, tables and transport from Connected Tulum.` },
     ],
     links: [{ rel: "canonical", href: `${site.domain}/villas` }],
   }),
   component: VillasPage,
 });
 
+const styles = [
+  { t: "Jungle retreats", d: "Private pools, hidden in the trees.", image: img.villaJungle },
+  { t: "Modern in town", d: "Rooftops and plunge pools by Aldea Zamá.", image: img.villaModern },
+  { t: "Beachfront", d: "Sand outside the door.", image: img.villaBeach },
+];
+
 function VillasPage() {
   useReveal();
+  const href = site.villaAffiliateUrl || waLink(waTemplate("Villa for high season"));
+  const ext = !!site.villaAffiliateUrl;
   return (
     <Shell>
       <section className="page-head wrap">
         <nav className="crumbs mono" aria-label="Breadcrumb"><a href={u("/")}>Connected</a> / Villas</nav>
-        <Eyebrow>The portfolio</Eyebrow>
-        <h1 className="h1">Luxury villas in Tulum <em className="accent">({villas.length})</em></h1>
-        <p className="sub">Jungle, beach and modern stays for groups. Every villa comes with the full concierge: chef, transport, tables and festival nights.</p>
+        <Eyebrow>Villa partner · {site.villaPartner}</Eyebrow>
+        <h1 className="h1">Villas in Tulum, <em className="accent">handled</em>.</h1>
+        <p className="sub">Browse the full villa collection with our partner {site.villaPartner}. Then let us line up the nights, the rides and the tables around your stay.</p>
+        <div className="hero__ctas">
+          <a className="cta-hero" href={href} target="_blank" rel={ext ? "noopener sponsored" : "noopener"}>{ext ? "Browse villas" : "Ask for villas"} <Arrow /></a>
+          <a className="cta-wa" href={waLink(waTemplate("Villa for high season"))} target="_blank" rel="noopener"><WaGlyph /> WhatsApp {site.whatsappDisplay}</a>
+        </div>
       </section>
       <section className="sec sec--tight wrap">
-        <div className="vgrid">{villas.map((v) => <VillaCard key={v.slug} v={v} />)}</div>
+        <div className="stay">
+          {styles.map((s) => (
+            <a key={s.t} href={href} target="_blank" rel={ext ? "noopener sponsored" : "noopener"} className="stay__c" data-rise>
+              <img src={s.image} alt="" loading="lazy" width={800} height={600} />
+              <b>{s.t}</b><span>{s.d}</span>
+            </a>
+          ))}
+        </div>
       </section>
       <section className="sec wrap">
         <Eyebrow>Not seeing it?</Eyebrow>
-        <H2 a="Found a villa somewhere else?" b="We'll book that one too" />
-        <p className="sub">Send us the link with your dates and group size and we take it from there.</p>
+        <H2 a="Found a villa somewhere else?" b="Send it over" />
+        <p className="sub">Send us the link with your dates and group size. We build the rest of the trip around it.</p>
       </section>
-      <ClosingCTA a="Tell us the dates," b="we'll find the villa" topic="Finding a villa" />
+      <ClosingCTA a="Tell us the dates," b="we'll sort the villa" topic="Villa for high season" />
     </Shell>
   );
 }

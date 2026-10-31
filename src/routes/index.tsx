@@ -1,17 +1,17 @@
-import { u } from "../lib/url";
+import { u, VARIANT } from "../lib/url";
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef } from "react";
 import {
-  site, img, services, villas, venues, events, marquee, team, reviews, faqs, steps, waLink, waTemplate, fmtDate,
+  site, img, services, events, marquee, team, reviews, faqs, steps, waLink, waTemplate,
 } from "../content/site";
-import { VillaCard } from "../components/site/cards";
 import { Shell, Eyebrow, H2, Icon, Arrow, ClosingCTA, Faq, WaGlyph, LogoAnim, useReveal } from "../components/site/ui";
+import { SeasonScroller, Calendar, NightCard, useToday, daysUntil } from "../components/site/events";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Connected Tulum | Villas, VIP Tables, Festivals & 24/7 Concierge" },
-      { name: "description", content: "Luxury villas, VIP tables, Zamna, Tehmplo, Day Zero, yachts, chefs and 24/7 concierge in Tulum. One contact for the whole trip." },
+      { title: "Connected Tulum | Tulum High Season 2027 Tickets & VIP Tables" },
+      { name: "description", content: "Tickets and VIP tables for Tulum High Season 2027: Zamna, Tehmplo, Day Zero and every night. Plus transport, reservations, yachts and villas." },
       { property: "og:url", content: site.domain },
     ],
     links: [
@@ -24,6 +24,8 @@ export const Route = createFileRoute("/")({
 
 function Hero() {
   const layer = useRef<HTMLDivElement>(null);
+  const today = useToday();
+  const left = today ? daysUntil("2026-12-31", today) : null;
   useEffect(() => {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduce) return;
@@ -49,19 +51,21 @@ function Hero() {
       </div>
       <div className="hero__shade" aria-hidden="true" />
       <div className="hero__logo" aria-hidden="true"><LogoAnim /></div>
-      <div className="hero__corner hero__corner--l mono">EST · TULUM</div>
-      <div className="hero__corner hero__corner--r mono">VILLAS · TABLES · FESTIVALS</div>
       <div className="wrap hero__in">
+        <p className="hero__eye mono"><i aria-hidden="true" /> Tickets · VIP tables · High Season 2027</p>
         <h1 id="hero-h" className="hero__h">
-          Get connected to <em className="accent">the real Tulum</em>.
+          Tulum, <em className="accent">connected</em>.
         </h1>
-        <p className="hero__lead">Private villas, VIP tables, high season festivals and a 24/7 concierge. One contact for the whole trip.</p>
+        <p className="hero__lead">Every night of the season, in one place. Grab tickets, lock a VIP table, and we handle the rest.</p>
+        <p className="hero__count mono">
+          31.12 to 10.01{left !== null && left > 0 ? ` · ${left} days to go` : ""}
+        </p>
         <div className="hero__ctas">
-          <a className="cta-hero" href={u("/contact")}>Get your custom plan <Arrow /></a>
-          <a className="cta-wa" href={waLink(waTemplate("24/7 VIP Concierge"))} target="_blank" rel="noopener"><WaGlyph /> Concierge 24/7</a>
+          <a className="cta-hero" href="#season">See every night <Arrow /></a>
+          <a className="cta-wa" href={waLink(waTemplate("VIP table, High Season 2027"))} target="_blank" rel="noopener"><WaGlyph /> Inquire about a table</a>
         </div>
         <ul className="hero__trust mono">
-          <li>Luxury villas</li><li>VIP reservations</li><li>High Season 2027</li><li>Yachts</li><li>24/7</li>
+          <li>Zamna</li><li>Tehmplo</li><li>Day Zero</li><li>Transport</li><li>24/7</li>
         </ul>
       </div>
     </section>
@@ -81,12 +85,38 @@ function Marquee() {
   );
 }
 
+function Calendar_() {
+  return (
+    <section id="calendar" className="sec wrap" aria-labelledby="cal-h">
+      <Eyebrow>Season calendar</Eyebrow>
+      <div id="cal-h"><H2 a="Every night." b="One calendar" /></div>
+      <p className="sub">Tap a date to see what is on, then grab tickets or ask about a table.</p>
+      <Calendar />
+    </section>
+  );
+}
+
+function Nights() {
+  const list = events.filter((e) => e.key);
+  return (
+    <section id="nights" className="sec wrap" aria-labelledby="nt-h">
+      <Eyebrow>The nights</Eyebrow>
+      <div className="pf__head">
+        <div id="nt-h"><H2 a="Get tickets." b="Or a table" /></div>
+        <a href={u("/tulum-festival-season")} className="cta-pill">All nights <Arrow /></a>
+      </div>
+      <p className="sub">Tap a flyer's Get tickets for the ticket link. Want a table or VIP? Inquire and we reply on WhatsApp.</p>
+      <div className="evgrid">{list.map((e, i) => <NightCard key={i} e={e} />)}</div>
+    </section>
+  );
+}
+
 function Services() {
   return (
     <section id="services" className="sec wrap" aria-labelledby="svc-h">
-      <Eyebrow>Service catalogue</Eyebrow>
-      <div id="svc-h"><H2 a="One team. One contact." b="Your whole Tulum" /></div>
-      <p className="sub">From the airport pickup to the last table of the night, you deal with one person.</p>
+      <Eyebrow>Around the nights</Eyebrow>
+      <div id="svc-h"><H2 a="Everything else" b="in one message" /></div>
+      <p className="sub">Rides, dinners, beach days and boats, lined up around the events you pick.</p>
       <div className="svc">
         {services.map((s, i) => (
           <a key={s.slug} href={u(`/${s.slug}`)} className={`svc__c ${i % 3 === 0 ? "svc__c--up" : ""}`} data-rise>
@@ -102,81 +132,19 @@ function Services() {
   );
 }
 
-function Portfolio() {
+function VillaStrip() {
+  const href = site.villaAffiliateUrl || u("/villas");
   return (
-    <section id="villas" className="sec wrap" aria-labelledby="pf-h">
-      <Eyebrow>The portfolio</Eyebrow>
-      <div className="pf__head">
-        <div id="pf-h"><H2 a="Villas we manage." b="And access to the ones we don't" /></div>
-        <a href={u("/villas")} className="cta-pill">All villas <Arrow /></a>
-      </div>
-      <p className="sub">Starting with our signature stay and growing every week. Found a villa somewhere else? We'll book that one too.</p>
-      <div className="vgrid">
-        {villas.map((v) => <VillaCard key={v.slug} v={v} />)}
-      </div>
-    </section>
-  );
-}
-
-function Venues() {
-  const track = useRef<HTMLDivElement>(null);
-  const go = (d: number) => track.current?.scrollBy({ left: d * track.current.clientWidth * 0.8, behavior: "smooth" });
-  return (
-    <section id="venues" className="sec sec--dark" aria-labelledby="ven-h">
-      <div className="wrap">
-        <Eyebrow>Where the city goes</Eyebrow>
-        <div className="pf__head">
-          <div id="ven-h"><H2 a="Tables at the places" b="that say they're full" /></div>
-          <div className="arrows">
-            <button onClick={() => go(-1)} aria-label="Previous venues">←</button>
-            <button onClick={() => go(1)} aria-label="Next venues">→</button>
-          </div>
+    <section id="villas" className="sec wrap" aria-labelledby="vs-h">
+      <div className="vstrip">
+        <img src={img.villaJungle} alt="" loading="lazy" width={1200} height={800} />
+        <div className="vstrip__t">
+          <Eyebrow>Villa partner · {site.villaPartner}</Eyebrow>
+          <div id="vs-h"><H2 a="Stay close" b="to the nights" /></div>
+          <p className="sub">Browse private villas for the season with {site.villaPartner}. We'll line up tickets, tables and rides around your dates.</p>
+          <a className="cta-hero" href={href} {...(site.villaAffiliateUrl ? { target: "_blank", rel: "noopener sponsored" } : {})}>Browse villas <Arrow /></a>
         </div>
       </div>
-      <div className="ven" ref={track}>
-        {venues.map((v) => (
-          <article key={v.name} className="ven__c">
-            <div className="ven__img"><img src={v.image} alt={v.name} loading="lazy" width={800} height={600} /></div>
-            <span className="mono ven__tag">{v.tag}</span>
-            <h3>{v.name}</h3>
-            <ul>{v.points.map((p) => <li key={p}>{p}</li>)}</ul>
-            {v.page ? (
-              <a href={u(v.page)} className="ven__go">Open the night page <Arrow /></a>
-            ) : (
-              <a href={waLink(waTemplate(`Table at ${v.name}`))} target="_blank" rel="noopener" className="ven__go">Book a table <Arrow /></a>
-            )}
-          </article>
-        ))}
-      </div>
-    </section>
-  );
-}
-
-function Upcoming() {
-  const list = events.filter((e) => e.festival || e.title.startsWith("NYE")).slice(0, 8);
-  return (
-    <section className="sec wrap" aria-labelledby="up-h">
-      <Eyebrow>High Season 2027</Eyebrow>
-      <div className="pf__head">
-        <div id="up-h"><H2 a="NYE to Day Zero." b="Pick your nights" /></div>
-        <a href={u("/tulum-festival-season")} className="cta-pill">Full calendar <Arrow /></a>
-      </div>
-      <ol className="up">
-        {list.map((e, i) => {
-          const d = fmtDate(e.date);
-          return (
-            <li key={i} className="up__r" data-rise>
-              <span className="up__d"><b>{d.day}</b><span className="mono">{d.mon}</span></span>
-              <span className="up__t"><b>{e.title}</b><span>{e.venue}{e.tbd ? " · lineup TBA" : ""}</span></span>
-              {e.ticketUrl ? (
-                <a href={e.ticketUrl} target="_blank" rel="noopener sponsored" className="up__go">Tickets <Arrow /></a>
-              ) : (
-                <a href={waLink(waTemplate(`${e.title} @ ${e.venue} (${d.long})`))} target="_blank" rel="noopener" className="up__go">Reserve <Arrow /></a>
-              )}
-            </li>
-          );
-        })}
-      </ol>
     </section>
   );
 }
@@ -225,7 +193,7 @@ function How() {
         ))}
       </ol>
       <div className="how__cta">
-        <p>Want it all mapped out? Get a personalized schedule for your trip.</p>
+        <p>Want it all mapped out? Get a plan for your nights, rides and tables.</p>
         <a className="cta-hero" href={u("/contact")}>Get my schedule <Arrow /></a>
       </div>
     </section>
@@ -238,16 +206,17 @@ function Home() {
     <Shell overlay>
       <Hero />
       <Marquee />
+      {VARIANT === "dark" && <SeasonScroller />}
+      <Nights />
+      <Calendar_ />
       <Services />
-      <Portfolio />
-      <Venues />
-      <Upcoming />
+      <VillaStrip />
       <Team />
       <Reviews />
       <How />
       <section className="sec wrap" aria-labelledby="faq-h">
         <Eyebrow>FAQ</Eyebrow>
-        <div id="faq-h"><H2 a="What groups" b="are asking" tail="" /></div>
+        <div id="faq-h"><H2 a="Quick" b="answers" /></div>
         <Faq items={faqs} />
       </section>
       <ClosingCTA />

@@ -1,4 +1,4 @@
-import { u } from "../../lib/url";
+import { u, VARIANT, OTHER_URL } from "../../lib/url";
 import { Link } from "@tanstack/react-router";
 import { useEffect, useState, type ReactNode } from "react";
 import {
@@ -43,7 +43,7 @@ export function Brand({ dark = false }: { dark?: boolean }) {
       <img src={u("/assets/logo-mark.svg")} alt="" width={40} height={40} className="brand__mark" />
       <span className="brand__text">
         <span className="brand__word">connected</span>
-        <span className="brand__sub">TULUM · CONCIERGE</span>
+        <span className="brand__sub">TULUM</span>
       </span>
     </Link>
   );
@@ -51,19 +51,23 @@ export function Brand({ dark = false }: { dark?: boolean }) {
 
 /* ---------------------------------------------------------------- header */
 const nav = [
+  { label: "Events", to: "/tulum-festival-season" },
+  { label: "Calendar", to: "/#calendar" },
   { label: "Villas", to: "/villas" },
   { label: "Services", to: "/#services" },
-  { label: "Events", to: "/tulum-festival-season" },
-  { label: "Yachts", to: "/boats" },
-  { label: "Beach Clubs", to: "/tulum-group-beach-clubs" },
   { label: "Contact", to: "/contact" },
 ];
 
 export function Header({ overlay = false }: { overlay?: boolean }) {
   const [open, setOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [prog, setProg] = useState(0);
   useEffect(() => {
-    const on = () => setScrolled(window.scrollY > 40);
+    const on = () => {
+      setScrolled(window.scrollY > 40);
+      const max = document.documentElement.scrollHeight - window.innerHeight;
+      setProg(max > 0 ? Math.min(1, window.scrollY / max) : 0);
+    };
     on();
     window.addEventListener("scroll", on, { passive: true });
     return () => window.removeEventListener("scroll", on);
@@ -89,6 +93,7 @@ export function Header({ overlay = false }: { overlay?: boolean }) {
           <span /><span />
         </button>
       </div>
+      <span className="hdr__bar" style={{ transform: `scaleX(${prog})` }} aria-hidden="true" />
       {open && (
         <div className="mnav" role="dialog" aria-label="Menu">
           {nav.map((n, i) => (
@@ -97,7 +102,7 @@ export function Header({ overlay = false }: { overlay?: boolean }) {
             </a>
           ))}
           <a className="mnav__wa" href={waLink(waTemplate("Planning a Tulum trip"))} target="_blank" rel="noopener">
-            WhatsApp the concierge <Arrow />
+            WhatsApp Connected <Arrow />
           </a>
         </div>
       )}
@@ -119,12 +124,12 @@ export function H2({ a, b, tail = "." }: { a: string; b: string; tail?: string }
 }
 
 /* ---------------------------------------------------------------- closing CTA */
-export function ClosingCTA({ a = "Tell us who's coming,", b = "and it's handled", topic = "Planning a Tulum trip", label = "Message on WhatsApp" }: { a?: string; b?: string; topic?: string; label?: string }) {
+export function ClosingCTA({ a = "Pick the night,", b = "we handle the rest", topic = "Planning a Tulum trip", label = "Message on WhatsApp" }: { a?: string; b?: string; topic?: string; label?: string }) {
   return (
     <section className="closing" aria-labelledby="closing-h">
       <div className="closing__glow" aria-hidden="true" />
       <div className="wrap closing__in">
-        <p className="mono closing__k">Start with two details · dates & group size</p>
+        <p className="mono closing__k">Tickets · VIP tables · group size</p>
         <h2 id="closing-h" className="h2 h2--light">{a} <em className="accent">{b}</em>.</h2>
         <div className="closing__ctas">
           <a className="cta-wa" href={waLink(waTemplate(topic))} target="_blank" rel="noopener">
@@ -204,7 +209,7 @@ export function Footer() {
       <div className="wrap ftr__grid">
         <div className="ftr__brand">
           <Brand dark />
-          <p>Tulum, connected. Villas, tables, festivals and the people who make them happen.</p>
+          <p>Tulum, connected. Tickets, VIP tables and every night of high season.</p>
           <div className="ftr__soc">
             <a href={site.socials.instagram} target="_blank" rel="noopener">Instagram</a>
             <a href={site.socials.tiktok} target="_blank" rel="noopener">TikTok</a>
@@ -212,7 +217,7 @@ export function Footer() {
           </div>
         </div>
         <div>
-          <h4>Plan your trip</h4>
+          <h4>The season</h4>
           <ul>{footerPlan.map((l) => <li key={l.to}><a href={u(l.to)}>{l.label}</a></li>)}</ul>
         </div>
         <div>
@@ -220,7 +225,7 @@ export function Footer() {
           <ul>{footerExplore.map((l) => <li key={l.to}><a href={u(l.to)}>{l.label}</a></li>)}</ul>
         </div>
         <div>
-          <h4>Concierge</h4>
+          <h4>Contact</h4>
           <ul>
             <li><a href={waLink(waTemplate("Planning a Tulum trip"))} target="_blank" rel="noopener">WhatsApp {site.whatsappDisplay}</a></li>
             <li><a href={`mailto:${site.email}`}>{site.email}</a></li>
@@ -240,6 +245,23 @@ export function Footer() {
   );
 }
 
+/** Temporary review switch: jump between the light and dark design. Remove once one is chosen. */
+export function VariantSwitch() {
+  if (!OTHER_URL) return null;
+  const light = VARIANT === "light";
+  const here = (
+    <span className="vswitch__on">{light ? "A · Light" : "B · Dark"}</span>
+  );
+  const other = (
+    <a href={OTHER_URL}>{light ? "B · Dark" : "A · Light"}</a>
+  );
+  return (
+    <div className="vswitch" aria-label="Compare designs">
+      {light ? <>{here}{other}</> : <>{other}{here}</>}
+    </div>
+  );
+}
+
 export function Shell({ children, overlay = false }: { children: ReactNode; overlay?: boolean }) {
   return (
     <>
@@ -247,6 +269,7 @@ export function Shell({ children, overlay = false }: { children: ReactNode; over
       <main id="main">{children}</main>
       <Footer />
       <FloatDock />
+      <VariantSwitch />
       <NotifyModal />
     </>
   );

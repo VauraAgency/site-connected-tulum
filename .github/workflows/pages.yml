@@ -20,15 +20,31 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      - name: Build (subpath for GitHub Pages)
+      # Design A (light) lives at the root, design B (dark) at /dark/. Both share the same content file.
+      - name: Build A (light)
         run: npm run build
         env:
           BASE_PATH: /site-connected-tulum/
-      - name: SPA-style 404 fallback
-        run: cp dist/client/index.html dist/client/404.html
+          VITE_VARIANT: light
+          VITE_OTHER_URL: /site-connected-tulum/dark/
+      - run: mv dist/client dist/light
+      - name: Build B (dark)
+        run: npm run build
+        env:
+          BASE_PATH: /site-connected-tulum/dark/
+          VITE_VARIANT: dark
+          VITE_OTHER_URL: /site-connected-tulum/
+      - run: mv dist/client dist/dark
+      - name: Assemble
+        run: |
+          mkdir -p site
+          cp -r dist/light/. site/
+          mkdir -p site/dark
+          cp -r dist/dark/. site/dark/
+          cp site/index.html site/404.html
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: dist/client
+          path: site
   deploy:
     needs: build
     runs-on: ubuntu-latest

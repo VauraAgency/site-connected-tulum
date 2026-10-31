@@ -5,6 +5,7 @@ import {
   type Service, type FestivalPage, type LandingPage, type TEvent,
 } from "../content/site";
 import { Shell, Eyebrow, H2, Arrow, ClosingCTA, Faq, WaGlyph, Icon, useReveal } from "../components/site/ui";
+import { NightCard, Calendar } from "../components/site/events";
 
 type Resolved =
   | { kind: "service"; s: Service }
@@ -71,6 +72,10 @@ function RestOfTrip({ skip }: { skip: string }) {
             <span><Icon name={s.icon} size={16} /> {s.title}</span>
           </a>
         ))}
+        <a href={u("/villas")} className="rest__c" data-rise>
+          <img src={img.villaJungle} alt="" loading="lazy" width={600} height={450} />
+          <span><Icon name="home" size={16} /> Villas</span>
+        </a>
       </div>
     </section>
   );
@@ -129,39 +134,6 @@ function eventsFor(p: FestivalPage): TEvent[] {
   return events.filter((e) => e.festival === p.festival);
 }
 
-function EventCard({ e }: { e: TEvent }) {
-  const d = fmtDate(e.date);
-  const name = `${e.title}${e.venue && !e.title.includes(e.venue) && e.title !== e.venue ? ` @ ${e.venue}` : ""}`;
-  return (
-    <article className="ev" data-rise>
-      <div className="ev__flyer">
-        {e.flyer ? (
-          <img src={e.flyer} alt={`${name} flyer`} loading="lazy" width={800} height={1000} />
-        ) : (
-          <div className="ev__ph">
-            <img src={e.festival ? img.festival : img.beachClub} alt="" loading="lazy" width={800} height={600} />
-            <span className="ev__ph-t">{e.tbd ? "Lineup TBA" : e.lineup || e.title}</span>
-          </div>
-        )}
-        <span className="ev__date"><b>{d.day}</b><span>{d.mon}</span></span>
-      </div>
-      <div className="ev__b">
-        <p className="mono">{d.wk} · {e.venue}{e.time ? ` · ${e.time}` : ""}</p>
-        <h3>{name}</h3>
-        {e.lineup && <p className="ev__lu">Lineup: {e.lineup}</p>}
-        <div className="ev__ctas">
-          {e.ticketUrl ? (
-            <a className="cta-ticket" href={e.ticketUrl} target="_blank" rel="noopener sponsored">Tickets <Arrow /></a>
-          ) : null}
-          <a className={e.ticketUrl ? "linkish" : "cta-ticket"} href={waLink(waTemplate(`${name} (${d.long}): ${e.ticketUrl ? "VIP table" : "tickets / VIP table"}`))} target="_blank" rel="noopener">
-            {e.ticketUrl ? "Book a table" : "Reserve a table"} <Arrow />
-          </a>
-        </div>
-      </div>
-    </article>
-  );
-}
-
 function Festival({ p }: { p: FestivalPage }) {
   const list = eventsFor(p);
   return (
@@ -175,7 +147,7 @@ function Festival({ p }: { p: FestivalPage }) {
           <p className="fhero__lead">{p.lead}</p>
           <div className="hero__ctas">
             <a className="cta-hero" href="#nights">See the nights <Arrow /></a>
-            <a className="cta-wa" href={waLink(waTemplate(p.h1a + " VIP table"))} target="_blank" rel="noopener"><WaGlyph /> Request a VIP table</a>
+            <a className="cta-wa" href={waLink(waTemplate(p.h1a + " VIP table"))} target="_blank" rel="noopener"><WaGlyph /> Inquire about a table</a>
           </div>
         </div>
       </section>
@@ -186,10 +158,18 @@ function Festival({ p }: { p: FestivalPage }) {
         <dl className="facts">{p.facts.map((f) => <div key={f.k}><dt className="mono">{f.k}</dt><dd>{f.v}</dd></div>)}</dl>
       </section>
 
+      {p.slug === "tulum-festival-season" && (
+        <section id="calendar" className="sec sec--tight wrap">
+          <Eyebrow>02 · Season calendar</Eyebrow>
+          <H2 a="The calendar." b="Today is highlighted" />
+          <Calendar />
+        </section>
+      )}
+
       <section id="nights" className="sec sec--tight wrap">
-        <Eyebrow>02 · Announced nights</Eyebrow>
-        <H2 a="The calendar." b="More coming" />
-        <div className="evgrid">{list.map((e, i) => <EventCard key={i} e={e} />)}</div>
+        <Eyebrow>{p.slug === "tulum-festival-season" ? "03" : "02"} · Announced nights</Eyebrow>
+        <H2 a="Get tickets." b="Or a table" />
+        <div className="evgrid">{list.map((e, i) => <NightCard key={i} e={e} />)}</div>
         <p className="sub">Dates update as lineups are announced. Flyers, set times and ticket links drop here first.</p>
       </section>
 
@@ -202,12 +182,12 @@ function Festival({ p }: { p: FestivalPage }) {
 
       <section className="sec wrap">
         <Eyebrow>04 · Beyond the table</Eyebrow>
-        <H2 a="Stay, ride," b="recover" />
+        <H2 a="Stay, ride," b="and dine" />
         <div className="rest">
           {[
             { t: "Villas", to: "/villas", im: villas[0].images[0] },
             { t: "Transport", to: "/transportation", im: img.transport },
-            { t: "Recovery", to: "/wellness", im: img.spa },
+            { t: "Restaurants & beach clubs", to: "/tulum-group-beach-clubs", im: img.beachClub },
             { t: "Yachts", to: "/boats", im: img.boat },
           ].map((x) => (
             <a key={x.t} href={x.to} className="rest__c" data-rise><img src={x.im} alt="" loading="lazy" width={600} height={450} /><span>{x.t} <Arrow /></span></a>

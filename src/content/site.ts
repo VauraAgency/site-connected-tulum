@@ -28,7 +28,16 @@ export const site = {
     facebook: "https://www.facebook.com/share/18M4RjEqWz/",
   },
   callHours: "Every day · Tulum time (EST, UTC−5)",
+  // PENDING: Beach Please affiliate URL for villas (Hector gets a special code). Empty = villa buttons go to WhatsApp. Can be swapped any time.
+  villaAffiliateUrl: "",
+  villaPartner: "Beach Please",
+  // PENDING: promoter / affiliate ticket links per festival. Empty = "Get tickets" opens a WhatsApp request instead.
+  promoterUrls: { zamna: "", tehmplo: "", "day-zero": "", other: "" } as Record<string, string>,
+  // Transport: client price = our cost + this markup (30%). Costs live on each transport item (cost field, USD).
+  transportMarkup: 0.3,
 };
+
+export const withMarkup = (cost: number) => Math.round(cost * (1 + site.transportMarkup) / 5) * 5;
 
 export function waLink(message: string) {
   return `https://wa.me/${site.whatsapp}?text=${encodeURIComponent(message)}`;
@@ -130,6 +139,7 @@ export type ServiceItem = {
   name: string;
   meta?: string; // e.g. "Up to 15 guests"
   price?: string; // e.g. "From $38,000 MXN" (leave empty until Hector confirms)
+  cost?: number; // our cost in USD. If set (and no price), client price = withMarkup(cost)
   badge?: string;
   link?: string; // optional affiliate / outbound link
 };
@@ -156,19 +166,48 @@ export type IconName =
 
 export const services: Service[] = [
   {
-    slug: "tulum-bachelor-party", num: "01", kicker: "Celebrate", title: "Bachelor & Bachelorette", icon: "glass",
-    short: "One villa, every table and nothing left to the group chat. The whole weekend, planned end to end.",
-    cardCta: "Plan the weekend", image: img.party,
-    h1: "Bachelor & Bachelorette", intro: "", items: [], included: [], notes: [],
+    slug: "tulum-festival-season", num: "01", kicker: "Access", title: "VIP Event Access", icon: "ticket",
+    short: "Zamna, Tehmplo, Day Zero and every high season night. Tickets, VIP tables and the plan around them.",
+    cardCta: "See the nights", image: img.festival,
+    h1: "VIP Event Access", intro: "", items: [], included: [], notes: [],
   },
   {
-    slug: "tulum-group-beach-clubs", num: "02", kicker: "Reservations", title: "VIP Reservations", icon: "crown",
-    short: "Priority tables at Tulum's beach clubs, restaurants and late-night spots. Skip the guesswork, skip the line.",
-    cardCta: "See venues", image: img.beachClub,
-    h1: "VIP Reservations", intro: "", items: [], included: [], notes: [],
+    slug: "transportation", num: "02", kicker: "Transit", title: "Ground Transportation", icon: "car",
+    short: "Airport pickups, private drivers, Sprinters and SUVs for the group and every night out.",
+    cardCta: "Get moving", image: img.transport,
+    h1: "Private Ground Transportation in Tulum",
+    intro: "From the moment you land to the last ride home after the after party. Tell us your flights and headcount.",
+    items: [
+      // cost = what it costs Connected (USD). Price shown to clients = cost + site.transportMarkup. PENDING: Hector's costs.
+      { name: "Airport transfer", meta: "Cancún / Tulum airport · Private" },
+      { name: "Hourly driver", meta: "SUV or Sprinter · Nights out and day trips" },
+      { name: "Event night rides", meta: "Round trip to Zamna, Tehmplo, Day Zero" },
+    ],
+    included: ["Bilingual drivers", "Meet & greet", "Water on board"],
+    notes: [{ label: "Pricing", text: "Quoted per route and vehicle." }],
   },
   {
-    slug: "boats", num: "03", kicker: "Sea", title: "Yachts & Catamarans", icon: "boat",
+    slug: "private-events", num: "03", kicker: "Produce", title: "Private Events", icon: "spark",
+    short: "Birthdays, proposals, brand dinners and buyouts. Logistics, execution and coordination.",
+    cardCta: "Plan an event", image: img.party,
+    h1: "Private Events in Tulum",
+    intro: "We source the venue, the vendors and the timeline, then run it on the day.",
+    items: [
+      { name: "Celebrations & decor", meta: "Birthdays, proposals, anniversaries" },
+      { name: "Corporate & brand events", meta: "Dinners, launches, offsites" },
+      { name: "Venue buyouts", meta: "On request" },
+    ],
+    included: ["Planning", "Vendor management", "On-site coordination"],
+    notes: [],
+  },
+  {
+    slug: "tulum-group-beach-clubs", num: "04", kicker: "Reservations", title: "Restaurants & Beach Clubs", icon: "crown",
+    short: "Priority tables at Tulum's beach clubs and restaurants. Skip the guesswork, skip the line.",
+    cardCta: "Reserve a table", image: img.beachClub,
+    h1: "Restaurants & Beach Clubs", intro: "", items: [], included: [], notes: [],
+  },
+  {
+    slug: "boats", num: "05", kicker: "Sea", title: "Yachts & Catamarans", icon: "boat",
     short: "Private catamarans and yachts on the Caribbean. Open water, open bar, your crew only.",
     cardCta: "See the fleet", image: img.boat,
     h1: "Tulum Yacht & Catamaran Charters",
@@ -184,130 +223,15 @@ export const services: Service[] = [
       { label: "Duration", text: "Half day and full day charters available." },
     ],
   },
-  {
-    slug: "tulum-festival-season", num: "04", kicker: "Access", title: "VIP Event Access", icon: "ticket",
-    short: "Zamna, Tehmplo, Day Zero and every high season night. Tickets, tables and the plan around them.",
-    cardCta: "High season 2027", image: img.festival,
-    h1: "VIP Event Access", intro: "", items: [], included: [], notes: [],
-  },
-  {
-    slug: "transportation", num: "05", kicker: "Transit", title: "Ground & Air Transport", icon: "car",
-    short: "Airport pickups, private drivers, Sprinters and SUVs for the group. Air transfers on request.",
-    cardCta: "Get moving", image: img.transport,
-    h1: "Private Transportation in Tulum",
-    intro: "From the moment you land to the last ride home after the after party. Tell us your flights and headcount.",
-    items: [
-      { name: "Airport transfer", meta: "Cancún / Tulum airport · Private" },
-      { name: "Hourly driver", meta: "SUV or Sprinter · Nights out and day trips" },
-      { name: "Air transfer", meta: "Private flights · On request" },
-    ],
-    included: ["Bilingual drivers", "Meet & greet", "Water on board"],
-    notes: [{ label: "Pricing", text: "Quoted per route and vehicle." }],
-  },
-  {
-    slug: "chef", num: "06", kicker: "Table", title: "Private Chef & Bartender", icon: "chef",
-    short: "In-villa breakfasts, dinners and open bar. Tasting menus, family style, recovery brunch.",
-    cardCta: "See menus", image: img.chef,
-    h1: "Private Chef & Bartender in Tulum",
-    intro: "A chef and bartender in your villa so the group never has to pick a restaurant at 1am.",
-    items: [
-      { name: "Breakfast & brunch", meta: "Daily in-villa service" },
-      { name: "Private dinner", meta: "Family style or tasting menu" },
-      { name: "Open bar", meta: "Bartender and full bar setup" },
-    ],
-    included: ["Shopping", "Setup", "Service", "Cleanup"],
-    notes: [{ label: "Pricing", text: "Per person, quoted on your menu." }],
-  },
-  {
-    slug: "wellness", num: "07", kicker: "Energy", title: "Spa & Wellness", icon: "leaf",
-    short: "In-villa massages, yoga, facials, ice baths and IV drips. Reset between nights.",
-    cardCta: "Wellness menu", image: img.spa,
-    h1: "Spa & Wellness in Tulum",
-    intro: "Recovery that comes to you. Book for one or for the whole group.",
-    items: [
-      { name: "Massage", meta: "In-villa · Individual or group" },
-      { name: "Yoga & breathwork", meta: "Private sessions" },
-      { name: "IV therapy", meta: "Hydration and recovery drips" },
-      { name: "Ice bath & sauna", meta: "On request" },
-    ],
-    included: ["Licensed therapists", "All equipment brought to you"],
-    notes: [],
-  },
-  {
-    slug: "dj", num: "08", kicker: "Night", title: "DJ Services", icon: "disc",
-    short: "Turn the villa into a club. DJs, decks, speakers and lights, set up and run for you.",
-    cardCta: "Book a DJ", image: img.party,
-    h1: "DJ Services & Equipment in Tulum",
-    intro: "From sunset sets by the pool to a full club night in the villa.",
-    items: [
-      { name: "DJ set", meta: "House, afro house, open format" },
-      { name: "Equipment package", meta: "Decks, speakers, lights" },
-    ],
-    included: ["Setup", "Sound check", "Breakdown"],
-    notes: [],
-  },
-  {
-    slug: "content-creation", num: "09", kicker: "Capture", title: "Photo & Video", icon: "camera",
-    short: "Photographers and videographers for the trip, the party or the proposal. Content that hits.",
-    cardCta: "Book a shoot", image: img.festival,
-    h1: "Photography & Videography in Tulum",
-    intro: "Professional content of your trip, delivered fast. Drone, reels and edits available.",
-    items: [
-      { name: "Photography", meta: "Hourly or full day" },
-      { name: "Videography & reels", meta: "Edited for social" },
-      { name: "Drone", meta: "Aerials of villa, beach and boat" },
-    ],
-    included: ["Edited delivery", "Social ready formats"],
-    notes: [],
-  },
-  {
-    slug: "private-events", num: "10", kicker: "Produce", title: "Private Events", icon: "spark",
-    short: "Birthdays, proposals, brand dinners and buyouts. Logistics, execution and coordination.",
-    cardCta: "Plan an event", image: img.beachClub,
-    h1: "Private Events in Tulum",
-    intro: "We source the venue, the vendors and the timeline, then run it on the day.",
-    items: [
-      { name: "Celebrations & decor", meta: "Birthdays, proposals, anniversaries" },
-      { name: "Corporate & brand events", meta: "Dinners, launches, offsites" },
-      { name: "Venue buyouts", meta: "On request" },
-    ],
-    included: ["Planning", "Vendor management", "On-site coordination"],
-    notes: [],
-  },
-  {
-    slug: "adventure", num: "11", kicker: "Adventure", title: "Adventure & Cenotes", icon: "compass",
-    short: "Cenotes, ruins, ATVs and ziplines. Private tours with transport handled.",
-    cardCta: "Tour options", image: img.cenote,
-    h1: "Tulum Adventures & Cenote Tours",
-    intro: "Daytime Tulum, done privately. Pick a mood and we build the day.",
-    items: [
-      { name: "Cenote tour", meta: "Private · Transport included" },
-      { name: "Tulum ruins", meta: "Guided" },
-      { name: "ATVs & ziplines", meta: "Half day" },
-    ],
-    included: ["Private guide", "Transport"],
-    notes: [],
-  },
-  {
-    slug: "personal-shopper", num: "12", kicker: "Style", title: "Personal Shopper", icon: "bag",
-    short: "Outfits for every night, sourced and delivered. Festival looks, white parties, dinner fits.",
-    cardCta: "Get styled", image: img.villaModern,
-    h1: "Personal Shopper in Tulum",
-    intro: "Show up with nothing to plan. We source looks and essentials and deliver them to the villa.",
-    items: [
-      { name: "Festival & party looks", meta: "Curated for the lineup" },
-      { name: "Essentials delivery", meta: "Groceries, supplies, gifts" },
-    ],
-    included: ["Sourcing", "Delivery to the villa"],
-    notes: [],
-  },
 ];
 
 export const serviceBySlug = (s: string) => services.find((x) => x.slug === s && x.items.length);
 
 /* ------------------------------------------------------------------ EVENTS (High Season 2027)
- * Add flyer (image path), time, DJ lineup, and ticketUrl (promoter / affiliate link).
- * No ticketUrl = button goes to WhatsApp to book tables.
+ * Per event: flyer (image path in /public/assets), ticketUrl (promoter / affiliate link), lineup, time.
+ * "Get tickets" -> ticketUrl, else the festival's link in site.promoterUrls, else a WhatsApp request.
+ * manual: true = Hector processes the tickets by hand (Zamna), so Get tickets is always a WhatsApp request.
+ * key: true = headline night, shown in the big season scroller on the home page.
  */
 export type TEvent = {
   date: string; // ISO yyyy-mm-dd
@@ -319,32 +243,41 @@ export type TEvent = {
   ticketUrl?: string;
   festival?: "zamna" | "tehmplo" | "day-zero";
   tbd?: boolean;
+  key?: boolean;
+  manual?: boolean;
+  bg?: string;
 };
 
 export const events: TEvent[] = [
-  { date: "2026-12-31", title: "NYE", venue: "Tulum" },
+  { date: "2026-12-31", title: "Renaissance Tulum NYE", venue: "Zamna Tulum", lineup: "Sasha, Maceo Plex, Sébastien Léger, Ida Engberg and more", festival: "zamna", key: true, manual: true, bg: img.festival },
   { date: "2026-12-31", title: "NYE @ Ahau", venue: "Ahau" },
-  { date: "2026-12-31", title: "NYE @ PPP", venue: "Papaya Playa Project" },
+  { date: "2026-12-31", title: "NYE @ Papaya Playa Project", venue: "Papaya Playa Project" },
   { date: "2026-12-31", title: "NYE @ Nomade", venue: "Nomade" },
   { date: "2026-12-31", title: "NYE @ Gitano Beach & Jungle", venue: "Gitano" },
-  { date: "2026-12-31", title: "Renaissance", venue: "Zamna", festival: "zamna" },
   { date: "2027-01-01", title: "Por Qué No", venue: "Kuul" },
   { date: "2027-01-02", title: "Por Qué No", venue: "Vesica" },
   { date: "2027-01-02", title: "Afrodise", venue: "Ahau" },
-  { date: "2027-01-02", title: "TBA", venue: "Zamna", festival: "zamna", tbd: true },
+  { date: "2027-01-02", title: "Lineup TBA", venue: "Zamna Tulum", festival: "zamna", tbd: true, manual: true },
   { date: "2027-01-03", title: "Por Qué No", venue: "Vesica" },
   { date: "2027-01-03", title: "Tehmplo", venue: "Tehmplo", festival: "tehmplo" },
-  { date: "2027-01-04", title: "Anyma", venue: "Zamna", lineup: "Anyma", festival: "zamna" },
+  { date: "2027-01-04", title: "Anyma presents ÆDEN: The Lost Temple", venue: "Zamna Tulum", lineup: "Anyma, CamelPhat, Cassian, Volkoder and more", festival: "zamna", key: true, manual: true, bg: img.party },
   { date: "2027-01-05", title: "7 Realms", venue: "Kuul" },
   { date: "2027-01-05", title: "Tehmplo", venue: "Tehmplo", festival: "tehmplo" },
-  { date: "2027-01-06", title: "TBA", venue: "Zamna", festival: "zamna", tbd: true },
-  { date: "2027-01-07", title: "Solomun", venue: "Tehmplo", lineup: "Solomun", festival: "tehmplo" },
-  { date: "2027-01-08", title: "Adriatique", venue: "Zamna", lineup: "Adriatique", festival: "zamna" },
-  { date: "2027-01-09", title: "Day Zero", venue: "Day Zero", festival: "day-zero" },
-  { date: "2027-01-10", title: "Adam Port", venue: "Zamna", lineup: "Adam Port", festival: "zamna" },
+  { date: "2027-01-06", title: "Black Coffee at Zamna Tulum", venue: "Zamna Tulum", lineup: "Black Coffee", festival: "zamna", key: true, manual: true, bg: img.festival },
+  { date: "2027-01-07", title: "Solomun Tulum at Tehmplo", venue: "Tehmplo", lineup: "Solomun", festival: "tehmplo", key: true, bg: img.cenote },
+  { date: "2027-01-08", title: "Adriatique presents X: FOREVER", venue: "Zamna Tulum", lineup: "Adriatique, Kotiër, Mind Against, Sama and more", festival: "zamna", key: true, manual: true, bg: img.party },
+  { date: "2027-01-09", title: "Day Zero 2027: Begin Again", venue: "Day Zero", festival: "day-zero", key: true, bg: img.cenote },
+  { date: "2027-01-10", title: "Adam Port, season closing", venue: "Zamna Tulum", lineup: "Adam Port", festival: "zamna", key: true, manual: true, bg: img.festival },
 ];
 
-export const marquee = ["Anyma", "Solomun", "Adriatique", "Adam Port", "Day Zero", "Zamna", "Tehmplo", "Afrodise", "7 Realms", "Por Qué No", "Renaissance"];
+/** Where "Get tickets" goes. Returns null when it should be a WhatsApp request (manual or no link yet). */
+export function ticketHref(e: TEvent): string | null {
+  if (e.manual && !e.ticketUrl) return null;
+  const url = e.ticketUrl || (e.festival ? site.promoterUrls[e.festival] : site.promoterUrls.other);
+  return url || null;
+}
+
+export const marquee = ["Renaissance", "Anyma", "Black Coffee", "Solomun", "Adriatique", "Day Zero", "Adam Port", "Zamna", "Tehmplo"];
 
 export function fmtDate(iso: string) {
   const d = new Date(iso + "T12:00:00Z");
@@ -383,11 +316,11 @@ export const team = [
 export const reviews: { quote: string; name: string; source?: string }[] = [];
 
 export const faqs = [
-  { q: "How far in advance should we book?", a: "As early as you can. High season (late December into January) is when Zamna, Tehmplo, Day Zero and the beach clubs sell out first, and the best villas go with them." },
-  { q: "What can Connected handle?", a: "The whole trip: villa, transport, tables, festival access, boats, chefs, wellness, DJs, content and private events. One contact for all of it." },
-  { q: "How big can our group be?", a: "Couples to large groups. Tell us the headcount and we build around it." },
-  { q: "Can you just get us tickets or a table?", a: "Yes. If there is a ticket link for the night we send you straight to it. If not, message us on WhatsApp and we reserve the table." },
-  { q: "How do we start?", a: "Send your dates and group size on WhatsApp, or book a quick call. We send back a custom plan." },
+  { q: "How far in advance should we book?", a: "As early as you can. High season (late December into January) is when Zamna, Tehmplo, Day Zero and the beach clubs sell out first." },
+  { q: "How do I get tickets?", a: "Tap Get tickets on any night. Where there is a ticket link it takes you straight there. Zamna tickets are handled by us directly: send the request and we confirm on WhatsApp." },
+  { q: "Can I get a VIP table?", a: "Yes. Tap Inquire about a table on the night you want, tell us the group size, and we check availability and send options." },
+  { q: "What else can Connected handle?", a: "Ground transportation, private events, restaurant and beach club reservations, and yachts. Villas run through our partner Beach Please." },
+  { q: "How do we start?", a: "Pick a night and message us on WhatsApp, or book a quick call. We reply with ticket links, table options and a plan." },
 ];
 
 /* ------------------------------------------------------------------ PAGES (festival + landing)
@@ -427,8 +360,8 @@ export type LandingPage = {
 };
 
 const howToBook = [
-  { t: "Pick the night", d: "Choose from the calendar or tell us the vibe." },
-  { t: "Send the details", d: "Dates, group size and budget on WhatsApp." },
+  { t: "Pick the night", d: "Choose from the calendar or the flyers." },
+  { t: "Tickets or a table", d: "Tap Get tickets, or inquire about a table with your group size." },
   { t: "Lock it in", d: "Ticket link or table confirmation sent back to you." },
   { t: "Arrive", d: "Transport and timing handled. You just show up." },
 ];
@@ -444,7 +377,7 @@ export const festivalPages: FestivalPage[] = [
       { t: "Book early", d: "Zamna, Tehmplo and Day Zero tickets move fast once lineups drop." },
       { t: "Tables", d: "VIP tables are limited per night. Reserve with dates and headcount." },
       { t: "Transport", d: "Festival nights mean traffic. Let us handle drivers both ways." },
-      { t: "Recovery", d: "Book the IV drips and massages before you need them." },
+      { t: "Reservations", d: "Dinner and beach club tables around the big nights book out. Ask early." },
     ],
     faqs: [
       { q: "Are all dates confirmed?", a: "Dates marked TBA are still being announced. This calendar updates as lineups drop." },
@@ -500,126 +433,41 @@ export const festivalPages: FestivalPage[] = [
 const handledTiles = [
   { h: "Nightlife", p: "Tables at the clubs and festivals that say they're full." },
   { h: "Transport", p: "Drivers from landing to last call." },
-  { h: "Food", p: "Private chef in the villa, tables everywhere else." },
-  { h: "Recovery", p: "Massages, IV drips and pool days." },
-  { h: "At home", p: "DJ, decor and the villa turned club." },
+  { h: "Dinner", p: "Restaurant tables for the whole group, timed around the night." },
+  { h: "Beach days", p: "Beds and tables at Tulum's best beach clubs." },
+  { h: "Events", p: "Private events and yachts when you want something custom." },
 ];
 
 export const landingPages: LandingPage[] = [
   {
-    kind: "landing", slug: "tulum-concierge", eyebrow: "Tulum · 24/7 VIP Concierge",
-    h1a: "Your Tulum concierge.", h1b: "On call, all trip.",
-    lead: "Villas, transport, VIP tables, festivals, boats, chefs and wellness. One number, every answer.",
-    image: img.villaJungle,
-    problem: { h: "Ten tabs, five WhatsApp groups. Not this time.", p: "Tulum rewards people who know who to call. That's us." },
-    stats: [{ k: "Support", v: "24/7" }, { k: "Services", v: "12+" }, { k: "Contact", v: "1" }, { k: "Season", v: "All year" }],
-    plan: [
-      { label: "Arrive", h: "Land and go.", points: ["Airport pickup", "Villa check-in", "Groceries stocked"], image: img.transport },
-      { label: "Day", h: "Sun, sea, cenotes.", points: ["Beach club beds", "Boat day", "Cenote tour"], image: img.boat },
-      { label: "Night", h: "Tables that matter.", points: ["Dinner reservation", "VIP table", "Ride home"], image: img.festival },
-    ],
-    tiles: handledTiles, faqs: [], ctaLabel: "Start with your dates",
-    title: "Tulum VIP Concierge 24/7 | Connected Tulum",
-    description: "24/7 VIP concierge in Tulum. Villas, transport, tables, festivals, yachts, chefs and wellness with one contact.",
-  },
-  {
-    kind: "landing", slug: "tulum-bachelor-party", eyebrow: "Tulum · Bachelor Party · Fully handled",
-    h1a: "The groom shows up.", h1b: "We handle the rest.",
-    lead: "Villa, tables, boat day, chef, DJ and drivers. A Tulum bachelor weekend with no dead time.",
-    image: img.party,
-    problem: { h: "Most bachelor trips stall in the group chat.", p: "Not this one. Send dates and headcount and we build the weekend." },
-    stats: [{ k: "Days", v: "3 to 5" }, { k: "Group", v: "Any size" }, { k: "Team", v: "Local" }, { k: "Support", v: "24/7" }],
-    plan: [
-      { label: "Day 1", h: "Arrive and set the tone.", points: ["Airport pickup", "Villa welcome", "Chef dinner"], image: img.chef },
-      { label: "Day 2", h: "Boat day into club night.", points: ["Catamaran", "Beach club", "VIP table"], image: img.boat },
-      { label: "Day 3", h: "Festival night.", points: ["Recovery brunch", "Pool & DJ", "Zamna or Tehmplo"], image: img.festival },
-    ],
-    tiles: handledTiles,
-    faqs: [{ q: "Can you plan around a festival night?", a: "Yes, most high season trips are built around one or two headliner nights." }],
-    ctaLabel: "Plan the weekend",
-    title: "Tulum Bachelor Party Planning | Connected Tulum",
-    description: "Tulum bachelor party, fully planned. Villa, VIP tables, boat day, chef, DJ and transport.",
-  },
-  {
-    kind: "landing", slug: "tulum-bachelorette-party", eyebrow: "Tulum · Bachelorette · Fully handled",
-    h1a: "She says yes.", h1b: "Tulum says welcome.",
-    lead: "Villa, beach clubs, boat day, spa, photographer and the best tables in town. The bachelorette, planned end to end.",
-    image: img.villaBeach,
-    problem: { h: "Planning shouldn't be the maid of honor's full-time job.", p: "Hand it to us. You get the itinerary, the bookings and the content." },
-    stats: [{ k: "Days", v: "3 to 5" }, { k: "Group", v: "Any size" }, { k: "Team", v: "Local" }, { k: "Support", v: "24/7" }],
-    plan: [
-      { label: "Day 1", h: "Welcome to the villa.", points: ["Decor & balloons", "Chef dinner", "Sunset photos"], image: img.chef },
-      { label: "Day 2", h: "Sea and spa.", points: ["Catamaran", "In-villa massages", "Beach club"], image: img.spa },
-      { label: "Day 3", h: "The big night.", points: ["Getting ready", "VIP table", "Content team"], image: img.beachClub },
-    ],
-    tiles: handledTiles, faqs: [], ctaLabel: "Plan the trip",
-    title: "Tulum Bachelorette Party Planning | Connected Tulum",
-    description: "Tulum bachelorette trips, fully planned. Villa, beach clubs, boat, spa, photographer and VIP tables.",
-  },
-  {
-    kind: "landing", slug: "tulum-group-beach-clubs", eyebrow: "Tulum · Beach Clubs · Group tables",
-    h1a: "Beds on the sand.", h1b: "Booked before you land.",
-    lead: "Papaya Playa, Gitano, Vagalume, Mia, Ahau and more. Group reservations and VIP tables.",
+    kind: "landing", slug: "tulum-group-beach-clubs", eyebrow: "Tulum · Restaurants & Beach Clubs · Group tables",
+    h1a: "Beds on the sand.", h1b: "Tables booked before you land.",
+    lead: "Papaya Playa, Gitano, Vagalume, Mia, Ahau and the restaurants that fill up first. Group reservations and VIP tables.",
     image: img.beachClub,
     problem: { h: "Walk-ins get turned away in high season.", p: "We reserve ahead so the group stays together." },
     stats: [{ k: "Venues", v: "10+" }, { k: "Group", v: "Any size" }, { k: "Booking", v: "Direct" }, { k: "Support", v: "24/7" }],
     plan: [
       { label: "Day", h: "Beach club day.", points: ["Beds & umbrellas", "Lunch", "Sunset set"], image: img.beachClub },
-      { label: "Night", h: "Into the night.", points: ["Dinner", "VIP table", "Ride home"], image: img.festival },
+      { label: "Night", h: "Dinner into the night.", points: ["Restaurant table", "VIP table", "Ride home"], image: img.festival },
     ],
-    tiles: handledTiles, faqs: [], ctaLabel: "Reserve the beds",
-    title: "Tulum Beach Club Reservations for Groups | Connected Tulum",
-    description: "Group reservations and VIP tables at Tulum beach clubs: Papaya Playa, Gitano, Vagalume, Mia, Ahau.",
-  },
-  {
-    kind: "landing", slug: "tulum-group-restaurant-reservations", eyebrow: "Tulum · Restaurants · Group tables",
-    h1a: "Dinner for twelve.", h1b: "At 9pm. Tonight.",
-    lead: "Group reservations at Tulum's best restaurants, timed around the night out.",
-    image: img.chef,
-    problem: { h: "Big groups are the hardest table in Tulum.", p: "We know who can seat you and when." },
-    stats: [{ k: "Group", v: "Any size" }, { k: "Booking", v: "Direct" }, { k: "Timing", v: "Planned" }, { k: "Support", v: "24/7" }],
-    plan: [{ label: "Night", h: "Dinner into the party.", points: ["Reservation", "Transport", "Table after"], image: img.chef }],
-    tiles: handledTiles, faqs: [], ctaLabel: "Book the dinner",
-    title: "Tulum Group Restaurant Reservations | Connected Tulum",
-    description: "Group restaurant reservations in Tulum, timed around your night out.",
-  },
-  {
-    kind: "landing", slug: "tulum-bachelorette-nightlife", eyebrow: "Tulum · Nightlife · VIP",
-    h1a: "Tables at the places", h1b: "that say they're full.",
-    lead: "Tulum after dark: festivals, beach parties and late-night spots with VIP tables held for you.",
-    image: img.festival,
-    problem: { h: "The best nights don't take walk-ins.", p: "We hold the table, you bring the energy." },
-    stats: [{ k: "Venues", v: "10+" }, { k: "Season", v: "High" }, { k: "Booking", v: "Direct" }, { k: "Support", v: "24/7" }],
-    plan: [{ label: "Night", h: "The full night.", points: ["Pre-party at the villa", "VIP table", "Driver home"], image: img.party }],
-    tiles: handledTiles, faqs: [], ctaLabel: "Get the table",
-    title: "Tulum Nightlife & VIP Tables | Connected Tulum",
-    description: "Tulum nightlife, VIP tables and festival access for groups and bachelorettes.",
+    tiles: handledTiles, faqs: [], ctaLabel: "Reserve a table",
+    title: "Tulum Restaurant & Beach Club Reservations | Connected Tulum",
+    description: "Group reservations and VIP tables at Tulum beach clubs and restaurants: Papaya Playa, Gitano, Vagalume, Mia, Ahau.",
   },
 ];
 
 export const footerPlan = [
-  { label: "Tulum Concierge", to: "/tulum-concierge" },
   { label: "High Season 2027", to: "/tulum-festival-season" },
   { label: "NYE 2027", to: "/nye-2027" },
-  { label: "Bachelor Party", to: "/tulum-bachelor-party" },
-  { label: "Bachelorette Trips", to: "/tulum-bachelorette-party" },
-  { label: "Beach Clubs", to: "/tulum-group-beach-clubs" },
-  { label: "Restaurant Reservations", to: "/tulum-group-restaurant-reservations" },
-  { label: "Nightlife", to: "/tulum-bachelorette-nightlife" },
+  { label: "Zamna Tulum", to: "/zamna-tulum" },
+  { label: "Tehmplo Tulum", to: "/tehmplo-tulum" },
+  { label: "Day Zero", to: "/day-zero-tulum" },
 ];
 
 export const footerExplore = [
   { label: "Villas", to: "/villas" },
-  { label: "Yachts & Catamarans", to: "/boats" },
-  { label: "Zamna Tulum", to: "/zamna-tulum" },
-  { label: "Tehmplo Tulum", to: "/tehmplo-tulum" },
-  { label: "Day Zero", to: "/day-zero-tulum" },
-  { label: "Transportation", to: "/transportation" },
-  { label: "Private Chef", to: "/chef" },
-  { label: "Spa & Wellness", to: "/wellness" },
-  { label: "DJ Services", to: "/dj" },
-  { label: "Photo & Video", to: "/content-creation" },
+  { label: "Ground Transportation", to: "/transportation" },
   { label: "Private Events", to: "/private-events" },
-  { label: "Personal Shopper", to: "/personal-shopper" },
-  { label: "Adventure", to: "/adventure" },
+  { label: "Restaurants & Beach Clubs", to: "/tulum-group-beach-clubs" },
+  { label: "Yachts & Catamarans", to: "/boats" },
 ];

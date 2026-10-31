@@ -17,7 +17,7 @@ export const Route = createFileRoute("/contact")({
 
 const NYE = ["NYE @ Ahau", "NYE @ Papaya Playa Project", "NYE @ Nomade", "NYE @ Gitano Beach & Jungle", "Renaissance @ Zamna", "Not sure yet"];
 const TABLES = ["Zamna", "Tehmplo", "Day Zero", "Papaya Playa", "Nomade"];
-const NEEDS = ["Villa", "Transportation", "VIP tables", "Yacht / catamaran", "Private chef", "Spa & wellness", "DJ", "Photo & video", "Private event", "Bachelor / bachelorette"];
+const NEEDS = ["Event tickets", "VIP tables", "Villa", "Ground transportation", "Restaurants & beach clubs", "Yacht / catamaran", "Private event"];
 
 type ListKey = "nye" | "tables" | "needs";
 type F = { name: string; method: string; phone: string; email: string; dates: string; group: string; nye: string[]; tables: string[]; needs: string[]; notes: string };
@@ -65,7 +65,7 @@ function Contact() {
       <section className="page-head wrap contact">
         <a href={u("/")} className="back mono">← Back to home</a>
         <h1 className="h1">Plan your Tulum trip, <em className="accent">connected</em>.</h1>
-        <p className="sub">A free call to map out villas, transport, tables, festivals, boats and anything else. Answer a few quick questions so we can fast track it.</p>
+        <p className="sub">A free call to map out tickets, VIP tables, villas, transport and the rest of your trip. Answer a few quick questions so we can fast track it.</p>
 
         <div className="cform">
           <ol className="cform__steps mono" aria-label="Progress">
