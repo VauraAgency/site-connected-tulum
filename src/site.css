@@ -654,7 +654,7 @@ a:hover .arr, button:hover .arr { transform: translateX(4px); }
 
 /* hero trust row: keep on one line on phones */
 @media (max-width: 600px) {
-  .hero .hero__trust { flex-wrap: nowrap; gap: 0 12px; font-size: 10px; letter-spacing: .06em; white-space: nowrap; }
+  .hero .hero__trust { flex-wrap: nowrap; justify-content: center; gap: 0 12px; font-size: 10px; letter-spacing: .06em; white-space: nowrap; }
   .hero__trust li::before { content: "\25CF\00a0"; font-size: 8px; }
 }
 @media (max-width: 380px) { .hero .hero__trust { gap: 0 9px; font-size: 9.5px; letter-spacing: .03em; } }
