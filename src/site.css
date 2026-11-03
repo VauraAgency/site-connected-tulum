@@ -559,8 +559,8 @@ a:hover .arr, button:hover .arr { transform: translateX(4px); }
    DARK DESIGN (reference-style): everything keys off .ct
    ===================================================================== */
 :where(html):where(html).theme-dark .ct { --bg: #050a08; --paper: #0b1511; --ink: #eef3ec; --ink-2: #cdd5cc; --muted: #8c978f; --line: rgba(255,255,255,.1); --black: #030605; --g-deep: #10f04a; --grad-deep: var(--grad); --f-display: "Syne", "Inter Tight", system-ui, sans-serif; }
-:where(html).theme-dark .h1, :where(html).theme-dark .h2, :where(html).theme-dark .hero__h, :where(html).theme-dark .fhero .h1 { font-weight: 700; letter-spacing: -.02em; }
-:where(html).theme-dark .hero__h { font-weight: 800; }
+:where(html).theme-dark .h1, :where(html).theme-dark .h2, :where(html).theme-dark .fhero .h1 { font-weight: 700; letter-spacing: -.02em; }
+:where(html).theme-dark .hero__h { font-family: "Inter Tight", "Inter", system-ui, sans-serif; font-weight: 600; letter-spacing: -.04em; }
 :where(html).theme-dark .hdr { background: rgba(5,10,8,.82); }
 :where(html).theme-dark .hdr--overlay { background: transparent; }
 :where(html).theme-dark .hdr--open { background: var(--bg); }
