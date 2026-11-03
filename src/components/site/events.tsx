@@ -83,12 +83,29 @@ export function Prices({ e }: { e: TEvent }) {
 export function NightCard({ e }: { e: TEvent }) {
   const d = fmtDate(e.date);
   const name = evName(e);
+  const [big, setBig] = useState(false);
+  useEffect(() => {
+    if (!big) return;
+    const k = (ev: KeyboardEvent) => { if (ev.key === "Escape") setBig(false); };
+    window.addEventListener("keydown", k);
+    return () => window.removeEventListener("keydown", k);
+  }, [big]);
   return (
     <article className="ev" data-rise>
-      <div className="ev__flyer">
-        {e.flyer ? <img src={e.flyer} alt={`${name} flyer`} loading="lazy" width={800} height={1000} /> : <Poster e={e} />}
-        {e.flyer && <span className="ev__date"><b>{d.day}</b><span>{d.mon}</span></span>}
+      <div className={`ev__flyer ${e.flyer ? "ev__flyer--img" : ""}`}>
+        {e.flyer ? (
+          <button type="button" className="ev__zoom" onClick={() => setBig(true)} aria-label={`View ${name} flyer larger`}>
+            <img className="ev__blur" src={e.flyer} alt="" aria-hidden="true" loading="lazy" width={400} height={500} />
+            <img className="ev__img" src={e.flyer} alt={`${name} flyer`} loading="lazy" width={800} height={1000} />
+          </button>
+        ) : <Poster e={e} />}
       </div>
+      {big && e.flyer && (
+        <div className="lbx" role="dialog" aria-modal="true" aria-label={`${name} flyer`} onClick={() => setBig(false)}>
+          <img src={e.flyer} alt={`${name} flyer`} />
+          <button type="button" className="lbx__x" aria-label="Close" onClick={() => setBig(false)}>&times;</button>
+        </div>
+      )}
       <div className="ev__b">
         <p className="mono">{d.wk} · {e.venue}{e.time ? ` · ${e.time}` : ""}</p>
         <h3>{name}</h3>
