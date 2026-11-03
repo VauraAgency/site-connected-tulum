@@ -49,7 +49,7 @@ body.ct {
 a:hover .arr, button:hover .arr { transform: translateX(4px); }
 
 /* ---------- type */
-.accent { font-family: var(--f-serif); font-style: italic; font-weight: 400; letter-spacing: -.005em; background: var(--grad-deep); -webkit-background-clip: text; background-clip: text; color: transparent; padding-right: .06em; }
+.accent { font-family: var(--f-serif); font-style: italic; font-weight: 400; letter-spacing: -.005em; background: var(--grad-deep); -webkit-background-clip: text; background-clip: text; color: transparent; padding: 0 .1em .18em 0; }
 .sec--dark .accent, .closing .accent, .hero .accent, .fhero .accent, .h1--light .accent, .h2--light .accent { background: var(--grad); -webkit-background-clip: text; background-clip: text; }
 .h1 { font-family: var(--f-display); font-weight: 600; font-size: clamp(38px, 6.4vw, 76px); line-height: 1.02; letter-spacing: -.035em; }
 .h1 .accent { font-size: 1.08em; }
@@ -224,7 +224,7 @@ a:hover .arr, button:hover .arr { transform: translateX(4px); }
 /* ---------- how */
 .how { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-top: 48px; }
 .how li, .guide__c { padding: 26px; border-radius: var(--r); background: var(--paper); border: 1px solid var(--line); }
-.how__n { font-family: var(--f-serif); font-style: italic; font-size: 42px; line-height: 1; background: var(--grad-deep); -webkit-background-clip: text; background-clip: text; color: transparent; }
+.how__n { font-family: var(--f-serif); font-style: italic; font-size: 42px; line-height: 1.2; padding-bottom: .12em; background: var(--grad-deep); -webkit-background-clip: text; background-clip: text; color: transparent; }
 .how h3, .guide__c h3 { font-family: var(--f-display); font-size: 20px; margin: 18px 0 6px; letter-spacing: -.015em; }
 .how p, .guide__c p { color: var(--muted); font-size: 14.5px; }
 .ct .how, .ct .guide { margin-top: 44px; }
@@ -493,7 +493,7 @@ a:hover .arr, button:hover .arr { transform: translateX(4px); }
 .ev__ph::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(3,6,5,.2), rgba(3,6,5,.0) 30%, rgba(3,6,5,.85)); }
 .ev .ev__ph-in { position: absolute; z-index: 1; left: 18px; right: 18px; bottom: 18px; display: flex; flex-direction: column; gap: 8px; }
 .ev .ev__ph-d { font-family: var(--f-display); font-weight: 800; font-size: clamp(44px, 5vw, 60px); line-height: .9; color: #fff; letter-spacing: -.02em; }
-.ev .ev__ph-t { position: static; font-size: 24px; line-height: 1.08; padding-bottom: 2px; }
+.ev .ev__ph-t { position: static; font-size: 24px; line-height: 1.22; padding: 0 .08em .16em 0; }
 .ev .ev__ph-v { color: rgba(255,255,255,.7); }
 
 /* villa strip */
@@ -660,10 +660,11 @@ a:hover .arr, button:hover .arr { transform: translateX(4px); }
 }
 @media (max-width: 380px) { .hero .hero__trust { gap: 0 9px; font-size: 9.5px; letter-spacing: .03em; } }
 
-/* real flyers: whole flyer visible (any aspect ratio) over a blurred copy, tap to enlarge */
-.ev__zoom { position: absolute; inset: 0; width: 100%; padding: 0; border: 0; background: #000; cursor: zoom-in; display: block; }
-.ev__zoom .ev__blur { position: absolute; inset: -8%; width: 116%; height: 116%; object-fit: cover; filter: blur(22px) brightness(.55); }
-.ev__zoom .ev__img { position: relative; width: 100%; height: 100%; object-fit: contain; }
+/* real flyers: the frame takes the flyer's own shape, so it fills edge to edge with nothing cropped */
+.evgrid { align-items: start; }
+.ev__flyer--img { aspect-ratio: auto; background: transparent; }
+.ev__flyer--img .ev__zoom { position: static; display: block; width: 100%; padding: 0; border: 0; background: none; cursor: zoom-in; line-height: 0; }
+.ev__flyer--img .ev__img { display: block; width: 100%; height: auto; }
 .lbx { position: fixed; inset: 0; z-index: 100; background: rgba(0,0,0,.9); display: flex; align-items: center; justify-content: center; padding: 20px; cursor: zoom-out; }
 .lbx img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 10px; }
 .lbx__x { position: absolute; top: 14px; right: 16px; width: 44px; height: 44px; border-radius: 50%; border: 1px solid rgba(255,255,255,.35); background: rgba(0,0,0,.5); color: #fff; font-size: 28px; line-height: 1; cursor: pointer; }

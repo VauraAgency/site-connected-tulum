@@ -95,8 +95,7 @@ export function NightCard({ e }: { e: TEvent }) {
       <div className={`ev__flyer ${e.flyer ? "ev__flyer--img" : ""}`}>
         {e.flyer ? (
           <button type="button" className="ev__zoom" onClick={() => setBig(true)} aria-label={`View ${name} flyer larger`}>
-            <img className="ev__blur" src={e.flyer} alt="" aria-hidden="true" loading="lazy" width={400} height={500} />
-            <img className="ev__img" src={e.flyer} alt={`${name} flyer`} loading="lazy" width={800} height={1000} />
+            <img className="ev__img" src={e.flyer} alt={`${name} flyer`} loading="lazy" width={900} height={e.flyerH || 1125} style={{ aspectRatio: `900 / ${e.flyerH || 1125}` }} />
           </button>
         ) : <Poster e={e} />}
       </div>

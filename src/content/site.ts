@@ -260,6 +260,7 @@ export type TEvent = {
   priceNote?: string;
   table?: string; // VIP table starting point, shown on the card
   flyer?: string;
+  flyerH?: number; // flyer height when scaled to 900px wide (keeps the frame the flyer's own shape)
   ticketUrl?: string;
   festival?: "zamna" | "tehmplo" | "day-zero";
   tbd?: boolean;
@@ -270,17 +271,17 @@ export type TEvent = {
 
 export const events: TEvent[] = [
   // ---- Dec 31 · New Year's Eve
-  { date: "2026-12-31", title: "NYE Dinner at Casa Malca", venue: "Casa Malca", type: "Dinner only", time: "8:00 PM", desc: "Beachfront dinner experience", flyer: u("/assets/flyers/casa-malca.webp"), ready: true, manual: true, bg: img.villaBeach,
+  { date: "2026-12-31", title: "NYE Dinner at Casa Malca", venue: "Casa Malca", type: "Dinner only", time: "8:00 PM", desc: "Beachfront dinner experience", flyer: u("/assets/flyers/casa-malca.webp"), flyerH: 1740, ready: true, manual: true, bg: img.villaBeach,
     prices: [{ label: "Adult, early", mxn: 4360 }, { label: "Child 6 to 12, early", mxn: 2183 }], priceNote: "Early rate through Dec 21. Regular $6,216 adult / $3,180 child. Includes VAT and service." },
-  { date: "2026-12-31", title: "NYE Dinner + Party at Nomade", venue: "Nomade", type: "Dinner + party", time: "7 PM to 8 AM", desc: "Beachfront dinner experience", flyer: u("/assets/flyers/nomade.webp"), ready: true, bg: img.villaBeach,
+  { date: "2026-12-31", title: "NYE Dinner + Party at Nomade", venue: "Nomade", type: "Dinner + party", time: "7 PM to 8 AM", desc: "Beachfront dinner experience", flyer: u("/assets/flyers/nomade.webp"), flyerH: 1600, ready: true, bg: img.villaBeach,
     prices: [{ label: "Dinner + party", mxn: 9000 }] },
-  { date: "2026-12-31", title: "NYE Party at Nomade", venue: "Nomade", type: "Party only", time: "7 PM to 8 AM", desc: "Beachfront party", flyer: u("/assets/flyers/nomade.webp"), ready: true, bg: img.beachClub,
+  { date: "2026-12-31", title: "NYE Party at Nomade", venue: "Nomade", type: "Party only", time: "7 PM to 8 AM", desc: "Beachfront party", flyer: u("/assets/flyers/nomade.webp"), flyerH: 1600, ready: true, bg: img.beachClub,
     prices: [{ label: "Party, early bird", mxn: 4200 }] },
-  { date: "2026-12-31", title: "Renaissance Tulum NYE", venue: "Zamna Tulum", type: "Festival", time: "10:00 PM", lineup: "Ida Engberg, Maceo Plex, Sasha, Sébastien Léger, Sirsax, Unders, Vhaera", flyer: u("/assets/flyers/renaissance.webp"), ready: true, festival: "zamna", key: true, manual: true, bg: img.festival,
+  { date: "2026-12-31", title: "Renaissance Tulum NYE", venue: "Zamna Tulum", type: "Festival", time: "10:00 PM", lineup: "Ida Engberg, Maceo Plex, Sasha, Sébastien Léger, Sirsax, Unders, Vhaera", flyer: u("/assets/flyers/renaissance.webp"), flyerH: 1600, ready: true, festival: "zamna", key: true, manual: true, bg: img.festival,
     prices: [{ label: "General, early", mxn: 1925 }, { label: "VIP, early", mxn: 4130 }], table: "Tables from $3,200 USD" },
-  { date: "2026-12-31", title: "NYE Dinner + Party at Papaya Playa Project", venue: "Papaya Playa Project", type: "Dinner + party", desc: "Beachfront dinner experience", flyer: u("/assets/flyers/papaya.webp"), ready: true, bg: img.beachClub,
+  { date: "2026-12-31", title: "NYE Dinner + Party at Papaya Playa Project", venue: "Papaya Playa Project", type: "Dinner + party", desc: "Beachfront dinner experience", flyer: u("/assets/flyers/papaya.webp"), flyerH: 1200, ready: true, bg: img.beachClub,
     prices: [{ label: "Dinner + party, early", mxn: 9790 }] },
-  { date: "2026-12-31", title: "NYE Party at Papaya Playa Project", venue: "Papaya Playa Project", type: "Party only", desc: "Beachfront party", flyer: u("/assets/flyers/papaya.webp"), ready: true, bg: img.party,
+  { date: "2026-12-31", title: "NYE Party at Papaya Playa Project", venue: "Papaya Playa Project", type: "Party only", desc: "Beachfront party", flyer: u("/assets/flyers/papaya.webp"), flyerH: 1200, ready: true, bg: img.party,
     prices: [{ label: "Party, early bird", mxn: 4697 }] },
   { date: "2026-12-31", title: "NYE at Ahau", venue: "Ahau Tulum", type: "Party only", tbd: true },
   // ---- January
@@ -288,23 +289,23 @@ export const events: TEvent[] = [
   { date: "2027-01-02", title: "Afrodise", venue: "Ahau Tulum", type: "Festival", time: "TBA", tbd: true },
   { date: "2027-01-02", title: "Por Que No Festival", venue: "Vesica Tulum", type: "Festival", time: "TBA", tbd: true },
   { date: "2027-01-03", title: "Por Que No Festival", venue: "Vesica Tulum", type: "Festival", time: "TBA", tbd: true },
-  { date: "2027-01-03", title: "&ME Tulum", venue: "Ikal Arena", type: "Festival", time: "8:00 PM", desc: "&ME", flyer: u("/assets/flyers/andme.webp"), ready: true, bg: img.party,
+  { date: "2027-01-03", title: "&ME Tulum", venue: "Ikal Arena", type: "Festival", time: "8:00 PM", desc: "&ME", flyer: u("/assets/flyers/andme.webp"), flyerH: 1125, ready: true, bg: img.party,
     prices: [{ label: "General, stage 1", mxn: 2900 }, { label: "Backstage, early bird", mxn: 4800 }] },
   { date: "2027-01-03", title: "Scenarios", venue: "Papaya Playa Project", type: "Festival" },
-  { date: "2027-01-04", title: "Anyma presents ÆDEN: The Lost Temple", venue: "Zamna Tulum", type: "Festival", time: "10:00 PM", lineup: "Anyma, CamelPhat, Cassian, Volkoder and more", flyer: u("/assets/flyers/anyma.webp"), ready: true, festival: "zamna", key: true, manual: true, bg: img.party,
+  { date: "2027-01-04", title: "Anyma presents ÆDEN: The Lost Temple", venue: "Zamna Tulum", type: "Festival", time: "10:00 PM", lineup: "Anyma, CamelPhat, Cassian, Volkoder and more", flyer: u("/assets/flyers/anyma.webp"), flyerH: 1600, ready: true, festival: "zamna", key: true, manual: true, bg: img.party,
     prices: [{ label: "General, phase 1", mxn: 3325 }, { label: "VIP, early", mxn: 7158 }] },
   { date: "2027-01-05", title: "Rafael presents Cheetah Print", venue: "Papaya Playa Project", type: "Festival", desc: "Rafael" },
   { date: "2027-01-05", title: "7 Realms", venue: "Kuul Tulum", type: "Festival", tbd: true },
-  { date: "2027-01-06", title: "Black Coffee at Zamna Tulum", venue: "Zamna Tulum", type: "Festival", time: "10:00 PM", lineup: "Black Coffee", flyer: u("/assets/flyers/black-coffee.webp"), ready: true, festival: "zamna", key: true, manual: true, bg: img.festival,
+  { date: "2027-01-06", title: "Black Coffee at Zamna Tulum", venue: "Zamna Tulum", type: "Festival", time: "10:00 PM", lineup: "Black Coffee", flyer: u("/assets/flyers/black-coffee.webp"), flyerH: 1600, ready: true, festival: "zamna", key: true, manual: true, bg: img.festival,
     prices: [{ label: "General, early", mxn: 2520 }, { label: "VIP, early", mxn: 7158 }] },
-  { date: "2027-01-07", title: "Solomun Tulum at Tehmplo", venue: "Tehmplo", type: "Festival", time: "10:00 PM", lineup: "Solomun", flyer: u("/assets/flyers/solomun.webp"), ready: true, festival: "tehmplo", key: true, bg: img.cenote,
+  { date: "2027-01-07", title: "Solomun Tulum at Tehmplo", venue: "Tehmplo", type: "Festival", time: "10:00 PM", lineup: "Solomun", flyer: u("/assets/flyers/solomun.webp"), flyerH: 1125, ready: true, festival: "tehmplo", key: true, bg: img.cenote,
     table: "Tables from $15,000 USD minimum spend" },
   { date: "2027-01-07", title: "Hugel", venue: "Papaya Playa Project", type: "Festival", desc: "Hugel" },
   { date: "2027-01-08", title: "Adriatique presents X: FOREVER", venue: "Zamna Tulum", type: "Festival", time: "10:00 PM", lineup: "Adriatique, Kotiër, Mind Against, Sama and more", ready: true, festival: "zamna", key: true, manual: true, bg: img.party,
     prices: [{ label: "General, early", mxn: 2520 }, { label: "VIP, early", mxn: 7158 }] },
-  { date: "2027-01-09", title: "Day Zero 2027: Begin Again", venue: "Cenote Dos Ojos", type: "Festival", time: "10:00 PM", lineup: "Several artists", flyer: u("/assets/flyers/day-zero.webp"), ready: true, festival: "day-zero", key: true, manual: true, bg: img.cenote },
+  { date: "2027-01-09", title: "Day Zero 2027: Begin Again", venue: "Cenote Dos Ojos", type: "Festival", time: "10:00 PM", lineup: "Several artists", flyer: u("/assets/flyers/day-zero.webp"), flyerH: 1125, ready: true, festival: "day-zero", key: true, manual: true, bg: img.cenote },
   { date: "2027-01-09", title: "Signature", venue: "Papaya Playa Project", type: "Festival", desc: "Signature" },
-  { date: "2027-01-10", title: "Adam Port, season closing", venue: "Zamna Tulum", type: "Festival", time: "10:00 PM", lineup: "Adam Port", flyer: u("/assets/flyers/adam-port.webp"), ready: true, festival: "zamna", key: true, manual: true, bg: img.festival,
+  { date: "2027-01-10", title: "Adam Port, season closing", venue: "Zamna Tulum", type: "Festival", time: "10:00 PM", lineup: "Adam Port", flyer: u("/assets/flyers/adam-port.webp"), flyerH: 1600, ready: true, festival: "zamna", key: true, manual: true, bg: img.festival,
     prices: [{ label: "General, early", mxn: 1925 }, { label: "VIP, early", mxn: 7158 }] },
   { date: "2027-01-11", title: "Giegling", venue: "Papaya Playa Project", type: "Festival", desc: "Giegling" },
 ];
