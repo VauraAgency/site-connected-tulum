@@ -203,7 +203,7 @@ function Festival({ p }: { p: FestivalPage }) {
             { t: "Restaurants & beach clubs", to: "/tulum-group-beach-clubs", im: img.beachClub },
             { t: "Yachts", to: "/boats", im: img.boat },
           ].map((x) => (
-            <a key={x.t} href={x.to} className="rest__c" data-rise><img src={x.im} alt="" loading="lazy" width={600} height={450} /><span>{x.t} <Arrow /></span></a>
+            <a key={x.t} href={u(x.to)} className="rest__c" data-rise><img src={x.im} alt="" loading="lazy" width={600} height={450} /><span>{x.t} <Arrow /></span></a>
           ))}
         </div>
       </section>
