@@ -1,6 +1,6 @@
 import { u } from "../../lib/url";
 import { Link } from "@tanstack/react-router";
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, Children, type ReactNode } from "react";
 import {
   site, waLink, waTemplate, footerPlan, footerExplore, type IconName,
 } from "../../content/site";
@@ -330,5 +330,63 @@ export function LogoAnim({ loop = false, className = "" }: { loop?: boolean; cla
         <path className="lgo__b" stroke="url(#lgo-g)" d="M386 82 A210 210 0 0 1 173 451 V230 A58 58 0 0 1 289 230 V280" pathLength={1} />
       </g>
     </svg>
+  );
+}
+
+/* ---------------------------------------------------------------- Carousel
+ * House rule for every VAURA build: on phones, any list of cards becomes a swipeable
+ * scroll-snap carousel (dots + optional "View all" link) instead of a long stack.
+ * Desktop/tablet keep whatever grid `className` gives. Wrap lists with this, never stack them on mobile.
+ */
+export function Carousel({
+  className = "", children, viewAllHref, viewAllLabel = "View all", label = "Carousel", as: Tag = "div",
+}: {
+  className?: string; children: ReactNode; viewAllHref?: string; viewAllLabel?: string; label?: string; as?: "div" | "ol" | "ul";
+}) {
+  const ref = useRef<HTMLElement | null>(null);
+  const [on, setOn] = useState(0);
+  const n = Children.count(children);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    let raf = 0;
+    const calc = () => {
+      raf = 0;
+      const kids = Array.from(el.children) as HTMLElement[];
+      if (!kids.length) return;
+      const mid = el.scrollLeft + el.clientWidth / 2;
+      let best = 0, d = Infinity;
+      kids.forEach((k, i) => {
+        const dist = Math.abs(k.offsetLeft + k.offsetWidth / 2 - mid);
+        if (dist < d) { d = dist; best = i; }
+      });
+      setOn(best);
+    };
+    const onScroll = () => { if (!raf) raf = requestAnimationFrame(calc); };
+    el.addEventListener("scroll", onScroll, { passive: true });
+    return () => { el.removeEventListener("scroll", onScroll); if (raf) cancelAnimationFrame(raf); };
+  }, []);
+  const go = (i: number) => {
+    const el = ref.current;
+    const k = el?.children[i] as HTMLElement | undefined;
+    if (el && k) el.scrollTo({ left: k.offsetLeft - (el.clientWidth - k.offsetWidth) / 2, behavior: "smooth" });
+  };
+  const T = Tag as "div";
+  return (
+    <div className="mcar">
+      <T ref={ref as never} className={`mcar__track ${className}`} role="group" aria-roledescription="carousel" aria-label={label} tabIndex={0}>
+        {children}
+      </T>
+      <div className="mcar__ui" aria-hidden={n < 2 ? "true" : undefined}>
+        {n > 1 && (
+          <div className="mcar__dots" role="tablist" aria-label={`${label} position`}>
+            {Array.from({ length: n }, (_, i) => (
+              <button key={i} type="button" role="tab" aria-selected={i === on} aria-label={`Go to item ${i + 1}`} className={i === on ? "on" : ""} onClick={() => go(i)} />
+            ))}
+          </div>
+        )}
+        {viewAllHref && <a className="cta-pill mcar__all" href={viewAllHref}>{viewAllLabel} <Arrow /></a>}
+      </div>
+    </div>
   );
 }

@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import {
   site, img, services, readyEvents, marquee, team, reviews, faqs, steps, waLink, waTemplate,
 } from "../content/site";
-import { Shell, Eyebrow, H2, Icon, Arrow, ClosingCTA, Faq, WaGlyph, LogoAnim, useReveal } from "../components/site/ui";
+import { Shell, Eyebrow, H2, Icon, Arrow, ClosingCTA, Faq, WaGlyph, LogoAnim, Carousel, useReveal } from "../components/site/ui";
 import { SeasonScroller, Calendar, NightCard, useToday, daysUntil } from "../components/site/events";
 
 export const Route = createFileRoute("/")({
@@ -106,7 +106,7 @@ function Nights() {
         <a href={u("/tulum-festival-season")} className="cta-pill">All nights <Arrow /></a>
       </div>
       <p className="sub">Tap a flyer's Get tickets for the ticket link. Want a table or VIP? Inquire and we reply on WhatsApp.</p>
-      <div className="evgrid evgrid--8">{list.map((e, i) => <NightCard key={i} e={e} />)}</div>
+      <Carousel className="evgrid evgrid--8" label="Upcoming nights" viewAllHref={u("/tulum-festival-season")} viewAllLabel="View all nights">{list.map((e, i) => <NightCard key={i} e={e} />)}</Carousel>
     </section>
   );
 }
@@ -117,7 +117,7 @@ function Services() {
       <Eyebrow>Around the nights</Eyebrow>
       <div id="svc-h"><H2 a="Everything else" b="in one message" /></div>
       <p className="sub">Rides, dinners, beach days and boats, lined up around the events you pick.</p>
-      <div className="svc">
+      <Carousel className="svc" label="Services">
         {services.map((s, i) => (
           <a key={s.slug} href={u(`/${s.slug}`)} className={`svc__c ${i % 3 === 0 ? "svc__c--up" : ""}`} data-rise>
             <span className="mono svc__k">{s.num} / {s.kicker}</span>
@@ -127,22 +127,22 @@ function Services() {
             <span className="svc__go">{s.cardCta} <Arrow /></span>
           </a>
         ))}
-      </div>
+      </Carousel>
     </section>
   );
 }
 
 function VillaStrip() {
-  const href = site.villaAffiliateUrl || u("/villas");
+  const href = u("/villas");
   return (
     <section id="villas" className="sec wrap" aria-labelledby="vs-h">
       <div className="vstrip">
         <img src={img.villaJungle} alt="" loading="lazy" width={1200} height={800} />
         <div className="vstrip__t">
-          <Eyebrow>Villa partner · {site.villaPartner}</Eyebrow>
+          <Eyebrow>Villas</Eyebrow>
           <div id="vs-h"><H2 a="Stay close" b="to the nights" /></div>
-          <p className="sub">Browse private villas for the season with {site.villaPartner}. We'll line up tickets, tables and rides around your dates.</p>
-          <a className="cta-hero" href={href} {...(site.villaAffiliateUrl ? { target: "_blank", rel: "noopener sponsored" } : {})}>Browse villas <Arrow /></a>
+          <p className="sub">Browse private villas for the season. We'll line up tickets, tables and rides around your dates.</p>
+          <a className="cta-hero" href={href}>Browse villas <Arrow /></a>
         </div>
       </div>
     </section>
@@ -173,11 +173,11 @@ function Reviews() {
     <section id="testimonials" className="sec wrap" aria-labelledby="rev-h">
       <Eyebrow>Reviews</Eyebrow>
       <div id="rev-h"><H2 a="What our guests" b="say" /></div>
-      <div className="rev">
+      <Carousel className="rev" label="Reviews">
         {reviews.map((r) => (
           <figure key={r.name + r.quote.slice(0, 10)} className="rev__c"><blockquote>{r.quote}</blockquote><figcaption>{r.name}{r.source ? ` · ${r.source}` : ""}</figcaption></figure>
         ))}
-      </div>
+      </Carousel>
     </section>
   );
 }
@@ -187,11 +187,11 @@ function How() {
     <section className="sec wrap" aria-labelledby="how-h">
       <Eyebrow>How it works</Eyebrow>
       <div id="how-h"><H2 a="From first message" b="to first night" /></div>
-      <ol className="how">
+      <Carousel as="ol" className="how" label="How it works">
         {steps.map((s, i) => (
           <li key={s.t} data-rise><span className="how__n">0{i + 1}</span><h3>{s.t}</h3><p>{s.d}</p></li>
         ))}
-      </ol>
+      </Carousel>
       <div className="how__cta">
         <p>Want it all mapped out? Get a plan for your nights, rides and tables.</p>
         <a className="cta-hero" href={u("/contact")}>Get my schedule <Arrow /></a>

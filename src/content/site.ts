@@ -28,9 +28,7 @@ export const site = {
     facebook: "https://www.facebook.com/share/18M4RjEqWz/",
   },
   callHours: "Every day · Tulum time (EST, UTC−5)",
-  // Beach Please villas. Currently their website; swap for Hector's special affiliate URL when he gets it. Empty = villa buttons go to WhatsApp.
-  villaAffiliateUrl: "https://beachpleasetulum.com",
-  villaPartner: "Beach Please",
+  // Villas are presented as Connected's own collection. Never link out to or name the sourcing partner on the public site.
   // PENDING: promoter / affiliate ticket links per festival. Empty = "Get tickets" opens a WhatsApp request instead.
   promoterUrls: { zamna: "", tehmplo: "", "day-zero": "", other: "" } as Record<string, string>,
   // Transport: client price = our cost + this markup (30%). Transport items use withMarkup(cost in MXN).
@@ -362,7 +360,7 @@ export const faqs = [
   { q: "How far in advance should we book?", a: "As early as you can. High season (late December into January) is when Zamna, Tehmplo, Day Zero and the beach clubs sell out first." },
   { q: "How do I get tickets?", a: "Tap Get tickets on any night. Where there is a ticket link it takes you straight there. Zamna tickets are handled by us directly: send the request and we confirm on WhatsApp." },
   { q: "Can I get a VIP table?", a: "Yes. Tap Inquire about a table on the night you want, tell us the group size, and we check availability and send options." },
-  { q: "What else can Connected handle?", a: "Ground transportation, private events, restaurant and beach club reservations, and yachts. Villas run through our partner Beach Please." },
+  { q: "What else can Connected handle?", a: "Ground transportation, private events, restaurant and beach club reservations, and yachts. Villas are part of our own collection." },
   { q: "How do we start?", a: "Pick a night and message us on WhatsApp, or book a quick call. We reply with ticket links, table options and a plan." },
 ];
 

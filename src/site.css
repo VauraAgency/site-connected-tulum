@@ -674,3 +674,26 @@ a:hover .arr, button:hover .arr { transform: translateX(4px); }
 .evgrid--8 { grid-template-columns: repeat(4, 1fr); }
 @media (max-width: 1000px) { .evgrid--8 { grid-template-columns: repeat(2, 1fr); gap: 12px; } }
 @media (max-width: 640px) { .evgrid--8 { grid-template-columns: 1fr; } }
+
+/* ---------- mobile carousel (house rule: card lists swipe on phones, never stack) */
+.mcar__ui { display: none; }
+@media (max-width: 760px) {
+  .mcar { margin-inline: -16px; }
+  .mcar__track {
+    display: flex !important; flex-wrap: nowrap; gap: 12px; margin-top: 28px;
+    overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory;
+    padding: 4px 16px 10px; scroll-padding-inline: 16px;
+    -webkit-overflow-scrolling: touch; scrollbar-width: none; align-items: stretch;
+  }
+  .mcar__track::-webkit-scrollbar { display: none; }
+  .mcar__track > * {
+    flex: 0 0 84%; max-width: 84%; min-width: 0; scroll-snap-align: center;
+    margin-top: 0 !important; transform: none !important; opacity: 1 !important;
+  }
+  .mcar__track.evgrid, .mcar__track.evgrid--8 { align-items: stretch; }
+  .mcar__ui { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 6px 16px 0; }
+  .mcar__dots { display: flex; gap: 7px; flex-wrap: wrap; }
+  .mcar__dots button { width: 8px; height: 8px; padding: 0; border: 0; border-radius: 99px; background: var(--line); cursor: pointer; transition: width .3s var(--ease), background .3s; }
+  .mcar__dots button.on { width: 22px; background: var(--g-green); }
+  .mcar__all { margin-left: auto; white-space: nowrap; }
+}

@@ -4,7 +4,7 @@ import {
   site, events, festivalPages, landingPages, serviceBySlug, services, villas, fmtDate, waLink, waTemplate, img,
   type Service, type FestivalPage, type LandingPage, type TEvent,
 } from "../content/site";
-import { Shell, Eyebrow, H2, Arrow, ClosingCTA, Faq, WaGlyph, Icon, useReveal } from "../components/site/ui";
+import { Shell, Eyebrow, H2, Arrow, ClosingCTA, Faq, WaGlyph, Icon, Carousel, useReveal } from "../components/site/ui";
 import { NightCard, Calendar } from "../components/site/events";
 
 type Resolved =
@@ -65,7 +65,7 @@ function RestOfTrip({ skip }: { skip: string }) {
   return (
     <section className="sec wrap" aria-label="Plan the rest of the trip">
       <Eyebrow>Plan the rest of the trip</Eyebrow>
-      <div className="rest">
+      <Carousel className="rest" label="More services">
         {list.map((s) => (
           <a key={s.slug} href={u(`/${s.slug}`)} className="rest__c" data-rise>
             <img src={s.image} alt="" loading="lazy" width={600} height={450} />
@@ -76,7 +76,7 @@ function RestOfTrip({ skip }: { skip: string }) {
           <img src={img.villaJungle} alt="" loading="lazy" width={600} height={450} />
           <span><Icon name="home" size={16} /> Villas</span>
         </a>
-      </div>
+      </Carousel>
     </section>
   );
 }
@@ -101,7 +101,7 @@ function ServicePage({ s }: { s: Service }) {
 
       <section className="sec sec--tight wrap">
         <H2 a="Choose your" b={s.title.toLowerCase()} />
-        <div className="items">
+        <Carousel className="items" label="Options">
           {s.items.map((it) => (
             <article key={it.name} className="item" data-rise>
               {it.badge && <span className="item__badge mono">{it.badge}</span>}
@@ -113,7 +113,7 @@ function ServicePage({ s }: { s: Service }) {
               </a>
             </article>
           ))}
-        </div>
+        </Carousel>
         {s.included.length > 0 && (
           <div className="incl"><span className="mono">Always included</span><p>{s.included.join(" · ")}</p></div>
         )}
@@ -171,7 +171,7 @@ function Festival({ p }: { p: FestivalPage }) {
       <section id="nights" className="sec sec--tight wrap">
         <Eyebrow>Announced nights</Eyebrow>
         <H2 a="Get tickets." b="Or a table" />
-        <div className="evgrid">{list.map((e, i) => <NightCard key={i} e={e} />)}</div>
+        <Carousel className="evgrid" label="Announced nights" viewAllHref={u("/tulum-festival-season")} viewAllLabel="View all nights">{list.map((e, i) => <NightCard key={i} e={e} />)}</Carousel>
         {soon.length > 0 && (
           <div className="soon">
             <p className="mono">Details coming soon</p>
@@ -188,15 +188,15 @@ function Festival({ p }: { p: FestivalPage }) {
 
       <section className="sec wrap">
         <Eyebrow>Field guide</Eyebrow>
-        <div className="guide">
+        <Carousel className="guide" label="Field guide">
           {p.guide.map((g, i) => <div key={g.t} className="guide__c" data-rise><span className="how__n">0{i + 1}</span><h3>{g.t}</h3><p>{g.d}</p></div>)}
-        </div>
+        </Carousel>
       </section>
 
       <section className="sec wrap">
         <Eyebrow>Beyond the table</Eyebrow>
         <H2 a="Stay, ride," b="and dine" />
-        <div className="rest">
+        <Carousel className="rest" label="Beyond the table">
           {[
             { t: "Villas", to: "/villas", im: villas[0].images[0] },
             { t: "Transport", to: "/transportation", im: img.transport },
@@ -205,7 +205,7 @@ function Festival({ p }: { p: FestivalPage }) {
           ].map((x) => (
             <a key={x.t} href={u(x.to)} className="rest__c" data-rise><img src={x.im} alt="" loading="lazy" width={600} height={450} /><span>{x.t} <Arrow /></span></a>
           ))}
-        </div>
+        </Carousel>
       </section>
 
       {p.faqs.length > 0 && (
@@ -261,14 +261,14 @@ function Landing({ p }: { p: LandingPage }) {
 
       <section className="sec wrap">
         <Eyebrow>The stay</Eyebrow>
-        <div className="stay">
+        <Carousel className="stay" label="Villas">
           {villas.slice(0, 3).map((v) => (
             <a key={v.slug} href={u(`/villas/${v.slug}`)} className="stay__c" data-rise>
               <img src={v.images[0]} alt={v.name} loading="lazy" width={800} height={600} />
               <b>{v.name}</b><span>{v.area} · {v.guests ? `Up to ${v.guests}` : "Capacity on request"}</span>
             </a>
           ))}
-        </div>
+        </Carousel>
       </section>
 
       <section className="sec sec--dark">
