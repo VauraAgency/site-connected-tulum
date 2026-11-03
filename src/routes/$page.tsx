@@ -88,7 +88,7 @@ function ServicePage({ s }: { s: Service }) {
       <section className="page-head wrap svcp">
         <div>
           <nav className="crumbs mono" aria-label="Breadcrumb"><a href={u("/")}>Connected</a> / {s.title}</nav>
-          <h1 className="h1">{s.h1} <em className="accent">({s.items.length})</em></h1>
+          <h1 className="h1">{s.h1}</h1>
           <p className="sub">{s.short}</p>
           {s.included.length > 0 && <p className="mono svcp__inc">{s.included.join(" · ")}</p>}
           <p className="sub">{s.intro}</p>
@@ -155,21 +155,21 @@ function Festival({ p }: { p: FestivalPage }) {
       </section>
 
       <section className="sec wrap">
-        <Eyebrow>01 · The season</Eyebrow>
+        <Eyebrow>The season</Eyebrow>
         <H2 a="How it works." b="Choose the night" />
         <dl className="facts">{p.facts.map((f) => <div key={f.k}><dt className="mono">{f.k}</dt><dd>{f.v}</dd></div>)}</dl>
       </section>
 
       {p.slug === "tulum-festival-season" && (
         <section id="calendar" className="sec sec--tight wrap">
-          <Eyebrow>02 · Season calendar</Eyebrow>
+          <Eyebrow>Season calendar</Eyebrow>
           <H2 a="The calendar." b="Today is highlighted" />
           <Calendar />
         </section>
       )}
 
       <section id="nights" className="sec sec--tight wrap">
-        <Eyebrow>{p.slug === "tulum-festival-season" ? "03" : "02"} · Announced nights</Eyebrow>
+        <Eyebrow>Announced nights</Eyebrow>
         <H2 a="Get tickets." b="Or a table" />
         <div className="evgrid">{list.map((e, i) => <NightCard key={i} e={e} />)}</div>
         {soon.length > 0 && (
@@ -187,14 +187,14 @@ function Festival({ p }: { p: FestivalPage }) {
       </section>
 
       <section className="sec wrap">
-        <Eyebrow>03 · Field guide</Eyebrow>
+        <Eyebrow>Field guide</Eyebrow>
         <div className="guide">
           {p.guide.map((g, i) => <div key={g.t} className="guide__c" data-rise><span className="how__n">0{i + 1}</span><h3>{g.t}</h3><p>{g.d}</p></div>)}
         </div>
       </section>
 
       <section className="sec wrap">
-        <Eyebrow>04 · Beyond the table</Eyebrow>
+        <Eyebrow>Beyond the table</Eyebrow>
         <H2 a="Stay, ride," b="and dine" />
         <div className="rest">
           {[
@@ -210,7 +210,7 @@ function Festival({ p }: { p: FestivalPage }) {
 
       {p.faqs.length > 0 && (
         <section className="sec wrap">
-          <Eyebrow>05 · Direct answers</Eyebrow>
+          <Eyebrow>Direct answers</Eyebrow>
           <Faq items={p.faqs} />
         </section>
       )}
@@ -238,14 +238,14 @@ function Landing({ p }: { p: LandingPage }) {
       </section>
 
       <section className="sec wrap">
-        <Eyebrow>01 · The brief</Eyebrow>
+        <Eyebrow>The brief</Eyebrow>
         <h2 className="h2">{p.problem.h}</h2>
         <p className="sub">{p.problem.p}</p>
         <dl className="facts">{p.stats.map((f) => <div key={f.k}><dt className="mono">{f.k}</dt><dd>{f.v}</dd></div>)}</dl>
       </section>
 
       <section id="plan" className="sec wrap">
-        <Eyebrow>02 · The plan</Eyebrow>
+        <Eyebrow>The plan</Eyebrow>
         <H2 a="Every day." b="No dead time" />
         <div className="days">
           {p.plan.map((d) => (
@@ -260,7 +260,7 @@ function Landing({ p }: { p: LandingPage }) {
       </section>
 
       <section className="sec wrap">
-        <Eyebrow>03 · The stay</Eyebrow>
+        <Eyebrow>The stay</Eyebrow>
         <div className="stay">
           {villas.slice(0, 3).map((v) => (
             <a key={v.slug} href={u(`/villas/${v.slug}`)} className="stay__c" data-rise>
@@ -273,14 +273,14 @@ function Landing({ p }: { p: LandingPage }) {
 
       <section className="sec sec--dark">
         <div className="wrap">
-          <Eyebrow>04 · Everything handled</Eyebrow>
+          <Eyebrow>Everything handled</Eyebrow>
           <div className="tiles">{p.tiles.map((t) => <div key={t.h} className="tile"><h3>{t.h}</h3><p>{t.p}</p></div>)}</div>
         </div>
       </section>
 
       {p.faqs.length > 0 && (
         <section className="sec wrap">
-          <Eyebrow>05 · Direct answers</Eyebrow>
+          <Eyebrow>Direct answers</Eyebrow>
           <Faq items={p.faqs} />
         </section>
       )}
