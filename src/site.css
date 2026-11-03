@@ -697,3 +697,11 @@ a:hover .arr, button:hover .arr { transform: translateX(4px); }
   .mcar__dots button.on { width: 22px; background: var(--g-green); }
   .mcar__all { margin-left: auto; white-space: nowrap; }
 }
+
+/* villa gallery: mixed portrait/landscape photos */
+.gal img { background: var(--line); }
+.gal img:not(.gal__main) { aspect-ratio: auto; }
+@media (max-width: 760px) { .gal { grid-auto-rows: 240px; } }
+
+/* villa style tag sits on photos: keep it solid so it reads in both themes */
+.vcard__tag, :where(html).theme-dark .vcard__tag { background: rgba(6,10,8,.88); color: var(--g-green); backdrop-filter: blur(6px); }

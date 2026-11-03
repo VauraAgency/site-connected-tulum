@@ -2,7 +2,7 @@ import { u } from "../lib/url";
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef } from "react";
 import {
-  site, img, services, readyEvents, marquee, team, reviews, faqs, steps, waLink, waTemplate,
+  site, img, services, villas, readyEvents, marquee, team, reviews, faqs, steps, waLink, waTemplate,
 } from "../content/site";
 import { Shell, Eyebrow, H2, Icon, Arrow, ClosingCTA, Faq, WaGlyph, LogoAnim, Carousel, useReveal } from "../components/site/ui";
 import { SeasonScroller, Calendar, NightCard, useToday, daysUntil } from "../components/site/events";
@@ -137,7 +137,7 @@ function VillaStrip() {
   return (
     <section id="villas" className="sec wrap" aria-labelledby="vs-h">
       <div className="vstrip">
-        <img src={img.villaJungle} alt="" loading="lazy" width={1200} height={800} />
+        <img src={villas.find((v) => v.slug === "kune-201")!.images[0]} alt="" loading="lazy" width={1200} height={800} />
         <div className="vstrip__t">
           <Eyebrow>Villas</Eyebrow>
           <div id="vs-h"><H2 a="Stay close" b="to the nights" /></div>

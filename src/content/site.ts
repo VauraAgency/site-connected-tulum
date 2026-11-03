@@ -62,8 +62,8 @@ export const img = {
 };
 
 /* ------------------------------------------------------------------ VILLAS
- * Hector: start with 1 villa, expand from there.
- * Replace the placeholder entries below with real villas (name, guests, photos, amenities).
+ * Presented as Connected's own collection. Rates are "on request": never show or link to the sourcing company.
+ * Photos live in /public/assets/villas/<slug>-<n>.webp (resized, 1600px max).
  */
 export type Villa = {
   slug: string;
@@ -77,57 +77,168 @@ export type Villa = {
   overview: string[];
   amenities: string[];
   images: string[];
-  bookingUrl?: string; // optional outbound booking / affiliate link
-  owned?: boolean; // true = Connected manages it directly
+  bookingUrl?: string; // optional outbound booking link (leave empty: booking goes through WhatsApp)
+  owned?: boolean;
   placeholder?: boolean;
 };
 
 export const villas: Villa[] = [
   {
-    slug: "signature-villa",
-    name: "Signature Villa",
-    area: "Tulum · Jungle",
-    style: "Jungle retreat",
-    guests: null,
-    bedrooms: null,
-    bathrooms: null,
-    hook: "Our flagship stay. Details dropping soon.",
+    slug: "casa-isla",
+    name: "Casa Isla",
+    area: "Tulum · Region 8",
+    style: "Jungle architecture",
+    guests: 14,
+    bedrooms: 7,
+    bathrooms: 6,
+    hook: "Seven bedrooms of concrete, jungle and a private pool.",
     overview: [
-      "A private jungle home base for groups who want the whole of Tulum on call: tables, boats, chefs and festival nights, planned around the villa.",
-      "Full photo gallery, capacity and amenities are being finalized. Message us for availability and the direct rate.",
+      "A seven bedroom home of about 1,287 m² built from concrete and jungle, five minutes from the beach zone and fifteen from downtown Tulum.",
+      "Private pool and gardens, living and dining spaces that open to the water, and a concierge who can set up a private chef, mixology, airport transfers and decor for the occasion.",
     ],
-    amenities: ["Private pool", "Chef on call", "In-villa wellness", "DJ setup on request", "24/7 concierge"],
-    images: [img.villaJungle, img.party, img.chef],
-    owned: true,
-    placeholder: true,
+    amenities: ["Private pool and gardens", "Daily housekeeping", "Private chef on request", "Cocktail and mixology experiences", "Private airport transfers", "Bikes and golf arranged by concierge", "Special occasion decor"],
+    images: [
+      u("/assets/villas/casa-isla-5.webp"),
+      u("/assets/villas/casa-isla-1.webp"),
+      u("/assets/villas/casa-isla-2.webp"),
+      u("/assets/villas/casa-isla-3.webp"),
+      u("/assets/villas/casa-isla-4.webp"),
+    ],
   },
   {
-    slug: "villa-two",
-    name: "Villa Two",
-    area: "Tulum · Aldea Zamá",
-    style: "Modern",
-    guests: null,
-    bedrooms: null,
-    bathrooms: null,
-    hook: "Coming soon to the collection.",
-    overview: ["Details, photos and capacity coming soon. Ask us for availability."],
-    amenities: ["Rooftop", "Plunge pool", "Concierge"],
-    images: [img.villaModern, img.spa],
-    placeholder: true,
+    slug: "piedras-negras",
+    name: "Casa Piedras Negras",
+    area: "Tulum · Gated community",
+    style: "Jungle villa",
+    guests: 16,
+    bedrooms: 6,
+    bathrooms: 6,
+    hook: "Six bedrooms, three private pools and a jungle rooftop.",
+    overview: [
+      "Six bedrooms and three private pools, including a rooftop plunge pool with jungle views, inside a gated community with 24/7 security.",
+      "A BBQ area, terraces and balconies make it an easy base for a big group, with a paddle court about a minute away.",
+    ],
+    amenities: ["Three private pools", "Rooftop plunge pool", "BBQ area", "Balconies and terraces", "Paddle court nearby", "24/7 security", "Fully equipped kitchen", "Living and dining areas"],
+    images: [
+      u("/assets/villas/piedras-negras-1.webp"),
+      u("/assets/villas/piedras-negras-2.webp"),
+      u("/assets/villas/piedras-negras-3.webp"),
+      u("/assets/villas/piedras-negras-4.webp"),
+      u("/assets/villas/piedras-negras-5.webp"),
+      u("/assets/villas/piedras-negras-6.webp"),
+    ],
   },
   {
-    slug: "villa-three",
-    name: "Villa Three",
-    area: "Tulum · Beach",
+    slug: "karanda-4br",
+    name: "Villa Karanda",
+    area: "Tulum · La Veleta",
+    style: "Resort villa",
+    guests: 14,
+    bedrooms: 4,
+    bathrooms: 4,
+    hook: "Four en-suite bedrooms with a private pool and rooftop plunge pool.",
+    overview: [
+      "Four en-suite bedrooms in a private villa with its own pool and a rooftop plunge pool, set inside a resort style community.",
+      "Shared pools with loungers and hammocks, a paddle court and 24/7 security. Add a private chef, DJ, mixology, ATV tours, yachts or nightlife access through our concierge.",
+    ],
+    amenities: ["Private pool", "Rooftop plunge pool", "Three shared pools", "Paddle court", "Terrace with grill", "Open living, dining and kitchen", "24/7 security"],
+    images: [
+      u("/assets/villas/karanda-4br-1.webp"),
+      u("/assets/villas/karanda-4br-2.webp"),
+      u("/assets/villas/karanda-4br-3.webp"),
+      u("/assets/villas/karanda-4br-4.webp"),
+    ],
+  },
+  {
+    slug: "mantaray",
+    name: "MantaRay Casa",
+    area: "Tulum · Soliman Bay",
     style: "Beachfront",
-    guests: null,
-    bedrooms: null,
-    bathrooms: null,
-    hook: "Coming soon to the collection.",
-    overview: ["Details, photos and capacity coming soon. Ask us for availability."],
-    amenities: ["Beach access", "Concierge"],
-    images: [img.villaBeach, img.boat],
-    placeholder: true,
+    guests: 8,
+    bedrooms: 3,
+    bathrooms: 2,
+    hook: "Three bedrooms with white sand at the door.",
+    overview: [
+      "A three bedroom oceanfront home with white sand just outside, air conditioning throughout and sea views from the terrace and living room.",
+      "Shared pool with ocean views, an on-site restaurant, a game room with a pool table, and kayaks and paddle boards. Continental breakfast is included.",
+    ],
+    amenities: ["Direct beach access", "Air conditioning", "On-site restaurant", "Shared pool with ocean views", "Game room with pool table", "Kayaks and paddle boards", "Continental breakfast included", "Private airport transfers on request"],
+    images: [
+      u("/assets/villas/mantaray-1.webp"),
+      u("/assets/villas/mantaray-2.webp"),
+      u("/assets/villas/mantaray-3.webp"),
+      u("/assets/villas/mantaray-4.webp"),
+      u("/assets/villas/mantaray-5.webp"),
+    ],
+  },
+  {
+    slug: "casa-bespoke",
+    name: "Casa Bespoke",
+    area: "Tulum · Private bay",
+    style: "Beachfront",
+    guests: 6,
+    bedrooms: 2,
+    bathrooms: 3,
+    hook: "Two bedrooms on a private bay with beach club access.",
+    overview: [
+      "A two bedroom beachfront villa on a private bay about twenty minutes from Tulum, with ocean views, its own terrace and direct beach access.",
+      "Guests can use the neighboring beach club, with an infinity pool and gym, and the villa sits close to cenotes and the reef.",
+    ],
+    amenities: ["Private terrace", "Direct beach access", "Beach club with infinity pool and gym", "Full kitchen", "Air conditioning", "Wifi"],
+    images: [
+      u("/assets/villas/casa-bespoke-1.webp"),
+      u("/assets/villas/casa-bespoke-2.webp"),
+      u("/assets/villas/casa-bespoke-3.webp"),
+      u("/assets/villas/casa-bespoke-4.webp"),
+      u("/assets/villas/casa-bespoke-5.webp"),
+      u("/assets/villas/casa-bespoke-6.webp"),
+      u("/assets/villas/casa-bespoke-7.webp"),
+    ],
+  },
+  {
+    slug: "antal-104",
+    name: "Antal 104",
+    area: "Tulum · Tankah Bay",
+    style: "Oceanfront",
+    guests: 8,
+    bedrooms: 3,
+    bathrooms: 4,
+    hook: "Oceanfront in Tankah Bay with a private rooftop plunge pool.",
+    overview: [
+      "A modern three bedroom oceanfront apartment in Tankah Bay with a private terrace, direct beach access and Caribbean views. Every bedroom has its own bathroom.",
+      "Private rooftop with a plunge pool, a shared pool, and kayaks and snorkel gear, in a secure beachfront building about ten to fifteen minutes from downtown.",
+    ],
+    amenities: ["Direct beach access", "Private terrace", "Private rooftop with plunge pool", "Shared pool", "Kayaks and snorkel gear", "Air conditioning in every bedroom", "24/7 security", "Wifi"],
+    images: [
+      u("/assets/villas/antal-104-1.webp"),
+      u("/assets/villas/antal-104-2.webp"),
+      u("/assets/villas/antal-104-3.webp"),
+      u("/assets/villas/antal-104-4.webp"),
+      u("/assets/villas/antal-104-5.webp"),
+    ],
+  },
+  {
+    slug: "kune-201",
+    name: "Kune 201",
+    area: "Tulum · Kune community",
+    style: "Modern apartment",
+    guests: 6,
+    bedrooms: 3,
+    bathrooms: 2,
+    hook: "Three bedrooms, rooftop pools and five minutes to the beach.",
+    overview: [
+      "A stylish three bedroom apartment in a modern, jungle side complex, about five minutes from the beach and downtown.",
+      "Shared rooftop with jungle views, several pools including a semi-Olympic lap pool, a gym, co-working spaces, kids areas and 24/7 security.",
+    ],
+    amenities: ["Rooftop with jungle views", "Multiple pools", "Gym", "Co-working spaces", "Kids areas", "24/7 security", "Fully equipped kitchen", "Sofa bed in living area"],
+    images: [
+      u("/assets/villas/kune-201-1.webp"),
+      u("/assets/villas/kune-201-2.webp"),
+      u("/assets/villas/kune-201-3.webp"),
+      u("/assets/villas/kune-201-4.webp"),
+      u("/assets/villas/kune-201-5.webp"),
+      u("/assets/villas/kune-201-6.webp"),
+    ],
   },
 ];
 

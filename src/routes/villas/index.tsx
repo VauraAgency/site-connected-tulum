@@ -1,7 +1,7 @@
 import { u } from "../../lib/url";
 import { createFileRoute } from "@tanstack/react-router";
-import { site, img, waLink, waTemplate } from "../../content/site";
-import { Shell, Eyebrow, H2, ClosingCTA, Arrow, WaGlyph, useReveal } from "../../components/site/ui";
+import { site, villas, waLink, waTemplate } from "../../content/site";
+import { Shell, Eyebrow, H2, ClosingCTA, Arrow, WaGlyph, Carousel, useReveal } from "../../components/site/ui";
 
 export const Route = createFileRoute("/villas/")({
   head: () => ({
@@ -13,12 +13,6 @@ export const Route = createFileRoute("/villas/")({
   }),
   component: VillasPage,
 });
-
-const styles = [
-  { t: "Jungle retreats", d: "Private pools, hidden in the trees.", image: img.villaJungle },
-  { t: "Modern in town", d: "Rooftops and plunge pools by Aldea Zamá.", image: img.villaModern },
-  { t: "Beachfront", d: "Sand outside the door.", image: img.villaBeach },
-];
 
 function VillasPage() {
   useReveal();
@@ -36,14 +30,23 @@ function VillasPage() {
         </div>
       </section>
       <section className="sec sec--tight wrap">
-        <div className="stay">
-          {styles.map((s) => (
-            <a key={s.t} href={href} target="_blank" rel="noopener" className="stay__c" data-rise>
-              <img src={s.image} alt="" loading="lazy" width={800} height={600} />
-              <b>{s.t}</b><span>{s.d}</span>
+        <Carousel className="vgrid" label="Villas">
+          {villas.map((v) => (
+            <a key={v.slug} href={u(`/villas/${v.slug}`)} className="vcard" data-rise>
+              <div className="vcard__img">
+                <img src={v.images[0]} alt={v.name} loading="lazy" width={800} height={660} />
+                <span className="vcard__tag mono">{v.style}</span>
+              </div>
+              <div className="vcard__b">
+                <h3>{v.name}</h3>
+                <p className="vcard__m">
+                  <span>{v.area}</span>
+                  <span><b>{v.bedrooms} bd</b> · Up to {v.guests}</span>
+                </p>
+              </div>
             </a>
           ))}
-        </div>
+        </Carousel>
       </section>
       <section className="sec wrap">
         <Eyebrow>Not seeing it?</Eyebrow>
