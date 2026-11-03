@@ -58,7 +58,7 @@ function Hero() {
         </h1>
         <p className="hero__lead">Every night of the season, in one place. Grab tickets, lock a VIP table, and we handle the rest.</p>
         <p className="hero__count mono">
-          31.12 to 10.01{left !== null && left > 0 ? ` · ${left} days to go` : ""}
+          12/31 to 1/10{left !== null && left > 0 ? ` · ${left} days to go` : ""}
         </p>
         <div className="hero__ctas">
           <a className="cta-hero" href="#season">See every night <Arrow /></a>

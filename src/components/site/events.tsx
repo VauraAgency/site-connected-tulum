@@ -5,7 +5,8 @@ import { Arrow } from "./ui";
 /* ------------------------------------------------------------------ helpers */
 const pad = (n: number) => String(n).padStart(2, "0");
 export const isoOf = (d: Date) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
-const dotDate = (iso: string) => `${iso.slice(8, 10)}.${iso.slice(5, 7)}`;
+/** US style month/day, e.g. 12/31 */
+const dotDate = (iso: string) => `${iso.slice(5, 7)}/${iso.slice(8, 10)}`;
 const evName = (e: TEvent) => e.title;
 
 /** Today's date, set after mount so prerendered HTML never mismatches. */
@@ -226,7 +227,7 @@ export function Calendar() {
             </button>
           </>
         ) : (
-          <span className="cal__count">High Season 2027 · 31.12 to 10.01</span>
+          <span className="cal__count">High Season 2027 · 12/31 to 1/10</span>
         )}
       </div>
 
