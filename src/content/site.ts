@@ -28,15 +28,16 @@ export const site = {
     facebook: "https://www.facebook.com/share/18M4RjEqWz/",
   },
   callHours: "Every day · Tulum time (EST, UTC−5)",
-  // PENDING: Beach Please affiliate URL for villas (Hector gets a special code). Empty = villa buttons go to WhatsApp. Can be swapped any time.
-  villaAffiliateUrl: "",
+  // Beach Please villas. Currently their website; swap for Hector's special affiliate URL when he gets it. Empty = villa buttons go to WhatsApp.
+  villaAffiliateUrl: "https://beachpleasetulum.com",
   villaPartner: "Beach Please",
   // PENDING: promoter / affiliate ticket links per festival. Empty = "Get tickets" opens a WhatsApp request instead.
   promoterUrls: { zamna: "", tehmplo: "", "day-zero": "", other: "" } as Record<string, string>,
-  // Transport: client price = our cost + this markup (30%). Costs live on each transport item (cost field, USD).
+  // Transport: client price = our cost + this markup (30%). Transport items use withMarkup(cost in MXN).
   transportMarkup: 0.3,
 };
 
+export const mxn = (n: number) => `$${n.toLocaleString("en-US")} MXN`;
 export const withMarkup = (cost: number) => Math.round(cost * (1 + site.transportMarkup) / 5) * 5;
 
 export function waLink(message: string) {
@@ -139,7 +140,7 @@ export type ServiceItem = {
   name: string;
   meta?: string; // e.g. "Up to 15 guests"
   price?: string; // e.g. "From $38,000 MXN" (leave empty until Hector confirms)
-  cost?: number; // our cost in USD. If set (and no price), client price = withMarkup(cost)
+  cost?: number; // our cost in MXN (optional, not displayed)
   badge?: string;
   link?: string; // optional affiliate / outbound link
 };
@@ -173,18 +174,25 @@ export const services: Service[] = [
   },
   {
     slug: "transportation", num: "02", kicker: "Transit", title: "Ground Transportation", icon: "car",
-    short: "Airport pickups, private drivers, Sprinters and SUVs for the group and every night out.",
+    short: "Airport transfers, private drivers, Sprinters and SUVs for the group and every night out.",
     cardCta: "Get moving", image: img.transport,
     h1: "Private Ground Transportation in Tulum",
     intro: "From the moment you land to the last ride home after the after party. Tell us your flights and headcount.",
     items: [
-      // cost = what it costs Connected (USD). Price shown to clients = cost + site.transportMarkup. PENDING: Hector's costs.
-      { name: "Airport transfer", meta: "Cancún / Tulum airport · Private" },
+      // Prices below are Transportation Services Tulum's rates (MXN) + site.transportMarkup. The markup itself is never shown.
+      { name: "Tulum Airport (TQO) to Tulum centro", meta: `Private · 1 to 3 pax. 4 to 7 pax: ${mxn(withMarkup(1600))} in / ${mxn(withMarkup(1400))} out`, price: `${mxn(withMarkup(1400))} in · ${mxn(withMarkup(1200))} out` },
+      { name: "Tulum Airport (TQO) to Hotel Zone", meta: `Private · 1 to 3 pax. 4 to 7 pax: ${mxn(withMarkup(1800))} in / ${mxn(withMarkup(1700))} out`, price: `${mxn(withMarkup(1700))} in · ${mxn(withMarkup(1600))} out` },
+      { name: "Cancún Airport (CUN) to Tulum centro", meta: `Private · 1 to 3 pax. 4 to 7 pax: ${mxn(withMarkup(2100))} each way`, price: `${mxn(withMarkup(1900))} each way` },
+      { name: "Cancún Airport (CUN) to Hotel Zone", meta: `Private · 1 to 3 pax. 4 to 7 pax: ${mxn(withMarkup(2400))} each way`, price: `${mxn(withMarkup(2100))} each way` },
+      { name: "Event night rides", meta: "Round trip to Zamna, Tehmplo, Day Zero and the beach clubs" },
       { name: "Hourly driver", meta: "SUV or Sprinter · Nights out and day trips" },
-      { name: "Event night rides", meta: "Round trip to Zamna, Tehmplo, Day Zero" },
     ],
     included: ["Bilingual drivers", "Meet & greet", "Water on board"],
-    notes: [{ label: "Pricing", text: "Quoted per route and vehicle." }],
+    notes: [
+      { label: "Pricing", text: "Per vehicle, not per person. Event nights and other routes quoted on request." },
+      { label: "Extras", text: "Night transfers (12 AM to 6 AM), extra waiting time, pet carriers and terminal changes carry a small extra charge. We confirm everything before you book." },
+      { label: "Cancellations", text: "Cancel more than 3 hours before pickup at no charge." },
+    ],
   },
   {
     slug: "private-events", num: "03", kicker: "Produce", title: "Private Events", icon: "spark",
@@ -228,17 +236,29 @@ export const services: Service[] = [
 export const serviceBySlug = (s: string) => services.find((x) => x.slug === s && x.items.length);
 
 /* ------------------------------------------------------------------ EVENTS (High Season 2027)
- * Per event: flyer (image path in /public/assets), ticketUrl (promoter / affiliate link), lineup, time.
+ * Source: "Tulum High Season Calendar 2027" sheet in the Connected Drive.
+ * ready: true  = flyer + info are ready (sheet: "Flyer at Drive = Yes"). Shown as a full flyer card.
+ * ready: false = date is on the calendar but details are not out yet. Calendar + table inquiry only.
+ * Per event: flyer (image path in /public/assets, optional: otherwise a designed poster is drawn),
+ * ticketUrl (promoter / affiliate link), lineup, time, prices (MXN).
  * "Get tickets" -> ticketUrl, else the festival's link in site.promoterUrls, else a WhatsApp request.
- * manual: true = Hector processes the tickets by hand (Zamna), so Get tickets is always a WhatsApp request.
+ * manual: true = Hector processes the tickets by hand with the Zamna contact, so Get tickets is always a WhatsApp request.
  * key: true = headline night, shown in the big season scroller on the home page.
  */
+export type EventType = "Dinner only" | "Dinner + party" | "Party only" | "Festival" | "Beach club";
+
 export type TEvent = {
   date: string; // ISO yyyy-mm-dd
   title: string;
   venue: string;
+  type?: EventType;
   lineup?: string;
+  desc?: string;
   time?: string;
+  ready?: boolean;
+  prices?: { label: string; mxn: number }[]; // per person, Mexican pesos
+  priceNote?: string;
+  table?: string; // VIP table starting point, shown on the card
   flyer?: string;
   ticketUrl?: string;
   festival?: "zamna" | "tehmplo" | "day-zero";
@@ -249,26 +269,48 @@ export type TEvent = {
 };
 
 export const events: TEvent[] = [
-  { date: "2026-12-31", title: "Renaissance Tulum NYE", venue: "Zamna Tulum", lineup: "Sasha, Maceo Plex, Sébastien Léger, Ida Engberg and more", festival: "zamna", key: true, manual: true, bg: img.festival },
-  { date: "2026-12-31", title: "NYE @ Ahau", venue: "Ahau" },
-  { date: "2026-12-31", title: "NYE @ Papaya Playa Project", venue: "Papaya Playa Project" },
-  { date: "2026-12-31", title: "NYE @ Nomade", venue: "Nomade" },
-  { date: "2026-12-31", title: "NYE @ Gitano Beach & Jungle", venue: "Gitano" },
-  { date: "2027-01-01", title: "Por Qué No", venue: "Kuul" },
-  { date: "2027-01-02", title: "Por Qué No", venue: "Vesica" },
-  { date: "2027-01-02", title: "Afrodise", venue: "Ahau" },
-  { date: "2027-01-02", title: "Lineup TBA", venue: "Zamna Tulum", festival: "zamna", tbd: true, manual: true },
-  { date: "2027-01-03", title: "Por Qué No", venue: "Vesica" },
-  { date: "2027-01-03", title: "Tehmplo", venue: "Tehmplo", festival: "tehmplo" },
-  { date: "2027-01-04", title: "Anyma presents ÆDEN: The Lost Temple", venue: "Zamna Tulum", lineup: "Anyma, CamelPhat, Cassian, Volkoder and more", festival: "zamna", key: true, manual: true, bg: img.party },
-  { date: "2027-01-05", title: "7 Realms", venue: "Kuul" },
-  { date: "2027-01-05", title: "Tehmplo", venue: "Tehmplo", festival: "tehmplo" },
-  { date: "2027-01-06", title: "Black Coffee at Zamna Tulum", venue: "Zamna Tulum", lineup: "Black Coffee", festival: "zamna", key: true, manual: true, bg: img.festival },
-  { date: "2027-01-07", title: "Solomun Tulum at Tehmplo", venue: "Tehmplo", lineup: "Solomun", festival: "tehmplo", key: true, bg: img.cenote },
-  { date: "2027-01-08", title: "Adriatique presents X: FOREVER", venue: "Zamna Tulum", lineup: "Adriatique, Kotiër, Mind Against, Sama and more", festival: "zamna", key: true, manual: true, bg: img.party },
-  { date: "2027-01-09", title: "Day Zero 2027: Begin Again", venue: "Day Zero", festival: "day-zero", key: true, bg: img.cenote },
-  { date: "2027-01-10", title: "Adam Port, season closing", venue: "Zamna Tulum", lineup: "Adam Port", festival: "zamna", key: true, manual: true, bg: img.festival },
+  // ---- Dec 31 · New Year's Eve
+  { date: "2026-12-31", title: "NYE Dinner at Casa Malca", venue: "Casa Malca", type: "Dinner only", time: "8:00 PM", desc: "Beachfront dinner experience", ready: true, manual: true, bg: img.villaBeach,
+    prices: [{ label: "Dinner", mxn: 4360 }], priceNote: "Price available through Dec 21" },
+  { date: "2026-12-31", title: "NYE Dinner + Party at Nomade", venue: "Nomade", type: "Dinner + party", time: "7 PM to 8 AM", desc: "Beachfront dinner experience", ready: true, bg: img.villaBeach,
+    prices: [{ label: "Dinner + party", mxn: 9000 }] },
+  { date: "2026-12-31", title: "NYE Party at Nomade", venue: "Nomade", type: "Party only", time: "7 PM to 8 AM", desc: "Beachfront party", ready: true, bg: img.beachClub,
+    prices: [{ label: "Party, early bird", mxn: 4200 }] },
+  { date: "2026-12-31", title: "Renaissance Tulum NYE", venue: "Zamna Tulum", type: "Festival", time: "10:00 PM", lineup: "Sasha, Maceo Plex, Sébastien Léger, Ida Engberg and more", ready: true, festival: "zamna", key: true, manual: true, bg: img.festival,
+    prices: [{ label: "General, early", mxn: 1925 }, { label: "VIP, early", mxn: 4130 }], table: "Tables from $3,200 USD" },
+  { date: "2026-12-31", title: "NYE Dinner + Party at Papaya Playa Project", venue: "Papaya Playa Project", type: "Dinner + party", desc: "Beachfront dinner experience", ready: true, bg: img.beachClub,
+    prices: [{ label: "Dinner + party, early", mxn: 9790 }] },
+  { date: "2026-12-31", title: "NYE Party at Papaya Playa Project", venue: "Papaya Playa Project", type: "Party only", desc: "Beachfront party", ready: true, bg: img.party,
+    prices: [{ label: "Party, early bird", mxn: 4697 }] },
+  { date: "2026-12-31", title: "NYE at Ahau", venue: "Ahau Tulum", type: "Party only", tbd: true },
+  // ---- January
+  { date: "2027-01-01", title: "EDM Tulum Network Event", venue: "Kuul Tulum", type: "Beach club", time: "1 PM to 7 PM", desc: "EDM and Connected Tulum event" },
+  { date: "2027-01-02", title: "Afrodise", venue: "Ahau Tulum", type: "Festival", time: "TBA", tbd: true },
+  { date: "2027-01-02", title: "Por Que No Festival", venue: "Vesica Tulum", type: "Festival", time: "TBA", tbd: true },
+  { date: "2027-01-03", title: "Por Que No Festival", venue: "Vesica Tulum", type: "Festival", time: "TBA", tbd: true },
+  { date: "2027-01-03", title: "&ME Tulum", venue: "Ikal Arena", type: "Festival", time: "8:00 PM", desc: "&ME", ready: true, bg: img.party,
+    prices: [{ label: "General, stage 1", mxn: 2900 }, { label: "Backstage, early bird", mxn: 4800 }] },
+  { date: "2027-01-03", title: "Scenarios", venue: "Papaya Playa Project", type: "Festival" },
+  { date: "2027-01-04", title: "Anyma presents ÆDEN: The Lost Temple", venue: "Zamna Tulum", type: "Festival", time: "10:00 PM", lineup: "Anyma, CamelPhat, Cassian, Volkoder and more", ready: true, festival: "zamna", key: true, manual: true, bg: img.party,
+    prices: [{ label: "General, phase 1", mxn: 3325 }, { label: "VIP, early", mxn: 7158 }] },
+  { date: "2027-01-05", title: "Rafael presents Cheetah Print", venue: "Papaya Playa Project", type: "Festival", desc: "Rafael" },
+  { date: "2027-01-05", title: "7 Realms", venue: "Kuul Tulum", type: "Festival", tbd: true },
+  { date: "2027-01-06", title: "Black Coffee at Zamna Tulum", venue: "Zamna Tulum", type: "Festival", time: "10:00 PM", lineup: "Black Coffee", ready: true, festival: "zamna", key: true, manual: true, bg: img.festival,
+    prices: [{ label: "General, early", mxn: 2520 }, { label: "VIP, early", mxn: 7158 }] },
+  { date: "2027-01-07", title: "Solomun Tulum at Tehmplo", venue: "Tehmplo", type: "Festival", time: "10:00 PM", lineup: "Solomun", ready: true, festival: "tehmplo", key: true, bg: img.cenote,
+    table: "Tables from $15,000 USD minimum spend" },
+  { date: "2027-01-07", title: "Hugel", venue: "Papaya Playa Project", type: "Festival", desc: "Hugel" },
+  { date: "2027-01-08", title: "Adriatique presents X: FOREVER", venue: "Zamna Tulum", type: "Festival", time: "10:00 PM", lineup: "Adriatique, Kotiër, Mind Against, Sama and more", ready: true, festival: "zamna", key: true, manual: true, bg: img.party,
+    prices: [{ label: "General, early", mxn: 2520 }, { label: "VIP, early", mxn: 7158 }] },
+  { date: "2027-01-09", title: "Day Zero 2027: Begin Again", venue: "Cenote Dos Ojos", type: "Festival", time: "10:00 PM", lineup: "Several artists", ready: true, festival: "day-zero", key: true, manual: true, bg: img.cenote },
+  { date: "2027-01-09", title: "Signature", venue: "Papaya Playa Project", type: "Festival", desc: "Signature" },
+  { date: "2027-01-10", title: "Adam Port, season closing", venue: "Zamna Tulum", type: "Festival", time: "10:00 PM", lineup: "Adam Port", ready: true, festival: "zamna", key: true, manual: true, bg: img.festival,
+    prices: [{ label: "General, early", mxn: 1925 }, { label: "VIP, early", mxn: 7158 }] },
+  { date: "2027-01-11", title: "Giegling", venue: "Papaya Playa Project", type: "Festival", desc: "Giegling" },
 ];
+
+export const readyEvents = events.filter((e) => e.ready);
+export const soonEvents = events.filter((e) => !e.ready);
 
 /** Where "Get tickets" goes. Returns null when it should be a WhatsApp request (manual or no link yet). */
 export function ticketHref(e: TEvent): string | null {
@@ -277,7 +319,7 @@ export function ticketHref(e: TEvent): string | null {
   return url || null;
 }
 
-export const marquee = ["Renaissance", "Anyma", "Black Coffee", "Solomun", "Adriatique", "Day Zero", "Adam Port", "Zamna", "Tehmplo"];
+export const marquee = ["Renaissance", "Anyma", "Black Coffee", "Solomun", "Adriatique", "&ME", "Day Zero", "Adam Port", "Casa Malca", "Nomade"];
 
 export function fmtDate(iso: string) {
   const d = new Date(iso + "T12:00:00Z");
@@ -390,12 +432,12 @@ export const festivalPages: FestivalPage[] = [
   {
     kind: "festival", slug: "nye-2027", eyebrow: "Connected Tulum · New Year's Eve",
     h1a: "NYE in Tulum.", h1b: "Pick your countdown.",
-    lead: "Beach club, jungle festival or a private villa party. Every NYE option in Tulum, with tables and tickets handled.",
-    facts: [{ k: "Date", v: "Dec 31" }, { k: "Options", v: "Ahau, PPP, Nomade, Gitano, Zamna" }, { k: "Format", v: "Parties & festivals" }, { k: "Access", v: "Tickets & VIP tables" }],
+    lead: "Jungle festival, beachfront dinner or a beach party. Every NYE option we have, with tickets and tables handled.",
+    facts: [{ k: "Date", v: "Dec 31" }, { k: "Options", v: "Zamna, Nomade, Casa Malca, Papaya Playa Project, Ahau" }, { k: "Format", v: "Parties & festivals" }, { k: "Access", v: "Tickets & VIP tables" }],
     guide: howToBook, faqs: [{ q: "Which NYE party is best?", a: "Depends on the group and the sound. Tell us the vibe and we'll match you." }],
     image: img.beachClub,
     title: "Tulum NYE 2027 Parties & Tables | Connected Tulum",
-    description: "Every New Year's Eve party in Tulum: Ahau, Papaya Playa Project, Nomade, Gitano and Zamna. Tickets and VIP tables.",
+    description: "Every New Year's Eve party in Tulum: Zamna Renaissance, Nomade, Casa Malca, Papaya Playa Project and Ahau. Tickets, dinners and VIP tables.",
   },
   {
     kind: "festival", slug: "zamna-tulum", festival: "zamna", eyebrow: "Connected Tulum presents · Zamna 2027",

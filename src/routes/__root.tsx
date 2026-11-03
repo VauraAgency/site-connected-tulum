@@ -1,4 +1,4 @@
-import { u, VARIANT } from "../lib/url";
+import { u } from "../lib/url";
 import {
   Outlet,
   createRootRoute,
@@ -29,6 +29,9 @@ const appMeta: AppMeta = {
 const FONTS =
   "https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Inter+Tight:wght@500;600;700&family=Inter:wght@400;500;600&family=Instrument+Serif:ital@1&family=JetBrains+Mono:wght@400&family=Montserrat:wght@300;400&display=swap";
 
+/** Runs before first paint: dark by default, or whatever the visitor picked last (stored in localStorage). */
+const THEME_BOOT = `(function(){var d=document.documentElement,t="dark";try{var s=localStorage.getItem("ct-theme");if(s==="light"||s==="dark")t=s}catch(e){}if(t==="dark")d.classList.add("theme-dark");d.style.colorScheme=t})();`;
+
 function buildHead(meta: AppMeta) {
   const title = meta.og_title ?? "Connected Tulum";
   const description = meta.og_description ?? "Tickets and VIP tables for Tulum High Season 2027.";
@@ -48,6 +51,7 @@ function buildHead(meta: AppMeta) {
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:image", content: ogImage },
     ],
+    scripts: [{ children: THEME_BOOT }],
     links: [
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" as const },
@@ -100,11 +104,11 @@ export const Route = createRootRoute({
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" style={{ colorScheme: "light" }}>
+    <html lang="en" suppressHydrationWarning>
       <head>
         <HeadContent />
       </head>
-      <body className={`ct ${VARIANT === "dark" ? "theme-dark" : ""}`}>
+      <body className="ct">
         {children}
         <Scripts />
       </body>

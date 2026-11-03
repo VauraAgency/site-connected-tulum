@@ -20,28 +20,19 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      # Design A (light) lives at the root, design B (dark) at /dark/. Both share the same content file.
-      - name: Build A (light)
+      # One site with a light/dark toggle in the header.
+      - name: Build
         run: npm run build
         env:
           BASE_PATH: /site-connected-tulum/
-          VITE_VARIANT: light
-          VITE_OTHER_URL: /site-connected-tulum/dark/
-      - run: mv dist/client dist/light
-      - name: Build B (dark)
-        run: npm run build
-        env:
-          BASE_PATH: /site-connected-tulum/dark/
-          VITE_VARIANT: dark
-          VITE_OTHER_URL: /site-connected-tulum/
-      - run: mv dist/client dist/dark
       - name: Assemble
         run: |
           mkdir -p site
-          cp -r dist/light/. site/
-          mkdir -p site/dark
-          cp -r dist/dark/. site/dark/
+          cp -r dist/client/. site/
           cp site/index.html site/404.html
+          # old review link (/dark/) now just goes to the main site
+          mkdir -p site/dark
+          printf '<!doctype html><meta charset="utf-8"><meta http-equiv="refresh" content="0;url=/site-connected-tulum/"><link rel="canonical" href="/site-connected-tulum/"><a href="/site-connected-tulum/">Connected Tulum</a>' > site/dark/index.html
       - uses: actions/upload-pages-artifact@v3
         with:
           path: site

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { events, img, ticketHref, fmtDate, waLink, waTemplate, type TEvent } from "../../content/site";
+import { events, readyEvents, img, ticketHref, fmtDate, waLink, waTemplate, mxn, type TEvent } from "../../content/site";
 import { Arrow } from "./ui";
 
 /* ------------------------------------------------------------------ helpers */
@@ -45,31 +45,54 @@ export function TableBtn({ e, className = "cta-table" }: { e: TEvent; className?
 }
 
 /* ------------------------------------------------------------------ flyer card */
+const posterHue = (e: TEvent) => (e.festival === "zamna" ? "zamna" : e.festival === "tehmplo" ? "tehmplo" : e.festival === "day-zero" ? "dayzero" : e.type === "Festival" ? "fest" : "beach");
+
+/** A designed poster stands in for the flyer until the real file is dropped into e.flyer. */
+function Poster({ e }: { e: TEvent }) {
+  const name = evName(e);
+  const bg = e.bg || (e.festival === "tehmplo" || e.festival === "day-zero" ? img.cenote : e.festival ? img.festival : img.beachClub);
+  const d = fmtDate(e.date);
+  return (
+    <div className={`ev__ph ev__ph--${posterHue(e)}`}>
+      <img src={bg} alt="" loading="lazy" width={800} height={1000} />
+      <span className="ev__tag mono">{e.type || "Event"}</span>
+      <div className="ev__ph-in">
+        <span className="ev__ph-d">{dotDate(e.date)}</span>
+        <span className="ev__ph-t">{name}</span>
+        {e.lineup && <span className="ev__ph-l">{e.lineup}</span>}
+        <span className="ev__ph-v mono">{e.venue} · {d.wk}{e.time ? ` · ${e.time}` : ""}</span>
+      </div>
+    </div>
+  );
+}
+
+export function Prices({ e }: { e: TEvent }) {
+  if (!e.prices?.length && !e.table && !e.priceNote) return null;
+  return (
+    <div className="ev__pr">
+      {e.prices?.map((p) => (
+        <p key={p.label}><span>{p.label}</span><b>{mxn(p.mxn)}</b></p>
+      ))}
+      {e.priceNote && <small>{e.priceNote}</small>}
+      {e.table && <small className="ev__tbl">{e.table}</small>}
+    </div>
+  );
+}
+
 export function NightCard({ e }: { e: TEvent }) {
   const d = fmtDate(e.date);
   const name = evName(e);
-  const bg = e.bg || (e.festival === "tehmplo" ? img.cenote : e.festival === "day-zero" ? img.cenote : e.festival ? img.festival : img.beachClub);
   return (
     <article className="ev" data-rise>
       <div className="ev__flyer">
-        {e.flyer ? (
-          <img src={e.flyer} alt={`${name} flyer`} loading="lazy" width={800} height={1000} />
-        ) : (
-          <div className="ev__ph">
-            <img src={bg} alt="" loading="lazy" width={800} height={1000} />
-            <div className="ev__ph-in">
-              <span className="ev__ph-d">{dotDate(e.date)}</span>
-              <span className="ev__ph-t">{e.tbd ? "Lineup TBA" : name}</span>
-              <span className="ev__ph-v mono">{e.venue}</span>
-            </div>
-          </div>
-        )}
+        {e.flyer ? <img src={e.flyer} alt={`${name} flyer`} loading="lazy" width={800} height={1000} /> : <Poster e={e} />}
         {e.flyer && <span className="ev__date"><b>{d.day}</b><span>{d.mon}</span></span>}
       </div>
       <div className="ev__b">
         <p className="mono">{d.wk} · {e.venue}{e.time ? ` · ${e.time}` : ""}</p>
         <h3>{name}</h3>
-        {e.lineup && <p className="ev__lu">{e.lineup}</p>}
+        {e.desc && <p className="ev__lu">{e.desc}</p>}
+        <Prices e={e} />
         <div className="ev__ctas">
           <TicketBtn e={e} />
           <TableBtn e={e} />
@@ -81,7 +104,7 @@ export function NightCard({ e }: { e: TEvent }) {
 
 /* ------------------------------------------------------------------ season scroller (big date + rail) */
 export function SeasonScroller() {
-  const list = useMemo(() => events.filter((e) => e.key), []);
+  const list = useMemo(() => readyEvents.filter((e) => e.key), []);
   const n = list.length;
   const box = useRef<HTMLElement>(null);
   const [i, setI] = useState(0);
@@ -242,10 +265,11 @@ export function Calendar() {
           <div key={k} className="cal__ev">
             <div>
               <b>{evName(e)}</b>
-              <span>{e.venue}{e.lineup ? ` · ${e.lineup}` : ""}</span>
+              <span>{e.venue}{e.type ? ` · ${e.type}` : ""}{e.time ? ` · ${e.time}` : ""}{e.lineup ? ` · ${e.lineup}` : ""}</span>
+              {e.prices?.length ? <span className="cal__pr">{e.prices.map((p) => `${p.label} ${mxn(p.mxn)}`).join("  ·  ")}</span> : null}
             </div>
             <div className="cal__btns">
-              <TicketBtn e={e} className="cta-ticket cta-ticket--sm" />
+              {e.ready ? <TicketBtn e={e} className="cta-ticket cta-ticket--sm" /> : <span className="cal__soon mono">Details soon</span>}
               <TableBtn e={e} className="cta-table cta-table--sm" />
             </div>
           </div>

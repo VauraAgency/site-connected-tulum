@@ -1,4 +1,4 @@
-import { u, VARIANT, OTHER_URL } from "../../lib/url";
+import { u } from "../../lib/url";
 import { Link } from "@tanstack/react-router";
 import { useEffect, useState, type ReactNode } from "react";
 import {
@@ -86,6 +86,7 @@ export function Header({ overlay = false }: { overlay?: boolean }) {
             <a key={n.label} href={u(n.to)}>{n.label}</a>
           ))}
         </nav>
+        <ThemeToggle />
         <a className="cta-call" href={u("/contact")}>
           Schedule your call <Arrow />
         </a>
@@ -245,20 +246,24 @@ export function Footer() {
   );
 }
 
-/** Temporary review switch: jump between the light and dark design. Remove once one is chosen. */
-export function VariantSwitch() {
-  if (!OTHER_URL) return null;
-  const light = VARIANT === "light";
-  const here = (
-    <span className="vswitch__on">{light ? "A · Light" : "B · Dark"}</span>
-  );
-  const other = (
-    <a href={OTHER_URL}>{light ? "B · Dark" : "A · Light"}</a>
-  );
+/** Light / dark switch. The theme class lives on <html> and is set before paint by the inline script in __root.tsx. */
+export function ThemeToggle({ className = "" }: { className?: string }) {
+  const flip = () => {
+    const d = document.documentElement;
+    const next = d.classList.contains("theme-dark") ? "light" : "dark";
+    d.classList.toggle("theme-dark", next === "dark");
+    d.style.colorScheme = next;
+    try { localStorage.setItem("ct-theme", next); } catch { /* private mode */ }
+  };
   return (
-    <div className="vswitch" aria-label="Compare designs">
-      {light ? <>{here}{other}</> : <>{other}{here}</>}
-    </div>
+    <button type="button" className={`tgl ${className}`} onClick={flip} aria-label="Switch between light and dark mode" title="Light / dark">
+      <svg className="tgl__sun" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true">
+        <circle cx="12" cy="12" r="4" /><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M18.7 5.3l-1.6 1.6M6.9 17.1l-1.6 1.6" />
+      </svg>
+      <svg className="tgl__moon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <path d="M20.5 14.2A8.5 8.5 0 1 1 9.8 3.5a6.7 6.7 0 0 0 10.7 10.7Z" />
+      </svg>
+    </button>
   );
 }
 
@@ -269,7 +274,6 @@ export function Shell({ children, overlay = false }: { children: ReactNode; over
       <main id="main">{children}</main>
       <Footer />
       <FloatDock />
-      <VariantSwitch />
       <NotifyModal />
     </>
   );

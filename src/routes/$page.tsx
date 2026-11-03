@@ -135,7 +135,9 @@ function eventsFor(p: FestivalPage): TEvent[] {
 }
 
 function Festival({ p }: { p: FestivalPage }) {
-  const list = eventsFor(p);
+  const all = eventsFor(p);
+  const list = all.filter((e) => e.ready);
+  const soon = all.filter((e) => !e.ready);
   return (
     <>
       <section className="fhero">
@@ -170,6 +172,17 @@ function Festival({ p }: { p: FestivalPage }) {
         <Eyebrow>{p.slug === "tulum-festival-season" ? "03" : "02"} · Announced nights</Eyebrow>
         <H2 a="Get tickets." b="Or a table" />
         <div className="evgrid">{list.map((e, i) => <NightCard key={i} e={e} />)}</div>
+        {soon.length > 0 && (
+          <div className="soon">
+            <p className="mono">Details coming soon</p>
+            <ul>
+              {soon.map((e, i) => {
+                const d = fmtDate(e.date);
+                return <li key={i}><b>{d.mon} {d.day}</b> {e.title} <span>· {e.venue}</span></li>;
+              })}
+            </ul>
+          </div>
+        )}
         <p className="sub">Dates update as lineups are announced. Flyers, set times and ticket links drop here first.</p>
       </section>
 

@@ -1,8 +1,8 @@
-import { u, VARIANT } from "../lib/url";
+import { u } from "../lib/url";
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useRef } from "react";
 import {
-  site, img, services, events, marquee, team, reviews, faqs, steps, waLink, waTemplate,
+  site, img, services, readyEvents, marquee, team, reviews, faqs, steps, waLink, waTemplate,
 } from "../content/site";
 import { Shell, Eyebrow, H2, Icon, Arrow, ClosingCTA, Faq, WaGlyph, LogoAnim, useReveal } from "../components/site/ui";
 import { SeasonScroller, Calendar, NightCard, useToday, daysUntil } from "../components/site/events";
@@ -97,7 +97,7 @@ function Calendar_() {
 }
 
 function Nights() {
-  const list = events.filter((e) => e.key);
+  const list = readyEvents.filter((e) => e.key);
   return (
     <section id="nights" className="sec wrap" aria-labelledby="nt-h">
       <Eyebrow>The nights</Eyebrow>
@@ -206,7 +206,7 @@ function Home() {
     <Shell overlay>
       <Hero />
       <Marquee />
-      {VARIANT === "dark" && <SeasonScroller />}
+      <SeasonScroller />
       <Nights />
       <Calendar_ />
       <Services />
