@@ -670,3 +670,7 @@ a:hover .arr, button:hover .arr { transform: translateX(4px); }
 .lbx__x { position: absolute; top: 14px; right: 16px; width: 44px; height: 44px; border-radius: 50%; border: 1px solid rgba(255,255,255,.35); background: rgba(0,0,0,.5); color: #fff; font-size: 28px; line-height: 1; cursor: pointer; }
 .rest__c > span { justify-content: space-between; font-weight: 600; letter-spacing: .01em; }
 .rest__c > span .arr, .rest__c > span svg { position: static; flex: none; }
+/* home: 8 nights = 4 x 2 on desktop, 2 x 4 on tablet/phone, always even */
+.evgrid--8 { grid-template-columns: repeat(4, 1fr); }
+@media (max-width: 1000px) { .evgrid--8 { grid-template-columns: repeat(2, 1fr); gap: 12px; } }
+@media (max-width: 640px) { .evgrid--8 { grid-template-columns: 1fr; } }

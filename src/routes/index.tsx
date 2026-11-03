@@ -97,7 +97,7 @@ function Calendar_() {
 }
 
 function Nights() {
-  const list = readyEvents.filter((e) => e.key);
+  const list = readyEvents.filter((e) => e.key).slice(0, 8);
   return (
     <section id="nights" className="sec wrap" aria-labelledby="nt-h">
       <Eyebrow>The nights</Eyebrow>
@@ -106,7 +106,7 @@ function Nights() {
         <a href={u("/tulum-festival-season")} className="cta-pill">All nights <Arrow /></a>
       </div>
       <p className="sub">Tap a flyer's Get tickets for the ticket link. Want a table or VIP? Inquire and we reply on WhatsApp.</p>
-      <div className="evgrid">{list.map((e, i) => <NightCard key={i} e={e} />)}</div>
+      <div className="evgrid evgrid--8">{list.map((e, i) => <NightCard key={i} e={e} />)}</div>
     </section>
   );
 }

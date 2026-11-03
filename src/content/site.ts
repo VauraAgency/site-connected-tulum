@@ -289,7 +289,7 @@ export const events: TEvent[] = [
   { date: "2027-01-02", title: "Afrodise", venue: "Ahau Tulum", type: "Festival", time: "TBA", tbd: true },
   { date: "2027-01-02", title: "Por Que No Festival", venue: "Vesica Tulum", type: "Festival", time: "TBA", tbd: true },
   { date: "2027-01-03", title: "Por Que No Festival", venue: "Vesica Tulum", type: "Festival", time: "TBA", tbd: true },
-  { date: "2027-01-03", title: "&ME Tulum", venue: "Ikal Arena", type: "Festival", time: "8:00 PM", desc: "&ME", flyer: u("/assets/flyers/andme.webp"), flyerH: 1125, ready: true, bg: img.party,
+  { date: "2027-01-03", title: "&ME Tulum", venue: "Ikal Arena", type: "Festival", time: "8:00 PM", desc: "&ME", flyer: u("/assets/flyers/andme.webp"), flyerH: 1125, ready: true, key: true, bg: img.party,
     prices: [{ label: "General, stage 1", mxn: 2900 }, { label: "Backstage, early bird", mxn: 4800 }] },
   { date: "2027-01-03", title: "Scenarios", venue: "Papaya Playa Project", type: "Festival" },
   { date: "2027-01-04", title: "Anyma presents ÆDEN: The Lost Temple", venue: "Zamna Tulum", type: "Festival", time: "10:00 PM", lineup: "Anyma, CamelPhat, Cassian, Volkoder and more", flyer: u("/assets/flyers/anyma.webp"), flyerH: 1600, ready: true, festival: "zamna", key: true, manual: true, bg: img.party,
