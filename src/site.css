@@ -398,7 +398,7 @@ a:hover .arr, button:hover .arr { transform: translateX(4px); }
 .cform__done .h2 { max-width: none; }
 .cform__cal { width: 100%; height: 680px; border: 0; border-radius: 16px; background: var(--bg); }
 .cform__done .linkish { margin-top: 24px; }
-.here { padding-bottom: clamp(88px, 11vw, 150px); }
+.here { padding-bottom: clamp(20px, 3vw, 36px); }
 .here ul { margin-top: 20px; display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; }
 .here li { background: var(--paper); padding: 18px; display: flex; flex-direction: column; gap: 6px; font-size: 15px; }
 .here .mono { color: var(--g-deep); }
@@ -707,7 +707,7 @@ a:hover .arr, button:hover .arr { transform: translateX(4px); }
 .vcard__tag, :where(html).theme-dark .vcard__tag { background: rgba(6,10,8,.88); color: var(--g-green); backdrop-filter: blur(6px); }
 
 /* ---------------------------------------------------------------- VAURA beams (contact page) */
-.vb { position: relative; overflow: hidden; isolation: isolate; background: radial-gradient(120% 90% at 50% 40%, #07140c 0%, #040806 55%, #020403 100%); border: 1px solid #14301e; border-radius: 28px; width: min(1160px, calc(100% - 40px)); margin: clamp(48px, 7vw, 96px) auto 0; min-height: clamp(520px, 52vw, 640px); display: grid; place-items: center; color: #fff; }
+.vb { position: relative; overflow: hidden; isolation: isolate; background: radial-gradient(120% 90% at 50% 40%, #07140c 0%, #040806 55%, #020403 100%); border: 1px solid #14301e; border-radius: 28px; width: min(1160px, calc(100% - 40px)); margin: 0 auto; min-height: clamp(520px, 52vw, 640px); display: grid; place-items: center; color: #fff; }
 .vb__svg { position: absolute; inset: 0; width: 100%; height: 100%; z-index: -2; filter: drop-shadow(0 0 5px rgba(16,240,74,.35)); }
 .vb__shade { position: absolute; inset: 0; z-index: -1; background: radial-gradient(60% 55% at 50% 50%, rgba(2,6,3,.78), rgba(2,6,3,.35) 60%, transparent 100%); pointer-events: none; }
 .vb__in { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 14px; padding: 56px 24px; max-width: 640px; }
@@ -749,3 +749,11 @@ a:hover .arr, button:hover .arr { transform: translateX(4px); }
 .dest__c .mono { color: var(--g-green); }
 .dest__go { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; opacity: .85; }
 @media (max-width: 860px) { .dest { grid-template-columns: 1fr; } }
+
+/* VAURA link: logo beside the word. Logo asset is white, so flip it on light header/menu. */
+.hdr__vaura img, .mnav__vaura img { height: 17px; width: auto; margin-right: 9px; filter: invert(1); }
+:where(html).theme-dark .hdr__vaura img, :where(html).theme-dark .mnav__vaura img, .hdr--overlay .hdr__vaura img { filter: none; }
+.mnav .mnav__vaura { align-items: center; }
+.mnav__vaura img { height: 20px; }
+.nt__off { color: var(--g-deep); margin: 10px 0 2px; }
+:where(html).theme-dark .nt__off { color: var(--g-green); }

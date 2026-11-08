@@ -84,7 +84,6 @@ export function VauraBeams() {
         <img className="vb__logo" src={u("/assets/vaura-logo.png")} alt="VAURA" width={560} height={367} />
         <p className="mono vb__k">Built by VAURA</p>
         <h3 id="vb-h" className="vb__h">Want a site like this <em className="accent">for your brand?</em></h3>
-        <p className="vb__p">Websites, branding, marketing, photo and video, woven into one brand that looks the part and performs.</p>
         <ul className="vb__chips" aria-label="What VAURA does">
           <li>Websites</li><li>Branding</li><li>Marketing</li><li>Photo &amp; video</li>
         </ul>

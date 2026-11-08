@@ -90,7 +90,7 @@ export function Header({ overlay = false }: { overlay?: boolean }) {
         <a className="cta-call" href={u("/contact")}>
           Schedule your call <Arrow />
         </a>
-        <a className="hdr__vaura" href="https://vauraagency.com" target="_blank" rel="noopener" aria-label="VAURA, our marketing company (opens in a new tab)">VAURA</a>
+        <a className="hdr__vaura" href="https://vauraagency.com" target="_blank" rel="noopener" aria-label="VAURA, our marketing company (opens in a new tab)"><img src={u("/assets/vaura-logo.png")} alt="" width={28} height={18} />VAURA</a>
         <button className="hdr__burger" aria-label={open ? "Close menu" : "Open menu"} aria-expanded={open} onClick={() => setOpen(!open)}>
           <span /><span />
         </button>
@@ -106,7 +106,7 @@ export function Header({ overlay = false }: { overlay?: boolean }) {
           <a className="mnav__wa" href={waLink(waTemplate("Planning a Tulum trip"))} target="_blank" rel="noopener">
             WhatsApp Connected <Arrow />
           </a>
-          <a className="mnav__vaura" href="https://vauraagency.com" target="_blank" rel="noopener" aria-label="VAURA, our marketing company (opens in a new tab)">VAURA</a>
+          <a className="mnav__vaura" href="https://vauraagency.com" target="_blank" rel="noopener" aria-label="VAURA, our marketing company (opens in a new tab)"><img src={u("/assets/vaura-logo.png")} alt="" width={28} height={18} />VAURA</a>
         </div>
       )}
     </header>
