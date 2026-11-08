@@ -757,3 +757,6 @@ a:hover .arr, button:hover .arr { transform: translateX(4px); }
 .mnav__vaura img { height: 20px; }
 .nt__off { color: var(--g-deep); margin: 10px 0 2px; }
 :where(html).theme-dark .nt__off { color: var(--g-green); }
+
+/* VAURA widget heading stays on one line on desktop */
+@media (min-width: 900px) { .vb__in { max-width: 980px; } .vb__h { white-space: nowrap; } }
