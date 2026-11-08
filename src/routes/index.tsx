@@ -149,6 +149,25 @@ function VillaStrip() {
   );
 }
 
+function Beyond() {
+  const places = ["Ibiza", "Mykonos", "New York"];
+  return (
+    <section id="beyond" className="sec wrap" aria-labelledby="by-h">
+      <Eyebrow>Beyond Tulum</Eyebrow>
+      <div id="by-h"><H2 a="More cities," b="more nights" /></div>
+      <Carousel className="dest" label="More destinations">
+        {places.map((p) => (
+          <a key={p} className="dest__c" href={waLink(waTemplate(`${p} events`))} target="_blank" rel="noopener" data-rise>
+            <b>{p}</b>
+            <span className="mono">Events coming soon</span>
+            <span className="dest__go">Ask about {p} <Arrow /></span>
+          </a>
+        ))}
+      </Carousel>
+    </section>
+  );
+}
+
 function Team() {
   return (
     <section id="team" className="sec wrap team" aria-labelledby="team-h">
@@ -211,6 +230,7 @@ function Home() {
       <Calendar_ />
       <Services />
       <VillaStrip />
+      <Beyond />
       <Team />
       <Reviews />
       <How />

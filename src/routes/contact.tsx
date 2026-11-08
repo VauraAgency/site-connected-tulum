@@ -3,6 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { site, waLink } from "../content/site";
 import { Shell, Arrow, WaGlyph } from "../components/site/ui";
+import { VauraBeams } from "../components/site/vaura";
 
 export const Route = createFileRoute("/contact")({
   head: () => ({
@@ -120,9 +121,10 @@ function Contact() {
           <li><span className="mono">Email</span><a href={`mailto:${site.email}`}>{site.email}</a></li>
           <li><span className="mono">Instagram</span><a href={site.socials.instagram} target="_blank" rel="noopener">@connected_tulum</a></li>
           <li><span className="mono">TikTok</span><a href={site.socials.tiktok} target="_blank" rel="noopener">@connected.tulum</a></li>
-          <li><span className="mono">Hours</span><span>{site.callHours}</span></li>
+          <li><span className="mono">Hours</span><span>All day, every day</span></li>
         </ul>
       </section>
+      <VauraBeams />
     </Shell>
   );
 }

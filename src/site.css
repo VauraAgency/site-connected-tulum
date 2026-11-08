@@ -705,3 +705,47 @@ a:hover .arr, button:hover .arr { transform: translateX(4px); }
 
 /* villa style tag sits on photos: keep it solid so it reads in both themes */
 .vcard__tag, :where(html).theme-dark .vcard__tag { background: rgba(6,10,8,.88); color: var(--g-green); backdrop-filter: blur(6px); }
+
+/* ---------------------------------------------------------------- VAURA beams (contact page) */
+.vb { position: relative; overflow: hidden; isolation: isolate; background: radial-gradient(120% 90% at 50% 40%, #07140c 0%, #040806 55%, #020403 100%); border: 1px solid #14301e; border-radius: 28px; width: min(1160px, calc(100% - 40px)); margin: clamp(48px, 7vw, 96px) auto 0; min-height: clamp(520px, 52vw, 640px); display: grid; place-items: center; color: #fff; }
+.vb__svg { position: absolute; inset: 0; width: 100%; height: 100%; z-index: -2; filter: drop-shadow(0 0 5px rgba(16,240,74,.35)); }
+.vb__shade { position: absolute; inset: 0; z-index: -1; background: radial-gradient(60% 55% at 50% 50%, rgba(2,6,3,.78), rgba(2,6,3,.35) 60%, transparent 100%); pointer-events: none; }
+.vb__in { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 14px; padding: 56px 24px; max-width: 640px; }
+.vb__logo { width: clamp(150px, 20vw, 230px); height: auto; filter: drop-shadow(0 0 22px rgba(16,240,74,.45)) drop-shadow(0 0 4px rgba(255,255,255,.35)); animation: vb-glow 5s ease-in-out infinite alternate; }
+.vb__k { color: var(--g-green); margin-top: 6px; }
+.vb__h { font-family: var(--f-display); font-weight: 600; font-size: clamp(28px, 4.4vw, 46px); line-height: 1.12; letter-spacing: -.03em; padding-bottom: .1em; }
+.vb__h .accent { background: var(--grad); -webkit-background-clip: text; background-clip: text; }
+.vb__p { color: #b4beb7; font-size: clamp(14.5px, 1.5vw, 16.5px); line-height: 1.55; max-width: 520px; }
+.vb__chips { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 4px 0 8px; padding: 0; list-style: none; }
+.vb__chips li { padding: 7px 14px; border-radius: 999px; border: 1px solid rgba(16,240,74,.28); background: rgba(16,240,74,.07); font-size: 12.5px; color: #dff9e6; backdrop-filter: blur(4px); }
+.vb__stars circle { fill: #bfffd0; opacity: .5; animation: vb-tw 4.5s ease-in-out infinite; }
+.vb__rib { transform-box: fill-box; transform-origin: center; will-change: transform; }
+.vb-d1 { animation: vb-d1 15s ease-in-out infinite alternate; }
+.vb-d2 { animation: vb-d2 19s ease-in-out infinite alternate; }
+.vb-d3 { animation: vb-d3 17s ease-in-out infinite alternate; }
+.vb__beam { stroke-dasharray: 70 930; stroke-dashoffset: 70; opacity: 0; animation-name: vb-run; animation-timing-function: cubic-bezier(.45,.05,.35,1); animation-iteration-count: infinite; filter: drop-shadow(0 0 7px #10f04a) drop-shadow(0 0 14px rgba(16,240,74,.7)); }
+@keyframes vb-run { 0% { stroke-dashoffset: 70; opacity: 0; } 8% { opacity: 1; } 78% { opacity: 1; } 100% { stroke-dashoffset: -1000; opacity: 0; } }
+@keyframes vb-d1 { from { transform: translate3d(-14px, -10px, 0) scaleY(1); } to { transform: translate3d(18px, 12px, 0) scaleY(1.07); } }
+@keyframes vb-d2 { from { transform: translate3d(16px, 8px, 0) scaleY(1.04); } to { transform: translate3d(-16px, -12px, 0) scaleY(.95); } }
+@keyframes vb-d3 { from { transform: translate3d(-10px, 12px, 0) scaleY(.96); } to { transform: translate3d(14px, -8px, 0) scaleY(1.06); } }
+@keyframes vb-tw { 0%, 100% { opacity: .15; } 50% { opacity: .7; } }
+@keyframes vb-glow { from { filter: drop-shadow(0 0 14px rgba(16,240,74,.3)) drop-shadow(0 0 3px rgba(255,255,255,.3)); } to { filter: drop-shadow(0 0 30px rgba(16,240,74,.6)) drop-shadow(0 0 5px rgba(255,255,255,.4)); } }
+@media (max-width: 760px) { .vb { border-radius: 22px; min-height: 560px; } .vb__in { padding: 44px 18px; } .vb__svg { filter: none; } }
+@media (prefers-reduced-motion: reduce) { .vb__rib, .vb__stars circle, .vb__logo { animation: none !important; } .vb__beam { animation: none !important; opacity: .55; stroke-dashoffset: -300; } }
+
+/* header VAURA link: far right on desktop, bottom of the mobile menu */
+.hdr__vaura { display: inline-flex; align-items: center; font-family: var(--f-mono); font-size: 11px; letter-spacing: .22em; text-transform: uppercase; padding: 10px 4px 10px 6px; opacity: .78; transition: opacity .25s, color .25s; white-space: nowrap; }
+.hdr__vaura:hover { opacity: 1; color: var(--g-deep); }
+:where(html).theme-dark .hdr__vaura:hover { color: var(--g-green); }
+.hdr--overlay .hdr__vaura { color: #fff; }
+@media (max-width: 1080px) { .hdr__vaura { display: none; } }
+.mnav .mnav__vaura { margin-top: auto; font-size: 13px; font-family: var(--f-mono); letter-spacing: .22em; text-transform: uppercase; border-bottom: 0; justify-content: center; padding: 26px 0 8px; opacity: .8; }
+
+/* Beyond Tulum destinations */
+.dest { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; margin-top: 40px; }
+.dest__c { position: relative; overflow: hidden; display: flex; flex-direction: column; gap: 10px; justify-content: flex-end; min-height: 210px; padding: 26px; border-radius: var(--r); background: radial-gradient(120% 120% at 100% 0%, rgba(16,240,74,.22), transparent 55%), var(--black); color: #fff; border: 1px solid #14301e; transition: transform .45s var(--ease), border-color .3s; }
+.dest__c:hover { transform: translateY(-5px); border-color: var(--g-green); }
+.dest__c b { font-family: var(--f-display); font-weight: 600; font-size: clamp(28px, 3.4vw, 40px); letter-spacing: -.03em; }
+.dest__c .mono { color: var(--g-green); }
+.dest__go { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; opacity: .85; }
+@media (max-width: 860px) { .dest { grid-template-columns: 1fr; } }
