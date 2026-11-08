@@ -760,3 +760,11 @@ a:hover .arr, button:hover .arr { transform: translateX(4px); }
 
 /* VAURA widget heading stays on one line on desktop */
 @media (min-width: 900px) { .vb__in { max-width: 980px; } .vb__h { white-space: nowrap; } }
+
+/* desktop: every night card in a row is the same height. Flyers sit in one fixed frame, fully visible (letterboxed, never cropped). Phones keep the swipe carousel as is. */
+@media (min-width: 761px) {
+  .evgrid { align-items: stretch; grid-auto-rows: 1fr; }
+  .ev__flyer, .ev__flyer--img { aspect-ratio: 5 / 7; background: #000; }
+  .ev__flyer--img .ev__zoom { position: absolute; inset: 0; display: block; height: 100%; }
+  .ev__flyer--img .ev__img { width: 100%; height: 100%; aspect-ratio: auto !important; object-fit: contain; }
+}
