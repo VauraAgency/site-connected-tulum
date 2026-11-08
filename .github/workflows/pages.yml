@@ -24,12 +24,13 @@ jobs:
       - name: Build
         run: npm run build
         env:
-          BASE_PATH: /site-connected-tulum/
+          BASE_PATH: /
       - name: Assemble
         run: |
           mkdir -p site
           cp -r dist/client/. site/
           cp site/index.html site/404.html
+          echo "connectedtulum.com" > site/CNAME
           # old review link (/dark/) now just goes to the main site
           mkdir -p site/dark
           printf '<!doctype html><meta charset="utf-8"><meta http-equiv="refresh" content="0;url=/site-connected-tulum/"><link rel="canonical" href="/site-connected-tulum/"><a href="/site-connected-tulum/">Connected Tulum</a>' > site/dark/index.html
