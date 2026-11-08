@@ -12,6 +12,9 @@ import siteCss from "../site.css?url";
 import { Shell } from "../components/site/ui";
 
 
+/** Link previews (WhatsApp, iMessage, Slack, X) need an absolute https URL. */
+const OG_IMAGE = "https://connectedtulum.com/assets/og.jpg";
+
 type AppMeta = {
   og_title?: string | null;
   og_description?: string | null;
@@ -22,7 +25,7 @@ type AppMeta = {
 const appMeta: AppMeta = {
   og_title: "Connected Tulum",
   og_description: "Tickets and VIP tables for Tulum High Season 2027: Zamna, Tehmplo, Day Zero and every night.",
-  og_image_url: u("/assets/og.jpg"),
+  og_image_url: OG_IMAGE,
   favicon_url: u("/assets/logo-mark.svg"),
 };
 
@@ -35,7 +38,7 @@ const THEME_BOOT = `(function(){var d=document.documentElement,t="dark";try{var 
 function buildHead(meta: AppMeta) {
   const title = meta.og_title ?? "Connected Tulum";
   const description = meta.og_description ?? "Tickets and VIP tables for Tulum High Season 2027.";
-  const ogImage = meta.og_image_url ?? u("/assets/og.jpg");
+  const ogImage = meta.og_image_url ?? OG_IMAGE;
   return {
     meta: [
       { charSet: "utf-8" },
@@ -48,6 +51,8 @@ function buildHead(meta: AppMeta) {
       { property: "og:description", content: description },
       { property: "og:type", content: "website" },
       { property: "og:image", content: ogImage },
+      { property: "og:image:width", content: "1200" },
+      { property: "og:image:height", content: "630" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:image", content: ogImage },
     ],

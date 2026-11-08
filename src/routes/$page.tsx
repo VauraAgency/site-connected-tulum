@@ -32,7 +32,7 @@ export const Route = createFileRoute("/$page")({
     if (!r) return {};
     const title = r.kind === "service" ? `${r.s.h1} | Connected Tulum` : r.p.title;
     const description = r.kind === "service" ? `${r.s.short} ${r.s.intro}`.trim() : r.p.description;
-    const image = r.kind === "service" ? r.s.image : r.p.image;
+    const image = "https://connectedtulum.com/assets/og.jpg";
     return {
       meta: [
         { title },

@@ -16,7 +16,7 @@ export const Route = createFileRoute("/villas/$slug")({
         ? [
             { title: `${v.name} Tulum${v.guests ? `: Villa for ${v.guests} Guests` : ""} | Connected Tulum` },
             { name: "description", content: `${v.name}, ${v.area}. ${v.hook} Book direct with Connected Tulum.` },
-            { property: "og:image", content: v.images[0] },
+            { property: "og:image", content: `${site.domain}${v.images[0]}` },
           ]
         : [],
       links: [{ rel: "canonical", href: `${site.domain}/villas/${params.slug}` }],
