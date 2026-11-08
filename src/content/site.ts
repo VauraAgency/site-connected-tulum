@@ -27,7 +27,7 @@ export const site = {
     tiktok: "https://www.tiktok.com/@connected.tulum",
     facebook: "https://www.facebook.com/share/18M4RjEqWz/",
   },
-  callHours: "Every day · Tulum time (EST, UTC−5)",
+  callHours: "Open every day, all day · Tulum time (EST, UTC−5)",
   // Villas are presented as Connected's own collection. Never link out to or name the sourcing partner on the public site.
   // PENDING: promoter / affiliate ticket links per festival. Empty = "Get tickets" opens a WhatsApp request instead.
   promoterUrls: { zamna: "", tehmplo: "", "day-zero": "", other: "" } as Record<string, string>,
@@ -392,9 +392,11 @@ export const events: TEvent[] = [
     prices: [{ label: "Dinner + party, early", mxn: 9790 }] },
   { date: "2026-12-31", title: "NYE Party at Papaya Playa Project", venue: "Papaya Playa Project", type: "Party only", desc: "Beachfront party", flyer: u("/assets/flyers/papaya.webp"), flyerH: 1200, ready: true, bg: img.party,
     prices: [{ label: "Party, early bird", mxn: 4697 }] },
+  { date: "2026-12-31", title: "NYE at Bagatelle", venue: "Bagatelle Tulum", type: "Party only", tbd: true },
   { date: "2026-12-31", title: "NYE at Ahau", venue: "Ahau Tulum", type: "Party only", tbd: true },
   // ---- January
   { date: "2027-01-01", title: "EDM Tulum Network Event", venue: "Kuul Tulum", type: "Beach club", time: "1 PM to 7 PM", desc: "EDM and Connected Tulum event" },
+  { date: "2027-01-02", title: "Amnesia", venue: "Amnesia Tulum", type: "Party only", time: "TBA", tbd: true },
   { date: "2027-01-02", title: "Afrodise", venue: "Ahau Tulum", type: "Festival", time: "TBA", tbd: true },
   { date: "2027-01-02", title: "Por Que No Festival", venue: "Vesica Tulum", type: "Festival", time: "TBA", tbd: true },
   { date: "2027-01-03", title: "Por Que No Festival", venue: "Vesica Tulum", type: "Festival", time: "TBA", tbd: true },
@@ -410,9 +412,11 @@ export const events: TEvent[] = [
   { date: "2027-01-07", title: "Solomun Tulum at Tehmplo", venue: "Tehmplo", type: "Festival", time: "10:00 PM", lineup: "Solomun", flyer: u("/assets/flyers/solomun.webp"), flyerH: 1125, ready: true, festival: "tehmplo", key: true, bg: img.cenote,
     table: "Tables from $15,000 USD minimum spend" },
   { date: "2027-01-07", title: "Hugel", venue: "Papaya Playa Project", type: "Festival", desc: "Hugel" },
+  { date: "2027-01-08", title: "Marco Carola at Bagatelle", venue: "Bagatelle Tulum", type: "Party only", time: "TBA", tbd: true },
   { date: "2027-01-08", title: "Adriatique presents X: FOREVER", venue: "Zamna Tulum", type: "Festival", time: "10:00 PM", lineup: "Adriatique, Kotiër, Mind Against, Sama and more", ready: true, festival: "zamna", key: true, manual: true, bg: img.party,
     prices: [{ label: "General, early", mxn: 2520 }, { label: "VIP, early", mxn: 7158 }] },
   { date: "2027-01-09", title: "Day Zero 2027: Begin Again", venue: "Cenote Dos Ojos", type: "Festival", time: "10:00 PM", lineup: "Several artists", flyer: u("/assets/flyers/day-zero.webp"), flyerH: 1125, ready: true, festival: "day-zero", key: true, manual: true, bg: img.cenote },
+  { date: "2027-01-09", title: "Day Zero after party", venue: "Villas behind Tehmplo", type: "Party only", time: "TBA", tbd: true },
   { date: "2027-01-09", title: "Signature", venue: "Papaya Playa Project", type: "Festival", desc: "Signature" },
   { date: "2027-01-10", title: "Adam Port, season closing", venue: "Zamna Tulum", type: "Festival", time: "10:00 PM", lineup: "Adam Port", flyer: u("/assets/flyers/adam-port.webp"), flyerH: 1600, ready: true, festival: "zamna", key: true, manual: true, bg: img.festival,
     prices: [{ label: "General, early", mxn: 1925 }, { label: "VIP, early", mxn: 7158 }] },
