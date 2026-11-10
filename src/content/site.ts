@@ -369,6 +369,8 @@ export type TEvent = {
   priceNote?: string;
   table?: string; // VIP table starting point, shown on the card
   flyer?: string;
+  flyerVideo?: string; // optional looping video flyer (the flyer image is its poster)
+  cta?: "reserve"; // restaurant / club nights: one "Request a reservation" button instead of tickets + table
   flyerH?: number; // flyer height when scaled to 900px wide (keeps the frame the flyer's own shape)
   ticketUrl?: string;
   festival?: "zamna" | "tehmplo" | "day-zero";
@@ -379,6 +381,8 @@ export type TEvent = {
 };
 
 export const events: TEvent[] = [
+  // ---- Nov 12 · Casa Jaguar 15th anniversary (flyer date: Thursday 12-11-2026)
+  { date: "2026-11-12", title: "Casa Jaguar 15th Anniversary", venue: "Casa Jaguar", type: "Party only", time: "10 PM till late", desc: "MoM + Bawab", flyer: u("/assets/flyers/casa-jaguar.webp"), flyerVideo: u("/assets/flyers/casa-jaguar.mp4"), flyerH: 1600, ready: true, manual: true, cta: "reserve", bg: img.party },
   // ---- Dec 31 · New Year's Eve
   { date: "2026-12-31", title: "NYE Dinner at Casa Malca", venue: "Casa Malca", type: "Dinner only", time: "8:00 PM", desc: "Beachfront dinner experience", flyer: u("/assets/flyers/casa-malca.webp"), flyerH: 1740, ready: true, manual: true, bg: img.villaBeach,
     prices: [{ label: "Adult, early", mxn: 4360 }, { label: "Child 6 to 12, early", mxn: 2183 }], priceNote: "Early rate through Dec 21. Regular $6,216 adult / $3,180 child. Includes VAT and service." },
@@ -395,6 +399,7 @@ export const events: TEvent[] = [
   { date: "2026-12-31", title: "NYE at Bagatelle", venue: "Bagatelle Tulum", type: "Party only", tbd: true },
   { date: "2026-12-31", title: "NYE at Ahau", venue: "Ahau Tulum", type: "Party only", tbd: true },
   // ---- January
+  { date: "2027-01-01", title: "Maxi Meraki at Bonbonniere", venue: "Bonbonniere Tulum", type: "Party only", lineup: "Maxi Meraki, Miul, Fer Delgado", desc: "Miul / Fer Delgado", flyer: u("/assets/flyers/maxi-meraki.webp"), flyerH: 1600, ready: true, manual: true, bg: img.party },
   { date: "2027-01-01", title: "EDM Tulum Network Event", venue: "Kuul Tulum", type: "Beach club", time: "1 PM to 7 PM", desc: "EDM and Connected Tulum event" },
   { date: "2027-01-02", title: "Amnesia", venue: "Amnesia Tulum", type: "Party only", time: "TBA", tbd: true },
   { date: "2027-01-02", title: "Afrodise", venue: "Ahau Tulum", type: "Festival", time: "TBA", tbd: true },

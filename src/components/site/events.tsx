@@ -26,6 +26,13 @@ export function daysUntil(iso: string, from: Date) {
 export function TicketBtn({ e, className = "cta-ticket" }: { e: TEvent; className?: string }) {
   const href = ticketHref(e);
   const d = fmtDate(e.date);
+  if (e.cta === "reserve") {
+    return (
+      <a className={className} href={waLink(waTemplate(`Reservation: ${evName(e)} @ ${e.venue} (${d.long})`))} target="_blank" rel="noopener">
+        Request a reservation <Arrow />
+      </a>
+    );
+  }
   if (href) {
     return <a className={className} href={href} target="_blank" rel="noopener sponsored">Get tickets <Arrow /></a>;
   }
@@ -38,6 +45,7 @@ export function TicketBtn({ e, className = "cta-ticket" }: { e: TEvent; classNam
 
 export function TableBtn({ e, className = "cta-table" }: { e: TEvent; className?: string }) {
   const d = fmtDate(e.date);
+  if (e.cta === "reserve") return null;
   return (
     <a className={className} href={waLink(waTemplate(`VIP table: ${evName(e)} @ ${e.venue} (${d.long})`))} target="_blank" rel="noopener">
       Inquire about a table
@@ -95,13 +103,17 @@ export function NightCard({ e }: { e: TEvent }) {
       <div className={`ev__flyer ${e.flyer ? "ev__flyer--img" : ""}`}>
         {e.flyer ? (
           <button type="button" className="ev__zoom" onClick={() => setBig(true)} aria-label={`View ${name} flyer larger`}>
-            <img className="ev__img" src={e.flyer} alt={`${name} flyer`} loading="lazy" width={900} height={e.flyerH || 1125} style={{ aspectRatio: `900 / ${e.flyerH || 1125}` }} />
+            {e.flyerVideo ? (
+              <video className="ev__img" src={e.flyerVideo} poster={e.flyer} autoPlay muted loop playsInline preload="none" aria-label={`${name} flyer`} width={900} height={e.flyerH || 1600} style={{ aspectRatio: `900 / ${e.flyerH || 1600}` }} />
+            ) : (
+              <img className="ev__img" src={e.flyer} alt={`${name} flyer`} loading="lazy" width={900} height={e.flyerH || 1125} style={{ aspectRatio: `900 / ${e.flyerH || 1125}` }} />
+            )}
           </button>
         ) : <Poster e={e} />}
       </div>
       {big && e.flyer && (
         <div className="lbx" role="dialog" aria-modal="true" aria-label={`${name} flyer`} onClick={() => setBig(false)}>
-          <img src={e.flyer} alt={`${name} flyer`} />
+          {e.flyerVideo ? <video src={e.flyerVideo} poster={e.flyer} autoPlay muted loop playsInline controls aria-label={`${name} flyer`} onClick={(ev) => ev.stopPropagation()} /> : <img src={e.flyer} alt={`${name} flyer`} />}
           <button type="button" className="lbx__x" aria-label="Close" onClick={() => setBig(false)}>&times;</button>
         </div>
       )}

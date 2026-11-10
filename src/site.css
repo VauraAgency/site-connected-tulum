@@ -666,7 +666,7 @@ a:hover .arr, button:hover .arr { transform: translateX(4px); }
 .ev__flyer--img .ev__zoom { position: static; display: block; width: 100%; padding: 0; border: 0; background: none; cursor: zoom-in; line-height: 0; }
 .ev__flyer--img .ev__img { display: block; width: 100%; height: auto; }
 .lbx { position: fixed; inset: 0; z-index: 100; background: rgba(0,0,0,.9); display: flex; align-items: center; justify-content: center; padding: 20px; cursor: zoom-out; }
-.lbx img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 10px; }
+.lbx img, .lbx video { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: 10px; }
 .lbx__x { position: absolute; top: 14px; right: 16px; width: 44px; height: 44px; border-radius: 50%; border: 1px solid rgba(255,255,255,.35); background: rgba(0,0,0,.5); color: #fff; font-size: 28px; line-height: 1; cursor: pointer; }
 .rest__c > span { justify-content: space-between; font-weight: 600; letter-spacing: .01em; }
 .rest__c > span .arr, .rest__c > span svg { position: static; flex: none; }
