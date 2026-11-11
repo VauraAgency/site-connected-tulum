@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as PortalRouteImport } from './routes/portal'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as PageRouteImport } from './routes/$page'
 import { Route as IndexRouteImport } from './routes/index'
@@ -19,6 +20,11 @@ import { Route as VillasSlugRouteImport } from './routes/villas/$slug'
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PortalRoute = PortalRouteImport.update({
+  id: '/portal',
+  path: '/portal',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContactRoute = ContactRouteImport.update({
@@ -51,6 +57,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$page': typeof PageRoute
   '/contact': typeof ContactRoute
+  '/portal': typeof PortalRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/villas/$slug': typeof VillasSlugRoute
   '/villas/': typeof VillasIndexRoute
@@ -59,6 +66,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$page': typeof PageRoute
   '/contact': typeof ContactRoute
+  '/portal': typeof PortalRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/villas/$slug': typeof VillasSlugRoute
   '/villas': typeof VillasIndexRoute
@@ -68,6 +76,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/$page': typeof PageRoute
   '/contact': typeof ContactRoute
+  '/portal': typeof PortalRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/villas/$slug': typeof VillasSlugRoute
   '/villas/': typeof VillasIndexRoute
@@ -75,14 +84,28 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/$page' | '/contact' | '/sitemap.xml' | '/villas/$slug' | '/villas/'
+    | '/'
+    | '/$page'
+    | '/contact'
+    | '/portal'
+    | '/sitemap.xml'
+    | '/villas/$slug'
+    | '/villas/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/$page' | '/contact' | '/sitemap.xml' | '/villas/$slug' | '/villas'
+  to:
+    | '/'
+    | '/$page'
+    | '/contact'
+    | '/portal'
+    | '/sitemap.xml'
+    | '/villas/$slug'
+    | '/villas'
   id:
     | '__root__'
     | '/'
     | '/$page'
     | '/contact'
+    | '/portal'
     | '/sitemap.xml'
     | '/villas/$slug'
     | '/villas/'
@@ -92,6 +115,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   PageRoute: typeof PageRoute
   ContactRoute: typeof ContactRoute
+  PortalRoute: typeof PortalRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   VillasSlugRoute: typeof VillasSlugRoute
   VillasIndexRoute: typeof VillasIndexRoute
@@ -104,6 +128,13 @@ declare module '@tanstack/react-router' {
       path: '/sitemap.xml'
       fullPath: '/sitemap.xml'
       preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/portal': {
+      id: '/portal'
+      path: '/portal'
+      fullPath: '/portal'
+      preLoaderRoute: typeof PortalRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contact': {
@@ -148,6 +179,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   PageRoute: PageRoute,
   ContactRoute: ContactRoute,
+  PortalRoute: PortalRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   VillasSlugRoute: VillasSlugRoute,
   VillasIndexRoute: VillasIndexRoute,
