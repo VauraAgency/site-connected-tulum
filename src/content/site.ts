@@ -410,7 +410,7 @@ export const events: TEvent[] = [
   { date: "2027-01-03", title: "Scenarios", venue: "Papaya Playa Project", type: "Festival" },
   { date: "2027-01-04", title: "Anyma presents ÆDEN: The Lost Temple", venue: "Zamna Tulum", type: "Festival", time: "10:00 PM", lineup: "Anyma, CamelPhat, Cassian, Volkoder and more", flyer: u("/assets/flyers/anyma.webp"), flyerH: 1600, ready: true, festival: "zamna", key: true, manual: true, bg: img.party,
     prices: [{ label: "General, phase 1", mxn: 3325 }, { label: "VIP, early", mxn: 7158 }] },
-  { date: "2027-01-05", title: "Rafael presents Cheetah Print", venue: "Papaya Playa Project", type: "Festival", desc: "Rafael" },
+  { date: "2027-01-05", title: "Cheetah Print", venue: "Papaya Playa Project", type: "Party only", desc: "Papaya Playa Project and Rafael present", flyer: u("/assets/flyers/cheetah-print.webp"), flyerH: 1200, ready: true, manual: true, bg: img.beachClub },
   { date: "2027-01-05", title: "7 Realms", venue: "Kuul Tulum", type: "Festival", tbd: true },
   { date: "2027-01-06", title: "Black Coffee at Zamna Tulum", venue: "Zamna Tulum", type: "Festival", time: "10:00 PM", lineup: "Black Coffee", flyer: u("/assets/flyers/black-coffee.webp"), flyerH: 1600, ready: true, festival: "zamna", key: true, manual: true, bg: img.festival,
     prices: [{ label: "General, early", mxn: 2520 }, { label: "VIP, early", mxn: 7158 }] },
