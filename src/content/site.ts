@@ -418,7 +418,7 @@ export const events: TEvent[] = [
     table: "Tables from $15,000 USD minimum spend" },
   { date: "2027-01-07", title: "Hugel", venue: "Papaya Playa Project", type: "Festival", desc: "Hugel" },
   { date: "2027-01-08", title: "Marco Carola at Bagatelle", venue: "Bagatelle Tulum", type: "Party only", time: "Doors 7:00 PM", lineup: "Marco Carola, Renê, Maubo", desc: "Renê / Maubo", flyer: u("/assets/flyers/marco-carola.webp"), flyerH: 1600, ready: true, manual: true, bg: img.beachClub },
-  { date: "2027-01-08", title: "Adriatique presents X: FOREVER", venue: "Zamna Tulum", type: "Festival", time: "10:00 PM", lineup: "Adriatique, Kotiër, Mind Against, Sama and more", ready: true, festival: "zamna", key: true, manual: true, bg: img.party,
+  { date: "2027-01-08", title: "Adriatique presents X: FOREVER", venue: "Zamna Tulum", type: "Festival", time: "10:00 PM", lineup: "Adriatique, Kotiër, Mind Against, Sama, WhoMadeWho (hybrid DJ set)", flyer: u("/assets/flyers/adriatique.webp"), flyerVideo: u("/assets/flyers/adriatique.mp4"), flyerH: 1600, ready: true, festival: "zamna", key: true, manual: true, bg: img.party,
     prices: [{ label: "General, early", mxn: 2520 }, { label: "VIP, early", mxn: 7158 }] },
   { date: "2027-01-09", title: "Day Zero 2027: Begin Again", venue: "Cenote Dos Ojos", type: "Festival", time: "10:00 PM", lineup: "Several artists", flyer: u("/assets/flyers/day-zero.webp"), flyerH: 1125, ready: true, festival: "day-zero", key: true, manual: true, bg: img.cenote },
   { date: "2027-01-09", title: "Day Zero after party", venue: "Villas behind Tehmplo", type: "Party only", time: "TBA", tbd: true },
