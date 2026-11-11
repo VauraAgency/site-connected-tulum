@@ -29,11 +29,24 @@ drop trigger if exists log_entries_touch on public.log_entries;
 create trigger log_entries_touch before update on public.log_entries
   for each row execute function public.log_entries_touch();
 
--- Only signed-in team members can read or write. Anonymous visitors get nothing.
+-- Allowed emails. Only these addresses can ever read or write the log, even if someone managed to create an account.
+create table if not exists public.team_emails (email text primary key);
+alter table public.team_emails enable row level security;   -- no policies: the browser can never read this list
+revoke all on public.team_emails from anon, authenticated;
+
+create or replace function public.is_team() returns boolean
+  language sql stable security definer set search_path = public as $$
+  select exists (select 1 from public.team_emails where lower(email) = lower(coalesce(auth.jwt() ->> 'email', '')));
+$$;
+grant execute on function public.is_team() to authenticated;
+
 alter table public.log_entries enable row level security;
 revoke all on public.log_entries from anon;
 grant select, insert, update, delete on public.log_entries to authenticated;
 
 drop policy if exists "team only" on public.log_entries;
 create policy "team only" on public.log_entries
-  for all to authenticated using (true) with check (true);
+  for all to authenticated using (public.is_team()) with check (public.is_team());
+
+-- Add Hector (replace with his real email). Add more people later with another insert.
+-- insert into public.team_emails (email) values ('hector@example.com');
