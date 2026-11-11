@@ -97,7 +97,8 @@ function Calendar_() {
 }
 
 function Nights() {
-  const list = readyEvents.filter((e) => e.key).slice(0, 8);
+  // every night with a flyer, strictly by date
+  const list = readyEvents.filter((e) => e.flyer).sort((a, b) => a.date.localeCompare(b.date));
   return (
     <section id="nights" className="sec wrap" aria-labelledby="nt-h">
       <Eyebrow>The nights</Eyebrow>
