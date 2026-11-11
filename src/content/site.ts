@@ -370,6 +370,7 @@ export type TEvent = {
   table?: string; // VIP table starting point, shown on the card
   flyer?: string;
   flyerVideo?: string; // optional looping video flyer (the flyer image is its poster)
+  skipGrid?: boolean; // repeat of a weekly night: shown in the calendar, hidden from the card grids
   cta?: "reserve"; // restaurant / club nights: one "Request a reservation" button instead of tickets + table
   flyerH?: number; // flyer height when scaled to 900px wide (keeps the frame the flyer's own shape)
   ticketUrl?: string;
@@ -380,7 +381,7 @@ export type TEvent = {
   bg?: string;
 };
 
-export const events: TEvent[] = [
+const rawEvents: TEvent[] = [
   // ---- Nov 12 · Casa Jaguar 15th anniversary (flyer date: Thursday 12-11-2026)
   { date: "2026-11-12", title: "Casa Jaguar 15th Anniversary", venue: "Casa Jaguar", type: "Party only", time: "10 PM till late", desc: "MoM + Bawab", flyer: u("/assets/flyers/casa-jaguar.webp"), flyerVideo: u("/assets/flyers/casa-jaguar.mp4"), flyerH: 1600, ready: true, manual: true, cta: "reserve", bg: img.party },
   // ---- Dec 31 · New Year's Eve
@@ -410,7 +411,7 @@ export const events: TEvent[] = [
   { date: "2027-01-03", title: "Scenarios", venue: "Papaya Playa Project", type: "Festival" },
   { date: "2027-01-04", title: "Anyma presents ÆDEN: The Lost Temple", venue: "Zamna Tulum", type: "Festival", time: "10:00 PM", lineup: "Anyma, CamelPhat, Cassian, Volkoder and more", flyer: u("/assets/flyers/anyma.webp"), flyerH: 1600, ready: true, festival: "zamna", key: true, manual: true, bg: img.party,
     prices: [{ label: "General, phase 1", mxn: 3325 }, { label: "VIP, early", mxn: 7158 }] },
-  { date: "2027-01-05", title: "Cheetah Print", venue: "Papaya Playa Project", type: "Party only", time: "9 PM to 3 AM", desc: "Papaya Playa Project and Rafael present", flyer: u("/assets/flyers/cheetah-print.webp"), flyerH: 1200, ready: true, manual: true, bg: img.beachClub },
+  { date: "2027-01-05", title: "Cheetah Print", venue: "Papaya Playa Project", type: "Party only", time: "9 PM to 3 AM", desc: "Papaya Playa Project and Rafael present", flyer: u("/assets/flyers/cheetah-print.webp"), flyerVideo: u("/assets/flyers/cheetah-print.mp4"), flyerH: 1200, ready: true, manual: true, bg: img.beachClub },
   { date: "2027-01-05", title: "7 Realms", venue: "Kuul Tulum", type: "Festival", tbd: true },
   { date: "2027-01-06", title: "Black Coffee at Zamna Tulum", venue: "Zamna Tulum", type: "Festival", time: "10:00 PM", lineup: "Black Coffee", flyer: u("/assets/flyers/black-coffee.webp"), flyerH: 1600, ready: true, festival: "zamna", key: true, manual: true, bg: img.festival,
     prices: [{ label: "General, early", mxn: 2520 }, { label: "VIP, early", mxn: 7158 }] },
@@ -427,8 +428,21 @@ export const events: TEvent[] = [
   { date: "2027-01-10", title: "Adam Port, season closing", venue: "Zamna Tulum", type: "Festival", time: "10:00 PM", lineup: "Adam Port", flyer: u("/assets/flyers/adam-port.webp"), flyerH: 1600, ready: true, festival: "zamna", key: true, manual: true, bg: img.festival,
     prices: [{ label: "General, early", mxn: 1925 }, { label: "VIP, early", mxn: 7158 }] },
   { date: "2027-01-11", title: "Giegling", venue: "Papaya Playa Project", type: "Festival", desc: "Giegling" },
+  // ---- Casa Jaguar: Thursday dinner + jungle party, then NYE
+  { date: "2026-11-19", title: "Casa Jaguar Thursdays", venue: "Casa Jaguar", type: "Dinner + party", time: "6 PM till late", desc: "Dinner & jungle party, every Thursday", flyer: u("/assets/flyers/casa-jaguar-thursday.webp"), flyerH: 1600, ready: true, manual: true, cta: "reserve", bg: img.party },
+  { date: "2026-11-26", title: "Casa Jaguar Thursdays", venue: "Casa Jaguar", type: "Dinner + party", time: "6 PM till late", desc: "Dinner & jungle party, every Thursday", flyer: u("/assets/flyers/casa-jaguar-thursday.webp"), flyerH: 1600, ready: true, manual: true, cta: "reserve", skipGrid: true, bg: img.party },
+  { date: "2026-12-03", title: "Casa Jaguar Thursdays", venue: "Casa Jaguar", type: "Dinner + party", time: "6 PM till late", desc: "Dinner & jungle party, every Thursday", flyer: u("/assets/flyers/casa-jaguar-thursday.webp"), flyerH: 1600, ready: true, manual: true, cta: "reserve", skipGrid: true, bg: img.party },
+  { date: "2026-12-10", title: "Casa Jaguar Thursdays", venue: "Casa Jaguar", type: "Dinner + party", time: "6 PM till late", desc: "Dinner & jungle party, every Thursday", flyer: u("/assets/flyers/casa-jaguar-thursday.webp"), flyerH: 1600, ready: true, manual: true, cta: "reserve", skipGrid: true, bg: img.party },
+  { date: "2026-12-17", title: "Casa Jaguar Thursdays", venue: "Casa Jaguar", type: "Dinner + party", time: "6 PM till late", desc: "Dinner & jungle party, every Thursday", flyer: u("/assets/flyers/casa-jaguar-thursday.webp"), flyerH: 1600, ready: true, manual: true, cta: "reserve", skipGrid: true, bg: img.party },
+  { date: "2026-12-24", title: "Casa Jaguar Thursdays", venue: "Casa Jaguar", type: "Dinner + party", time: "6 PM till late", desc: "Dinner & jungle party, every Thursday", flyer: u("/assets/flyers/casa-jaguar-thursday.webp"), flyerH: 1600, ready: true, manual: true, cta: "reserve", skipGrid: true, bg: img.party },
+  { date: "2027-01-07", title: "Casa Jaguar Thursdays", venue: "Casa Jaguar", type: "Dinner + party", time: "6 PM till late", desc: "Dinner & jungle party, every Thursday", flyer: u("/assets/flyers/casa-jaguar-thursday.webp"), flyerH: 1600, ready: true, manual: true, cta: "reserve", skipGrid: true, bg: img.party },
+  { date: "2027-01-14", title: "Casa Jaguar Thursdays", venue: "Casa Jaguar", type: "Dinner + party", time: "6 PM till late", desc: "Dinner & jungle party, every Thursday", flyer: u("/assets/flyers/casa-jaguar-thursday.webp"), flyerH: 1600, ready: true, manual: true, cta: "reserve", skipGrid: true, bg: img.party },
+  { date: "2027-01-21", title: "Casa Jaguar Thursdays", venue: "Casa Jaguar", type: "Dinner + party", time: "6 PM till late", desc: "Dinner & jungle party, every Thursday", flyer: u("/assets/flyers/casa-jaguar-thursday.webp"), flyerH: 1600, ready: true, manual: true, cta: "reserve", skipGrid: true, bg: img.party },
+  { date: "2027-01-28", title: "Casa Jaguar Thursdays", venue: "Casa Jaguar", type: "Dinner + party", time: "6 PM till late", desc: "Dinner & jungle party, every Thursday", flyer: u("/assets/flyers/casa-jaguar-thursday.webp"), flyerH: 1600, ready: true, manual: true, cta: "reserve", skipGrid: true, bg: img.party },
+  { date: "2026-12-31", title: "Casa Jaguar NYE Celebration", venue: "Casa Jaguar", type: "Dinner + party", desc: "Celebration with Todos Santos", flyer: u("/assets/flyers/casa-jaguar-nye.webp"), flyerH: 1599, ready: true, manual: true, cta: "reserve", bg: img.party },
 ];
 
+export const events: TEvent[] = [...rawEvents].sort((a, b) => a.date.localeCompare(b.date));
 export const readyEvents = events.filter((e) => e.ready);
 export const soonEvents = events.filter((e) => !e.ready);
 

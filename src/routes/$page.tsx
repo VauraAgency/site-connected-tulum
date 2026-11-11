@@ -136,7 +136,7 @@ function eventsFor(p: FestivalPage): TEvent[] {
 
 function Festival({ p }: { p: FestivalPage }) {
   const all = eventsFor(p);
-  const list = all.filter((e) => e.ready);
+  const list = all.filter((e) => e.ready && !e.skipGrid);
   const soon = all.filter((e) => !e.ready);
   return (
     <>
