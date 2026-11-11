@@ -26,6 +26,13 @@ export function daysUntil(iso: string, from: Date) {
 export function TicketBtn({ e, className = "cta-ticket" }: { e: TEvent; className?: string }) {
   const href = ticketHref(e);
   const d = fmtDate(e.date);
+  if (e.cta === "reserve" && e.ticketUrl) {
+    return (
+      <a className={className} href={e.ticketUrl} target="_blank" rel="noopener sponsored">
+        Request a reservation <Arrow />
+      </a>
+    );
+  }
   if (e.cta === "reserve") {
     return (
       <a className={className} href={waLink(waTemplate(`Reservation: ${evName(e)} @ ${e.venue} (${d.long})`))} target="_blank" rel="noopener">
