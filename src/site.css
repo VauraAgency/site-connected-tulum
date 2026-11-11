@@ -843,3 +843,5 @@ a:hover .arr, button:hover .arr { transform: translateX(4px); }
   .pt__who { display: none; }
 }
 .ftr__team { color: #7b837d; text-decoration: underline; text-underline-offset: 3px; } .ftr__team:hover { color: #fff; }
+/* mobile only: Team login sits just under the divider line, above the copyright */
+@media (max-width: 600px) { .ftr__base .ftr__team { order: -1; align-self: flex-start; font-size: 14px; } }
