@@ -422,6 +422,7 @@ export const events: TEvent[] = [
     prices: [{ label: "General, early", mxn: 2520 }, { label: "VIP, early", mxn: 7158 }] },
   { date: "2027-01-09", title: "Day Zero 2027: Begin Again", venue: "Cenote Dos Ojos", type: "Festival", time: "10:00 PM", lineup: "Several artists", flyer: u("/assets/flyers/day-zero.webp"), flyerH: 1125, ready: true, festival: "day-zero", key: true, manual: true, bg: img.cenote },
   { date: "2027-01-09", title: "Day Zero after party", venue: "Villas behind Tehmplo", type: "Party only", time: "TBA", tbd: true },
+  { date: "2027-01-09", title: "Franky Rizardo at Bagatelle", venue: "Bagatelle Tulum", type: "Party only", time: "Doors 7:00 PM", lineup: "Franky Rizardo, Dualité, Mauro Torretta", desc: "Dualité / Mauro Torretta", flyer: u("/assets/flyers/franky-rizardo.webp"), flyerH: 1608, ready: true, manual: true, bg: img.beachClub },
   { date: "2027-01-09", title: "Signature", venue: "Papaya Playa Project", type: "Festival", desc: "Signature" },
   { date: "2027-01-10", title: "Adam Port, season closing", venue: "Zamna Tulum", type: "Festival", time: "10:00 PM", lineup: "Adam Port", flyer: u("/assets/flyers/adam-port.webp"), flyerH: 1600, ready: true, festival: "zamna", key: true, manual: true, bg: img.festival,
     prices: [{ label: "General, early", mxn: 1925 }, { label: "VIP, early", mxn: 7158 }] },
