@@ -4,6 +4,6 @@
  * Leave empty and the portal runs in "preview mode" (data stays in the browser only).
  */
 export const PORTAL = {
-  url: "",     // e.g. "https://abcdxyz.supabase.co"
-  anonKey: "", // the project's "anon public" key
+  url: "https://ptrjmwpqjkvrvplfyyoj.supabase.co",
+  anonKey: "sb_publishable_oSoY9btyaARlVPFHCiAuIA_G2I6VIoa", // publishable key (safe to publish; data is protected by login + row rules)
 };
