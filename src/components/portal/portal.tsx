@@ -2,13 +2,14 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import { u } from "../../lib/url";
 import { events } from "../../content/site";
 import {
-  STATUSES, SERVICES, blankEntry, currentEmail, deleteEntry, hasSession, isLive, listEntries, saveEntry, signIn, signOut, toCsv,
-  type Entry, type EntryInput, type Status,
+  STATUSES, SERVICES, actionsToCsv, blankAction, blankEntry, blankReservation, currentEmail, deleteEntry, hasSession, isLive,
+  listActions, listEntries, listReservations, reservationsToCsv, saveAction, saveEntry, signIn, signOut, toCsv,
+  type Action, type ActionInput, type Entry, type EntryInput, type Reservation, type ReservationInput, type Status,
 } from "../../lib/portal-api";
 import { ThemeToggle } from "../site/ui";
-
-const todayIso = () => new Date().toLocaleDateString("en-CA");
-const fmtDay = (iso: string) => new Date(`${iso}T12:00:00`).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" });
+import { ActionForm, ActionsView } from "./actions";
+import { ReservationForm, ReservationsView, markCollected, markCompleted, sampleReservation, saveReservationFlow } from "./reservations";
+import { downloadCsv, fmtDay, todayIso } from "./shared";
 const statusLabel = (s: Status) => STATUSES.find((x) => x.v === s)?.label || s;
 
 /** Every night on the site, in date order, for the "which events" checkboxes. */
@@ -64,35 +65,42 @@ function Login({ onDone }: { onDone: () => void }) {
 }
 
 /* -------------------------------------------------------------------- log */
-type View = "followups" | "all";
+type View = "actions" | "reservations" | "all";
+type Editing =
+  | { kind: "entry"; data: EntryInput }
+  | { kind: "res"; data: ReservationInput }
+  | { kind: "act"; data: ActionInput };
 
 function Log({ onOut }: { onOut: () => void }) {
   const [rows, setRows] = useState<Entry[] | null>(null);
+  const [res, setRes] = useState<Reservation[]>([]);
+  const [acts, setActs] = useState<Action[]>([]);
   const [err, setErr] = useState("");
-  const [view, setView] = useState<View>("followups");
+  const [view, setView] = useState<View>("actions");
   const [q, setQ] = useState("");
   const [st, setSt] = useState<Status | "">("");
-  const [editing, setEditing] = useState<EntryInput | null>(null);
+  const [editing, setEditing] = useState<Editing | null>(null);
+
+  const fail = useCallback((e: unknown) => {
+    const m = (e as Error).message;
+    if (/sign in again|expired/i.test(m)) onOut(); else setErr(m);
+  }, [onOut]);
 
   const load = useCallback(async () => {
-    try { setRows(await listEntries()); setErr(""); } catch (e) {
-      const m = (e as Error).message;
-      if (/sign in again|expired/i.test(m)) onOut(); else setErr(m);
-    }
-  }, [onOut]);
+    try {
+      const [a, b, c] = await Promise.all([listEntries(), listReservations(), listActions()]);
+      setRows(a); setRes(b); setActs(c); setErr("");
+    } catch (e) { fail(e); }
+  }, [fail]);
   useEffect(() => { load(); }, [load]);
 
-  const open = useMemo(() => (rows || []).filter((r) => r.follow_up && r.status !== "done" && r.status !== "lost"), [rows]);
-  const today = todayIso();
-  const groups = useMemo(() => {
-    const sorted = [...open].sort((a, b) => (a.follow_up_date || "9999").localeCompare(b.follow_up_date || "9999"));
-    return [
-      { key: "over", label: "Overdue", items: sorted.filter((r) => r.follow_up_date && r.follow_up_date < today) },
-      { key: "today", label: "Today", items: sorted.filter((r) => r.follow_up_date === today) },
-      { key: "next", label: "Coming up", items: sorted.filter((r) => r.follow_up_date && r.follow_up_date > today) },
-      { key: "none", label: "No date set", items: sorted.filter((r) => !r.follow_up_date) },
-    ].filter((g) => g.items.length);
-  }, [open, today]);
+  /** Run a change, then reload everything so counts and totals stay in step. */
+  const run = async (fn: () => Promise<unknown>) => { try { await fn(); await load(); } catch (e) { fail(e); } };
+
+  const openCount = useMemo(
+    () => (rows || []).filter((r) => r.follow_up && r.status !== "done" && r.status !== "lost").length + acts.filter((a) => a.status === "open").length,
+    [rows, acts],
+  );
 
   const filtered = useMemo(() => {
     const s = q.trim().toLowerCase();
@@ -103,19 +111,22 @@ function Log({ onOut }: { onOut: () => void }) {
     });
   }, [rows, q, st]);
 
-  const markDone = async (r: Entry) => {
-    await saveEntry({ ...r, follow_up: false, actions_taken: r.actions_taken ? `${r.actions_taken}\nFollowed up ${todayIso()}` : `Followed up ${todayIso()}` });
-    load();
-  };
+  const markEntryDone = (r: Entry) =>
+    run(() => saveEntry({ ...r, follow_up: false, actions_taken: r.actions_taken ? `${r.actions_taken}\nFollowed up ${todayIso()}` : `Followed up ${todayIso()}` }));
 
   const exportCsv = () => {
-    const blob = new Blob([toCsv(rows || [])], { type: "text/csv;charset=utf-8" });
-    const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = `connected-tulum-log-${todayIso()}.csv`;
-    a.click();
-    setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+    if (view === "reservations") downloadCsv(reservationsToCsv(res), "connected-tulum-reservations");
+    else if (view === "actions") downloadCsv(actionsToCsv(acts), "connected-tulum-actions");
+    else downloadCsv(toCsv(rows || []), "connected-tulum-log");
   };
+  const exportCount = view === "reservations" ? res.length : view === "actions" ? acts.length : rows?.length ?? 0;
+
+  const newLabel = view === "reservations" ? "+ New reservation" : view === "actions" ? "+ New task" : "+ New entry";
+  const startNew = () =>
+    setEditing(view === "reservations" ? { kind: "res", data: blankReservation() } : view === "actions" ? { kind: "act", data: blankAction() } : { kind: "entry", data: blankEntry() });
+
+  const close = () => setEditing(null);
+  const saved = () => { setEditing(null); load(); };
 
   return (
     <div className="pt">
@@ -124,7 +135,7 @@ function Log({ onOut }: { onOut: () => void }) {
         <div className="pt__barr">
           {isLive() && currentEmail() && <span className="pt__who">{currentEmail()}</span>}
           <ThemeToggle />
-          <button className="pt__btn" onClick={exportCsv} disabled={!rows?.length}>Export CSV</button>
+          <button className="pt__btn" onClick={exportCsv} disabled={!exportCount}>Export CSV</button>
           {isLive() && <button className="pt__btn" onClick={onOut}>Sign out</button>}
         </div>
       </header>
@@ -135,35 +146,35 @@ function Log({ onOut }: { onOut: () => void }) {
 
       <div className="pt__top">
         <div className="pt__tabs" role="tablist">
-          <button role="tab" aria-selected={view === "followups"} className={view === "followups" ? "on" : ""} onClick={() => setView("followups")}>Follow-ups <i>{open.length}</i></button>
-          <button role="tab" aria-selected={view === "all"} className={view === "all" ? "on" : ""} onClick={() => setView("all")}>All entries <i>{rows?.length ?? 0}</i></button>
+          <button role="tab" aria-selected={view === "actions"} className={view === "actions" ? "on" : ""} onClick={() => setView("actions")}>Actions <i>{openCount}</i></button>
+          <button role="tab" aria-selected={view === "reservations"} className={view === "reservations" ? "on" : ""} onClick={() => setView("reservations")}>Reservations <i>{res.length}</i></button>
+          <button role="tab" aria-selected={view === "all"} className={view === "all" ? "on" : ""} onClick={() => setView("all")}>Clients <i>{rows?.length ?? 0}</i></button>
         </div>
-        <button className="pt__btn pt__btn--p" onClick={() => setEditing(blankEntry())}>+ New entry</button>
+        <button className="pt__btn pt__btn--p" onClick={startNew}>{newLabel}</button>
       </div>
 
       {err && <p className="pt__err" role="alert">{err} <button className="pt__link" onClick={load}>Retry</button></p>}
       {rows === null && !err && <p className="pt__sub">Loading…</p>}
 
-      {rows && view === "followups" && (
-        groups.length === 0 ? (
-          <div className="pt__empty"><p>No follow-ups waiting.</p><p className="pt__sub">When you log someone and tick "Needs a follow-up", they show up here, oldest first.</p></div>
-        ) : groups.map((g) => (
-          <section key={g.key} className="pt__grp">
-            <h2 className={`pt__gh pt__gh--${g.key}`}>{g.label} <i>{g.items.length}</i></h2>
-            <ul className="pt__list">
-              {g.items.map((r) => (
-                <li key={r.id} className="pt__card pt__row">
-                  <button className="pt__rowmain" onClick={() => setEditing(r)}>
-                    <b>{r.name}</b>
-                    <span className="pt__mut">{r.follow_up_date ? fmtDay(r.follow_up_date) : "No date"}{r.follow_up_note ? ` · ${r.follow_up_note}` : ""}</span>
-                    <Chips r={r} />
-                  </button>
-                  <button className="pt__btn pt__btn--ok" onClick={() => markDone(r)}>Mark done</button>
-                </li>
-              ))}
-            </ul>
-          </section>
-        ))
+      {rows && view === "actions" && (
+        <ActionsView
+          entries={rows} res={res} acts={acts}
+          onOpenEntry={(e) => setEditing({ kind: "entry", data: e })}
+          onOpenAction={(a) => setEditing({ kind: "act", data: a })}
+          onDoneEntry={markEntryDone}
+          onDoneAction={(a) => run(() => saveAction({ ...a, status: "done" }))}
+          onReopen={(a) => run(() => saveAction({ ...a, status: "open" }))}
+        />
+      )}
+
+      {rows && view === "reservations" && (
+        <ReservationsView
+          res={res}
+          onOpen={(r) => setEditing({ kind: "res", data: r })}
+          onCompleted={(r) => run(() => markCompleted(r, acts))}
+          onCollected={(r) => run(() => markCollected(r, acts))}
+          onSample={() => run(() => saveReservationFlow(sampleReservation(), true, acts))}
+        />
       )}
 
       {rows && view === "all" && (
@@ -181,7 +192,7 @@ function Log({ onOut }: { onOut: () => void }) {
             <ul className="pt__list">
               {filtered.map((r) => (
                 <li key={r.id} className="pt__card pt__row">
-                  <button className="pt__rowmain" onClick={() => setEditing(r)}>
+                  <button className="pt__rowmain" onClick={() => setEditing({ kind: "entry", data: r })}>
                     <span className="pt__line"><b>{r.name}</b><span className={`pt__pill pt__pill--${r.status}`}>{statusLabel(r.status)}</span>{r.follow_up && <span className="pt__pill pt__pill--fu">Follow up{r.follow_up_date ? ` · ${fmtDay(r.follow_up_date)}` : ""}</span>}</span>
                     <span className="pt__mut">{[r.contact, r.guests ? `${r.guests} guests` : "", r.trip_dates].filter(Boolean).join(" · ") || "No details"}</span>
                     <Chips r={r} />
@@ -194,7 +205,17 @@ function Log({ onOut }: { onOut: () => void }) {
         </>
       )}
 
-      {editing && <EntryForm start={editing} onClose={() => setEditing(null)} onSaved={() => { setEditing(null); load(); }} />}
+      {editing?.kind === "entry" && (
+        <EntryForm
+          start={editing.data} onClose={close} onSaved={saved}
+          onReserve={(e) => setEditing({
+            kind: "res",
+            data: { ...blankReservation(), entry_id: e.id, customer_name: e.name, customer_contact: e.contact, guests: e.guests, service: e.services[0] || "" },
+          })}
+        />
+      )}
+      {editing?.kind === "res" && <ReservationForm start={editing.data} entries={rows || []} acts={acts} onClose={close} onSaved={saved} />}
+      {editing?.kind === "act" && <ActionForm start={editing.data} entries={rows || []} res={res} onClose={close} onSaved={saved} />}
     </div>
   );
 }
@@ -206,7 +227,7 @@ function Chips({ r }: { r: Entry }) {
 }
 
 /* ------------------------------------------------------------------- form */
-function EntryForm({ start, onClose, onSaved }: { start: EntryInput; onClose: () => void; onSaved: () => void }) {
+function EntryForm({ start, onClose, onSaved, onReserve }: { start: EntryInput; onClose: () => void; onSaved: () => void; onReserve?: (e: Entry) => void }) {
   const [f, setF] = useState<EntryInput>(start);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState("");
@@ -225,6 +246,11 @@ function EntryForm({ start, onClose, onSaved }: { start: EntryInput; onClose: ()
     if (!f.name.trim()) { setErr("Add a name first."); return; }
     setBusy(true); setErr("");
     try { await saveEntry({ ...f, name: f.name.trim() }); onSaved(); } catch (e) { setErr((e as Error).message); setBusy(false); }
+  };
+  const reserve = async () => {
+    if (!f.name.trim()) { setErr("Add a name first."); return; }
+    setBusy(true); setErr("");
+    try { const e = await saveEntry({ ...f, name: f.name.trim() }); onReserve?.(e); } catch (e) { setErr((e as Error).message); setBusy(false); }
   };
   const remove = async () => {
     if (!f.id || !confirm(`Delete ${f.name || "this entry"}? This can't be undone.`)) return;
@@ -287,6 +313,7 @@ function EntryForm({ start, onClose, onSaved }: { start: EntryInput; onClose: ()
         <div className="pt__act">
           {f.id && <button type="button" className="pt__btn pt__btn--d" onClick={remove} disabled={busy}>Delete</button>}
           <span style={{ flex: 1 }} />
+          {f.id && onReserve && <button type="button" className="pt__btn" onClick={reserve} disabled={busy}>+ Reservation</button>}
           <button type="button" className="pt__btn" onClick={onClose}>Cancel</button>
           <button className="pt__btn pt__btn--p" disabled={busy}>{busy ? "Saving…" : "Save"}</button>
         </div>

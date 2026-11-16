@@ -842,6 +842,46 @@ a:hover .arr, button:hover .arr { transform: translateX(4px); }
   .pt__row .pt__btn--ok { margin: 0 14px; }
   .pt__who { display: none; }
 }
+/* Team log: reservations, commissions, action register */
+.pt__tabs { max-width: 100%; overflow-x: auto; scrollbar-width: none; } .pt__tabs::-webkit-scrollbar { display: none; }
+.pt__tabs button { white-space: nowrap; }
+.pt__btn--on { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.pt__filters--1 { grid-template-columns: 1fr; }
+.pt__filters--3 { grid-template-columns: 1fr 170px auto; align-items: center; }
+.pt__fchips { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 12px; scrollbar-width: none; } .pt__fchips::-webkit-scrollbar { display: none; }
+.pt__fchips button { font: inherit; font-size: 13.5px; font-weight: 600; white-space: nowrap; padding: 8px 14px; border-radius: 999px; border: 1px solid var(--line); background: var(--paper); color: var(--muted); cursor: pointer; }
+.pt__fchips button.on { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.pt__fchips i { font-style: normal; opacity: .65; margin-left: 3px; }
+.pt__sums { display: flex; flex-direction: column; gap: 10px; margin-bottom: 18px; }
+.pt__sumrow { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; position: relative; }
+.pt__cur { position: absolute; top: -8px; left: 12px; font-family: var(--f-mono); font-size: 10.5px; letter-spacing: .14em; background: var(--bg); padding: 0 6px; color: var(--muted); z-index: 1; }
+.pt__stat { background: var(--paper); border: 1px solid var(--line); border-radius: 16px; padding: 13px 15px; display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.pt__stat b { font-family: var(--f-display); font-size: 21px; letter-spacing: -.01em; overflow-wrap: anywhere; }
+.pt__statl { font-size: 12px; color: var(--muted); }
+.pt__statsub { font-size: 12px; color: var(--muted); }
+.pt__money { display: flex; flex-wrap: wrap; gap: 4px 16px; font-size: 13.5px; color: var(--muted); }
+.pt__money b { color: var(--ink); font-weight: 600; }
+.pt__bad, .pt__bad b { color: #e5484d !important; }
+.pt__calc { margin: 0; font-size: 14px; color: var(--muted); align-self: center; } .pt__calc b { color: var(--ink); }
+.pt__pill--r_confirmed { background: rgba(70,130,255,.18); color: #5b8cff; }
+.pt__pill--r_completed { background: rgba(16,240,74,.16); color: var(--g-deep); }
+.pt__pill--r_cancelled { background: rgba(229,72,77,.15); color: #e5484d; }
+.pt__pill--p_paid { background: rgba(16,240,74,.16); color: var(--g-deep); }
+.pt__pill--p_partial { background: rgba(255,190,50,.2); color: #d99a00; }
+.pt__pill--p_unpaid { background: rgba(229,72,77,.15); color: #e5484d; }
+.pt__pill--c_pending { background: rgba(255,190,50,.2); color: #d99a00; }
+.pt__pill--c_invoiced { background: rgba(70,130,255,.18); color: #5b8cff; }
+.pt__pill--c_partial { background: rgba(255,190,50,.2); color: #d99a00; }
+.pt__pill--c_collected { background: rgba(16,240,74,.16); color: var(--g-deep); }
+.pt__pill--c_written_off { background: var(--line); color: var(--muted); }
+.pt__pill--overdue, .pt__pill--high { background: rgba(229,72,77,.15); color: #e5484d; }
+@media (max-width: 640px) {
+  .pt__sumrow { grid-template-columns: 1fr 1fr; gap: 8px; }
+  .pt__stat { padding: 10px 12px; border-radius: 14px; } .pt__stat b { font-size: 18px; } .pt__statl, .pt__statsub { font-size: 11.5px; }
+  .pt__sums { gap: 14px; }
+  .pt__filters--3 { grid-template-columns: 1fr 1fr; } .pt__filters--3 input { grid-column: 1 / -1; }
+  .pt__top .pt__btn--p { width: 100%; }
+}
 .ftr__team { color: #7b837d; text-decoration: underline; text-underline-offset: 3px; } .ftr__team:hover { color: #fff; }
 /* mobile only: Team login sits just under the divider line, above the copyright */
 @media (max-width: 600px) { .ftr__base .ftr__team { order: -1; align-self: flex-start; font-size: 14px; } }
