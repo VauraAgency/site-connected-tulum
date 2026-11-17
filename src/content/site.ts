@@ -397,6 +397,8 @@ const rawEvents: TEvent[] = [
     prices: [{ label: "Dinner + party, early", mxn: 9790 }] },
   { date: "2026-12-31", title: "NYE Party at Papaya Playa Project", venue: "Papaya Playa Project", type: "Party only", desc: "Beachfront party", flyer: u("/assets/flyers/papaya.webp"), flyerH: 1200, ready: true, bg: img.party,
     prices: [{ label: "Party, early bird", mxn: 4697 }] },
+  { date: "2026-11-28", title: "Joezi at Ikal Arena", venue: "Ikal Arena", type: "Party only", time: "9:00 PM", lineup: "Joezi", desc: "Wave Society presents Joezi", flyer: u("/assets/flyers/joezi.webp"), flyerH: 1601, ready: true, manual: true, ticketUrl: "https://tf.link/dplgcklt", bg: img.party },
+  { date: "2026-12-30", title: "Darco at Bonbonniere", venue: "Bonbonniere Tulum", type: "Party only", time: "10:00 PM", lineup: "Darco, Renê, Gio de Lira", desc: "Renê / Gio de Lira", flyer: u("/assets/flyers/darco.webp"), flyerH: 1600, ready: true, manual: true, bg: img.party },
   { date: "2026-12-31", title: "Le Tropical NYE at Bagatelle", venue: "Bagatelle Tulum", type: "Party only", time: "Doors 10:00 PM", lineup: "Guy Gerber, Kimonos, Monobase, Story Behind", desc: "Guy Gerber / Kimonos", flyer: u("/assets/flyers/le-tropical.webp"), flyerH: 1600, ready: true, manual: true, bg: img.beachClub },
   { date: "2026-12-31", title: "NYE at Ahau", venue: "Ahau Tulum", type: "Party only", tbd: true },
   // ---- January
@@ -404,7 +406,8 @@ const rawEvents: TEvent[] = [
   { date: "2027-01-01", title: "EDM Tulum Network Event", venue: "Kuul Tulum", type: "Beach club", time: "1 PM to 7 PM", desc: "EDM and Connected Tulum event" },
   { date: "2027-01-02", title: "Amnesia", venue: "Amnesia Tulum", type: "Party only", time: "TBA", tbd: true },
   { date: "2027-01-02", title: "Afrodise", venue: "Ahau Tulum", type: "Festival", time: "TBA", tbd: true },
-  { date: "2027-01-02", title: "Por Que No Festival", venue: "Vesica Tulum", type: "Festival", time: "TBA", tbd: true },
+  { date: "2027-01-02", title: "Por Que No Festival", venue: "Vesica Tulum", type: "Festival", time: "TBA", ready: true, manual: true, ticketUrl: "https://www.eventbrite.com/e/1982357459525/?discount=connected20", bg: img.party },
+  { date: "2027-01-04", title: "Monolik at Bagatelle", venue: "Bagatelle Tulum", type: "Beach club", time: "TBA", lineup: "Monolik", ready: true, manual: true, bg: img.beachClub },
   { date: "2027-01-03", title: "Por Que No Festival", venue: "Vesica Tulum", type: "Festival", time: "TBA", tbd: true },
   { date: "2027-01-03", title: "&ME Tulum", venue: "Ikal Arena", type: "Festival", time: "8:00 PM", desc: "&ME", ticketUrl: "https://boletomovil.com/evento/and-me-tulum-2027-01-03?rp=AHCT", flyer: u("/assets/flyers/andme.webp"), flyerVideo: u("/assets/flyers/andme.mp4"), flyerH: 1125, ready: true, key: true, bg: img.party,
     prices: [{ label: "General, stage 1", mxn: 2900 }, { label: "Backstage, early bird", mxn: 4800 }] },
