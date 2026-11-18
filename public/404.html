@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Connected Tulum</title>
+<script>
+  // Agent referral links: connectedtulum.com/ref/<name> -> /?ref=<name> (the site records it and cleans the URL).
+  (function () {
+    var m = location.pathname.match(/^\/ref\/([A-Za-z0-9-]{2,30})\/?$/);
+    if (m) location.replace("/?ref=" + m[1].toLowerCase());
+  })();
+</script>
+<style>
+  html,body{height:100%;margin:0;background:#050706;color:#f3f5f1;font:16px/1.5 system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+  main{min-height:100%;display:grid;place-content:center;gap:14px;text-align:center;padding:24px}
+  h1{margin:0;font-size:32px;letter-spacing:-.02em}
+  p{margin:0;color:#a9b1aa}
+  a{display:inline-block;margin-top:6px;padding:12px 22px;border-radius:999px;background:#10f04a;color:#04120a;font-weight:600;text-decoration:none}
+</style>
+</head>
+<body>
+<main>
+  <h1>Lost in the jungle.</h1>
+  <p>That page doesn't exist. Head back home or message us.</p>
+  <div><a href="/">Back to home</a></div>
+</main>
+</body>
+</html>

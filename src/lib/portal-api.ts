@@ -21,6 +21,11 @@ export type Entry = {
   follow_up: boolean;
   follow_up_date: string | null;
   follow_up_note: string;
+  /** Set when an agent logged this client; null for Hector's own. */
+  agent_id: string | null;
+  /** The day and time they need the table / booking. */
+  need_date: string | null;
+  need_time: string | null;
 };
 export type EntryInput = Omit<Entry, "id" | "created_at" | "updated_at"> & { id?: string };
 
@@ -40,6 +45,7 @@ export type Reservation = {
   venue: string;
   details: string;
   reservation_date: string;
+  reservation_time: string | null;
   res_status: ResStatus;
   currency: Currency;
   total_amount: number;
@@ -56,9 +62,53 @@ export type Reservation = {
   commission_collected: number;
   commission_collected_on: string | null;
   commission_ref: string;
+  /** The agent who sent this customer (their payout is tracked here), or null. */
+  agent_id: string | null;
+  agent_basis: AgentBasis;
+  agent_rate: number;
+  agent_flat: number;
+  agent_amount: number;
+  agent_status: "pending" | "paid";
+  agent_paid_on: string | null;
   notes: string;
 };
 export type ReservationInput = Omit<Reservation, "id" | "created_at" | "updated_at"> & { id?: string };
+
+export type AgentBasis = "percent_commission" | "percent_total" | "flat";
+export type Agent = {
+  id: string;
+  created_at: string;
+  updated_at: string;
+  name: string;
+  email: string;
+  phone: string;
+  code: string;
+  commission_basis: AgentBasis;
+  commission_rate: number;
+  commission_flat: number;
+  active: boolean;
+  notes: string;
+};
+export type AgentInput = Omit<Agent, "id" | "created_at" | "updated_at"> & { id?: string };
+
+/** What an agent sees of their own sales (payout side only; never Connected's venue commission). */
+export type AgentSale = {
+  id: string;
+  reservation_date: string;
+  reservation_time: string | null;
+  customer_name: string;
+  guests: number | null;
+  venue: string;
+  service: string;
+  res_status: ResStatus;
+  currency: Currency;
+  total_amount: number;
+  agent_amount: number;
+  agent_status: "pending" | "paid";
+  agent_paid_on: string | null;
+};
+export type RefEvent = { agent_id?: string; kind: "visit" | "whatsapp" | "ticket"; created_at: string };
+export type Role = { role: "team" } | { role: "agent"; id: string; name: string; code: string } | { role: "none" };
 
 export type ActionType = "follow_up" | "commission" | "payment" | "booking" | "other";
 export type Priority = "low" | "normal" | "high";
@@ -136,6 +186,11 @@ export const PRIORITIES: { v: Priority; label: string }[] = [
   { v: "low", label: "Low" },
 ];
 export const TEAM = ["Hector", "Benji"];
+export const AGENT_BASES: { v: AgentBasis; label: string }[] = [
+  { v: "percent_commission", label: "% of our commission" },
+  { v: "percent_total", label: "% of the sale total" },
+  { v: "flat", label: "Flat amount" },
+];
 
 export const isLive = () => !!(PORTAL.url && PORTAL.anonKey);
 
@@ -145,15 +200,21 @@ const today = () => new Date().toLocaleDateString("en-CA");
 export const blankEntry = (): EntryInput => ({
   name: "", contact: "", source: "", events: [], other_interest: "", guests: null, trip_dates: "",
   services: [], notes: "", actions_taken: "", status: "new", follow_up: false, follow_up_date: null, follow_up_note: "",
+  agent_id: null, need_date: null, need_time: null,
 });
 
 export const blankReservation = (): ReservationInput => ({
   entry_id: null, customer_name: "", customer_contact: "", guests: null,
-  service: "", venue: "", details: "", reservation_date: today(), res_status: "confirmed",
+  service: "", venue: "", details: "", reservation_date: today(), reservation_time: null, res_status: "confirmed",
   currency: "USD", total_amount: 0, amount_paid: 0, payment_method: "", paid_to: "", paid_on: null,
   commission_basis: "percent", commission_rate: 0, commission_amount: 0, commission_payer: "",
   commission_status: "pending", commission_due: null, commission_collected: 0, commission_collected_on: null, commission_ref: "",
+  agent_id: null, agent_basis: "percent_commission", agent_rate: 0, agent_flat: 0, agent_amount: 0, agent_status: "pending", agent_paid_on: null,
   notes: "",
+});
+
+export const blankAgent = (): AgentInput => ({
+  name: "", email: "", phone: "", code: "", commission_basis: "percent_commission", commission_rate: 0, commission_flat: 0, active: true, notes: "",
 });
 
 export const blankAction = (): ActionInput => ({
@@ -171,6 +232,14 @@ export const money = (n: number, cur: string = "USD") =>
 /** What Connected Tulum should earn on a reservation, from its basis. */
 export const commissionFor = (r: Pick<Reservation, "commission_basis" | "commission_rate" | "commission_amount" | "total_amount">) =>
   r.commission_basis === "percent" ? r2((num(r.total_amount) * num(r.commission_rate)) / 100) : r2(num(r.commission_amount));
+
+/** What the sending agent earns on a reservation (from its own basis), rounded to cents. */
+export const agentAmountFor = (r: Pick<Reservation, "agent_id" | "agent_basis" | "agent_rate" | "agent_flat" | "commission_basis" | "commission_rate" | "commission_amount" | "total_amount">) => {
+  if (!r.agent_id) return 0;
+  if (r.agent_basis === "flat") return r2(num(r.agent_flat));
+  const base = r.agent_basis === "percent_total" ? num(r.total_amount) : commissionFor(r);
+  return r2((base * num(r.agent_rate)) / 100);
+};
 
 /** Commission still waiting to be collected (zero when written off or the reservation was cancelled). */
 export const commOutstanding = (r: Reservation) =>
@@ -254,6 +323,28 @@ async function rest(table: string, method: string, query: string, body?: unknown
   return j;
 }
 
+/* ================================================================== role */
+/**
+ * Before portal/supabase-agents.sql has been run there is no portal_role() function, and the new columns don't exist yet.
+ * In that case everyone who can sign in is team (as before) and the new fields are left out of saves, so nothing breaks.
+ */
+let legacy = false;
+export const isLegacy = () => legacy;
+
+export async function fetchRole(): Promise<Role> {
+  if (!isLive()) return { role: "team" };
+  const r = await fetch(`${PORTAL.url}/rest/v1/rpc/portal_role`, {
+    method: "POST",
+    headers: { apikey: PORTAL.anonKey, Authorization: `Bearer ${await token()}`, "Content-Type": "application/json" },
+    body: "{}",
+  });
+  if (r.status === 401) { writeSession(null); throw new Error("Session expired. Please sign in again."); }
+  if (r.status === 404) { legacy = true; return { role: "team" }; }
+  if (!r.ok) throw new Error("Couldn't check your access. Try again.");
+  legacy = false;
+  return (await r.json()) as Role;
+}
+
 /* ============================================================ table helper */
 type Base = { id: string; created_at: string; updated_at: string };
 
@@ -261,7 +352,7 @@ type Base = { id: string; created_at: string; updated_at: string };
  * One small CRUD helper per table. Live mode talks to Supabase (Row Level Security does the locking);
  * preview mode (no Supabase config) keeps rows in this browser only.
  */
-function makeStore<T extends Base>(table: string, lkey: string, normalize: (x: Record<string, unknown>) => Record<string, unknown>) {
+function makeStore<T extends Base>(table: string, lkey: string, normalize: (x: Record<string, unknown>) => Record<string, unknown>, newCols: string[] = []) {
   const readL = (): T[] => { try { return JSON.parse(localStorage.getItem(lkey) || "[]") as T[]; } catch { return []; } };
   const writeL = (rows: T[]) => { try { localStorage.setItem(lkey, JSON.stringify(rows)); } catch { /* private mode */ } };
   return {
@@ -272,6 +363,7 @@ function makeStore<T extends Base>(table: string, lkey: string, normalize: (x: R
     async save(input: Record<string, unknown> & { id?: string }): Promise<T> {
       const clean = normalize(input);
       const { id, created_at: _c, updated_at: _u, ...patch } = clean as Record<string, unknown> & { id?: string; created_at?: unknown; updated_at?: unknown };
+      if (isLive() && legacy) for (const k of newCols) delete patch[k];
       if (!isLive()) {
         const rows = readL();
         const now = new Date().toISOString();
@@ -295,9 +387,15 @@ function makeStore<T extends Base>(table: string, lkey: string, normalize: (x: R
 
 const nul = (v: unknown) => (v === "" || v === undefined ? null : v);
 
+const hhmm = (t: unknown) => (typeof t === "string" && t ? t.slice(0, 5) : null);
+
 const entries = makeStore<Entry>("log_entries", "ct-portal-local", (e) => ({
-  ...e, follow_up_date: e.follow_up && e.follow_up_date ? e.follow_up_date : null,
-}));
+  ...e,
+  follow_up_date: e.follow_up && e.follow_up_date ? e.follow_up_date : null,
+  agent_id: nul(e.agent_id),
+  need_date: nul(e.need_date),
+  need_time: e.need_date ? hhmm(e.need_time) : null,
+}), ["agent_id", "need_date", "need_time"]);
 
 const reservations = makeStore<Reservation>("reservations", "ct-portal-local-res", (x) => {
   const r = x as unknown as ReservationInput;
@@ -314,9 +412,19 @@ const reservations = makeStore<Reservation>("reservations", "ct-portal-local-res
     else if (collected > 0 && (status === "pending" || status === "invoiced" || status === "collected")) status = "partial";
   }
   if (collected > 0 && !on) on = today();
+  const agentId = nul(r.agent_id) as string | null;
+  const agentAmount = agentAmountFor({ agent_id: agentId, agent_basis: r.agent_basis, agent_rate: r.agent_rate, agent_flat: r.agent_flat, commission_basis: r.commission_basis, commission_rate: r.commission_rate, commission_amount: amount, total_amount: total });
+  const agentPaid = agentId && r.agent_status === "paid";
   return {
     ...x,
     entry_id: nul(r.entry_id),
+    reservation_time: hhmm(r.reservation_time),
+    agent_id: agentId,
+    agent_rate: agentId && r.agent_basis !== "flat" ? r2(num(r.agent_rate)) : 0,
+    agent_flat: agentId && r.agent_basis === "flat" ? r2(num(r.agent_flat)) : 0,
+    agent_amount: agentAmount,
+    agent_status: agentPaid ? "paid" : "pending",
+    agent_paid_on: agentPaid ? nul(r.agent_paid_on) || today() : null,
     guests: r.guests ? Number(r.guests) : null,
     total_amount: total,
     amount_paid: r2(num(r.amount_paid)),
@@ -328,7 +436,7 @@ const reservations = makeStore<Reservation>("reservations", "ct-portal-local-res
     commission_status: status,
     commission_due: nul(r.commission_due),
   };
-});
+}, ["reservation_time", "agent_id", "agent_basis", "agent_rate", "agent_flat", "agent_amount", "agent_status", "agent_paid_on"]);
 
 const actions = makeStore<Action>("actions", "ct-portal-local-act", (x) => {
   const a = x as unknown as ActionInput;
@@ -341,6 +449,37 @@ const actions = makeStore<Action>("actions", "ct-portal-local-act", (x) => {
     completed_at: done ? a.completed_at || new Date().toISOString() : null,
   };
 });
+
+const agents = makeStore<Agent>("agents", "ct-portal-local-agents", (x) => {
+  const a = x as unknown as AgentInput;
+  return {
+    ...x,
+    name: a.name.trim(),
+    email: a.email.trim().toLowerCase(),
+    code: a.code.trim().toLowerCase(),
+    commission_rate: Math.min(100, r2(num(a.commission_rate))),
+    commission_flat: r2(num(a.commission_flat)),
+  };
+});
+
+export const listAgents = async (): Promise<Agent[]> => {
+  const rows = await agents.list();
+  return isLive() ? rows.sort((a, b) => a.name.localeCompare(b.name)) : rows;
+};
+export const saveAgent = (a: AgentInput) => agents.save(a);
+export const deleteAgent = (id: string) => agents.remove(id);
+
+/** Visits and clicks from referral links (preview mode has none). */
+export async function listRefEvents(): Promise<RefEvent[]> {
+  if (!isLive() || legacy) return [];
+  return (await rest("ref_events", "GET", "?select=agent_id,kind,created_at&order=created_at.desc&limit=5000")) as RefEvent[];
+}
+
+/** An agent's own sales, payout side only. */
+export async function listAgentSales(): Promise<AgentSale[]> {
+  if (!isLive()) return [];
+  return (await rest("rpc/agent_sales", "POST", "", {})) as AgentSale[];
+}
 
 export const listEntries = () => entries.list();
 export const saveEntry = (e: EntryInput) => entries.save(e);
@@ -376,10 +515,12 @@ export const toCsv = (rows: Entry[]) => csv<Entry>([
   ["Follow up", (r) => (r.follow_up ? "Yes" : "No")],
   ["Follow up date", (r) => r.follow_up_date || ""],
   ["Follow up note", (r) => r.follow_up_note],
+  ["Needs it on", (r) => (r.need_date ? `${r.need_date}${r.need_time ? ` ${r.need_time}` : ""}` : "")],
 ], rows);
 
 export const reservationsToCsv = (rows: Reservation[]) => csv<Reservation>([
   ["Reservation date", (r) => r.reservation_date],
+  ["Reservation time", (r) => r.reservation_time || ""],
   ["Status", (r) => RES_STATUSES.find((s) => s.v === r.res_status)?.label || r.res_status],
   ["Customer", (r) => r.customer_name],
   ["Contact", (r) => r.customer_contact],
@@ -403,6 +544,8 @@ export const reservationsToCsv = (rows: Reservation[]) => csv<Reservation>([
   ["Commission outstanding", (r) => commOutstanding(r)],
   ["Collected on", (r) => r.commission_collected_on || ""],
   ["Reference", (r) => r.commission_ref],
+  ["Agent payout", (r) => (r.agent_id ? r.agent_amount : "")],
+  ["Agent payout status", (r) => (r.agent_id ? (r.agent_status === "paid" ? "Paid" : "Owed") : "")],
   ["Notes", (r) => r.notes],
 ], rows);
 

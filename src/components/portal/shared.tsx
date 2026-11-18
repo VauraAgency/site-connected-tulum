@@ -4,6 +4,14 @@ export const todayIso = () => new Date().toLocaleDateString("en-CA");
 export const fmtDay = (iso: string) => new Date(`${iso}T12:00:00`).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" });
 export const fmtDate = (iso: string) => new Date(`${iso}T12:00:00`).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
 
+/** "22:30" -> "10:30 PM" */
+export const fmtTime = (t: string | null | undefined) => {
+  if (!t) return "";
+  const [h, m] = t.split(":").map(Number);
+  if (!Number.isFinite(h)) return "";
+  return `${((h + 11) % 12) + 1}:${String(m || 0).padStart(2, "0")} ${h < 12 ? "AM" : "PM"}`;
+};
+
 export function downloadCsv(text: string, name: string) {
   const blob = new Blob([text], { type: "text/csv;charset=utf-8" });
   const a = document.createElement("a");

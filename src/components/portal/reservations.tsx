@@ -1,12 +1,12 @@
 import { useMemo, useState } from "react";
 import { events } from "../../content/site";
 import {
-  COMM_STATUSES, CURRENCIES, PAID_TO, PAY_METHODS, RES_STATUSES, SERVICES,
-  balanceDue, blankAction, commOutstanding, commOverdue, commissionFor, deleteReservation, money, payState,
+  AGENT_BASES, COMM_STATUSES, CURRENCIES, PAID_TO, PAY_METHODS, RES_STATUSES, SERVICES,
+  agentAmountFor, balanceDue, blankAction, blankReservation, commOutstanding, commOverdue, commissionFor, deleteReservation, isLegacy, money, payState,
   saveAction, saveReservation,
-  type Action, type CommStatus, type Currency, type Entry, type Reservation, type ReservationInput,
+  type Action, type Agent, type AgentBasis, type CommStatus, type Currency, type Entry, type Reservation, type ReservationInput,
 } from "../../lib/portal-api";
-import { Num, Sheet, fmtDate, todayIso } from "./shared";
+import { Num, Sheet, fmtDate, fmtTime, todayIso } from "./shared";
 
 const VENUES = [...new Set(events.map((e) => e.venue).filter(Boolean))].sort() as string[];
 
@@ -53,6 +53,7 @@ const addDays = (n: number) => { const d = new Date(); d.setDate(d.getDate() + n
 
 /** A clearly marked example so the whole flow can be tried (and deleted) in one click. */
 export const sampleReservation = (): ReservationInput => ({
+  ...blankReservation(),
   entry_id: null,
   customer_name: "Sample guest (test, safe to delete)",
   customer_contact: "+1 555 0100",
@@ -61,6 +62,7 @@ export const sampleReservation = (): ReservationInput => ({
   venue: "Casa Jaguar",
   details: "Sample table with bottle service",
   reservation_date: addDays(-3),
+  reservation_time: "22:00",
   res_status: "completed",
   currency: "USD",
   total_amount: 2400,
@@ -83,8 +85,9 @@ export const sampleReservation = (): ReservationInput => ({
 /* -------------------------------------------------------------------- view */
 type Filter = "completed" | "upcoming" | "collect" | "cancelled" | "all";
 
-export function ReservationsView({ res, onOpen, onCompleted, onCollected, onSample }: {
+export function ReservationsView({ res, agents, onOpen, onCompleted, onCollected, onSample }: {
   res: Reservation[];
+  agents: Agent[];
   onOpen: (r: Reservation) => void;
   onCompleted: (r: Reservation) => void;
   onCollected: (r: Reservation) => void;
@@ -93,6 +96,7 @@ export function ReservationsView({ res, onOpen, onCompleted, onCollected, onSamp
   const [f, setF] = useState<Filter>("completed");
   const [q, setQ] = useState("");
   const today = todayIso();
+  const agentName = (id: string | null) => agents.find((a) => a.id === id)?.name || "";
 
   const counts = useMemo(() => ({
     completed: res.filter((r) => r.res_status === "completed").length,
@@ -110,10 +114,10 @@ export function ReservationsView({ res, onOpen, onCompleted, onCollected, onSamp
       if (f === "cancelled" && r.res_status !== "cancelled") return false;
       if (f === "collect" && !(r.res_status === "completed" && commOutstanding(r) > 0)) return false;
       if (!s) return true;
-      return [r.customer_name, r.customer_contact, r.venue, r.service, r.details, r.commission_payer, r.commission_ref, r.notes].join(" ").toLowerCase().includes(s);
+      return [r.customer_name, r.customer_contact, r.venue, r.service, r.details, r.commission_payer, r.commission_ref, r.notes, agentName(r.agent_id)].join(" ").toLowerCase().includes(s);
     });
     rows = [...rows].sort((a, b) => {
-      if (f === "upcoming") return a.reservation_date.localeCompare(b.reservation_date);
+      if (f === "upcoming") return a.reservation_date.localeCompare(b.reservation_date) || (a.reservation_time || "99").localeCompare(b.reservation_time || "99");
       if (f === "collect") return (a.commission_due || "9999").localeCompare(b.commission_due || "9999") || a.reservation_date.localeCompare(b.reservation_date);
       return b.reservation_date.localeCompare(a.reservation_date);
     });
@@ -165,6 +169,7 @@ export function ReservationsView({ res, onOpen, onCompleted, onCollected, onSamp
                     <b>{r.customer_name}</b>
                     <span className={`pt__pill pt__pill--r_${r.res_status}`}>{RES_LABEL[r.res_status]}</span>
                     {r.res_status !== "cancelled" && <span className={`pt__pill pt__pill--p_${pay}`}>{PAY_LABEL[pay]}</span>}
+                    {r.agent_id && <span className="pt__pill pt__pill--ag">via {agentName(r.agent_id) || "agent"}</span>}
                     {r.res_status !== "cancelled" && r.commission_amount > 0 && (
                       <span className={`pt__pill ${overdue ? "pt__pill--overdue" : `pt__pill--c_${r.commission_status}`}`}>
                         {overdue ? "Commission overdue" : COMM_LABEL[r.commission_status]}
@@ -172,13 +177,14 @@ export function ReservationsView({ res, onOpen, onCompleted, onCollected, onSamp
                     )}
                   </span>
                   <span className="pt__mut">
-                    {[fmtDate(r.reservation_date), r.venue, r.service, r.guests ? `${r.guests} guests` : ""].filter(Boolean).join(" · ")}
+                    {[`${fmtDate(r.reservation_date)}${r.reservation_time ? ` at ${fmtTime(r.reservation_time)}` : ""}`, r.venue, r.service, r.guests ? `${r.guests} guests` : ""].filter(Boolean).join(" · ")}
                   </span>
                   <span className="pt__money">
                     <span>Total <b>{money(r.total_amount, r.currency)}</b></span>
                     <span>Paid <b>{money(r.amount_paid, r.currency)}</b></span>
                     {r.commission_amount > 0 && <span>Commission <b>{money(r.commission_amount, r.currency)}</b></span>}
                     {r.commission_amount > 0 && r.commission_collected > 0 && <span>Collected <b>{money(r.commission_collected, r.currency)}</b></span>}
+                    {r.agent_id && r.agent_amount > 0 && r.res_status !== "cancelled" && <span>Agent <b>{money(r.agent_amount, r.currency)}</b> {r.agent_status === "paid" ? "paid" : "owed"}</span>}
                     {owed > 0 && r.res_status === "completed" && <span className={overdue ? "pt__bad" : ""}>To collect <b>{money(owed, r.currency)}</b>{r.commission_due ? ` by ${fmtDate(r.commission_due)}` : ""}</span>}
                   </span>
                 </button>
@@ -232,9 +238,10 @@ function Stat({ label, value, sub, bad }: { label: string; value: string; sub?: 
 }
 
 /* -------------------------------------------------------------------- form */
-export function ReservationForm({ start, entries, acts, onClose, onSaved }: {
+export function ReservationForm({ start, entries, agents, acts, onClose, onSaved }: {
   start: ReservationInput;
   entries: Entry[];
+  agents: Agent[];
   acts: Action[];
   onClose: () => void;
   onSaved: () => void;
@@ -245,6 +252,16 @@ export function ReservationForm({ start, entries, acts, onClose, onSaved }: {
   const set = <K extends keyof ReservationInput>(k: K, v: ReservationInput[K]) => setF((p) => ({ ...p, [k]: v }));
 
   const expected = commissionFor(f);
+  const agentEarns = agentAmountFor({ ...f, commission_amount: expected });
+  const showAgents = !isLegacy() && (agents.length > 0 || !!f.agent_id);
+  const pickAgent = (id: string) => {
+    const a = agents.find((x) => x.id === id);
+    setF((p) => ({
+      ...p,
+      agent_id: id || null,
+      ...(a ? { agent_basis: a.commission_basis, agent_rate: a.commission_rate, agent_flat: a.commission_flat } : {}),
+    }));
+  };
   const owed = Math.max(0, expected - f.commission_collected);
   const hasOpenTask = !!f.id && acts.some((a) => a.reservation_id === f.id && a.type === "commission" && a.status === "open");
   const canAddTask = f.res_status !== "cancelled" && expected > 0 && f.commission_status !== "written_off" && owed > 0 && !hasOpenTask;
@@ -259,7 +276,14 @@ export function ReservationForm({ start, entries, acts, onClose, onSaved }: {
       customer_contact: p.customer_contact || e?.contact || "",
       guests: p.guests ?? e?.guests ?? null,
       service: p.service || e?.services[0] || "",
+      reservation_date: e?.need_date && !p.id ? e.need_date : p.reservation_date,
+      reservation_time: p.reservation_time || e?.need_time?.slice(0, 5) || null,
+      ...(e?.agent_id && !p.agent_id ? { agent_id: e.agent_id, ...agentDefaults(e.agent_id) } : {}),
     }));
+  };
+  const agentDefaults = (id: string) => {
+    const a = agents.find((x) => x.id === id);
+    return a ? { agent_basis: a.commission_basis, agent_rate: a.commission_rate, agent_flat: a.commission_flat } : {};
   };
 
   const setCommStatus = (v: CommStatus) =>
@@ -307,6 +331,7 @@ export function ReservationForm({ start, entries, acts, onClose, onSaved }: {
         <legend>Reservation</legend>
         <div className="pt__grid">
           <label className="pt__f">Reservation date<input type="date" value={f.reservation_date} onChange={(e) => set("reservation_date", e.target.value)} required /></label>
+          {!isLegacy() && <label className="pt__f">Time they need it<input type="time" value={f.reservation_time || ""} onChange={(e) => set("reservation_time", e.target.value || null)} /></label>}
           <label className="pt__f">Status
             <select value={f.res_status} onChange={(e) => set("res_status", e.target.value as ReservationInput["res_status"])}>{RES_STATUSES.map((s) => <option key={s.v} value={s.v}>{s.label}</option>)}</select>
           </label>
@@ -381,6 +406,38 @@ export function ReservationForm({ start, entries, acts, onClose, onSaved }: {
         )}
         {hasOpenTask && <p className="pt__sub">A collection task is already open on the Actions tab. It closes by itself once the commission is fully collected.</p>}
       </fieldset>
+
+      {showAgents && (
+        <fieldset className="pt__fs">
+          <legend>Sent by an agent</legend>
+          <label className="pt__f">Agent
+            <select value={f.agent_id || ""} onChange={(e) => pickAgent(e.target.value)}>
+              <option value="">No agent (our own client)</option>
+              {agents.map((a) => <option key={a.id} value={a.id}>{a.name}{a.active ? "" : " (inactive)"}</option>)}
+            </select>
+          </label>
+          {f.agent_id && (
+            <div className="pt__grid">
+              <label className="pt__f">Agent earns
+                <select value={f.agent_basis} onChange={(e) => set("agent_basis", e.target.value as AgentBasis)}>{AGENT_BASES.map((b) => <option key={b.v} value={b.v}>{b.label}</option>)}</select>
+              </label>
+              {f.agent_basis === "flat" ? (
+                <label className="pt__f">Flat amount ({cur})<Num value={f.agent_flat} onChange={(n) => set("agent_flat", n)} /></label>
+              ) : (
+                <label className="pt__f">Agent %<Num value={f.agent_rate} onChange={(n) => set("agent_rate", Math.min(100, n))} max={100} /></label>
+              )}
+              <p className="pt__calc">Agent earns <b>{money(agentEarns, cur)}</b></p>
+              <label className="pt__f">Payout
+                <select value={f.agent_status} onChange={(e) => setF((p) => ({ ...p, agent_status: e.target.value as "pending" | "paid", agent_paid_on: e.target.value === "paid" ? p.agent_paid_on || todayIso() : null }))}>
+                  <option value="pending">Owed (not paid yet)</option>
+                  <option value="paid">Paid to the agent</option>
+                </select>
+              </label>
+              {f.agent_status === "paid" && <label className="pt__f">Paid on<input type="date" value={f.agent_paid_on || ""} onChange={(e) => set("agent_paid_on", e.target.value || null)} /></label>}
+            </div>
+          )}
+        </fieldset>
+      )}
 
       <label className="pt__f pt__full">Notes<textarea rows={3} value={f.notes} onChange={(e) => set("notes", e.target.value)} /></label>
 

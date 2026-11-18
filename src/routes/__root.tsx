@@ -10,6 +10,7 @@ import { useEffect, type ReactNode } from "react";
 
 import siteCss from "../site.css?url";
 import { Shell } from "../components/site/ui";
+import { initReferral } from "../lib/ref";
 
 
 /** Link previews (WhatsApp, iMessage, Slack, X) need an absolute https URL. */
@@ -127,5 +128,6 @@ function RootShell({ children }: { children: ReactNode }) {
 }
 
 function RootComponent() {
+  useEffect(() => { initReferral(); }, []);
   return <Outlet />;
 }
