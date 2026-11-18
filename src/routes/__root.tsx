@@ -36,6 +36,12 @@ const FONTS =
 /** Runs before first paint: dark by default, or whatever the visitor picked last (stored in localStorage). */
 const THEME_BOOT = `(function(){var d=document.documentElement,t="dark";try{var s=localStorage.getItem("ct-theme");if(s==="light"||s==="dark")t=s}catch(e){}if(t==="dark")d.classList.add("theme-dark");d.style.colorScheme=t})();`;
 
+/**
+ * Agent referral links: connectedtulum.com/ref/<name> is not a real page (GitHub Pages serves the site's fallback for it),
+ * so before anything renders, send it to /?ref=<name>. The site records the code and cleans the URL (src/lib/ref.ts).
+ */
+const REF_BOOT = `(function(){var m=location.pathname.match(/^\\/ref\\/([A-Za-z0-9-]{2,30})\\/?$/);if(m)location.replace("/?ref="+m[1].toLowerCase())})();`;
+
 function buildHead(meta: AppMeta) {
   const title = meta.og_title ?? "Connected Tulum";
   const description = meta.og_description ?? "Tickets and VIP tables for Tulum High Season 2027.";
@@ -59,6 +65,7 @@ function buildHead(meta: AppMeta) {
     ],
     scripts: [
       { children: THEME_BOOT },
+      { children: REF_BOOT },
       // Google tag (GTM-P6T3LSNB), installed as given by Google so the ads partner can verify it
       { src: "https://www.googletagmanager.com/gtm.js?id=GTM-P6T3LSNB", async: true },
       { children: "window.dataLayer = window.dataLayer || [];\n  function gtag(){dataLayer.push(arguments);}\n  gtag('js', new Date());" },
