@@ -354,7 +354,7 @@ export const serviceBySlug = (s: string) => services.find((x) => x.slug === s &&
  * manual: true = Hector processes the tickets by hand with the Zamna contact, so Get tickets is always a WhatsApp request.
  * key: true = headline night, shown in the big season scroller on the home page.
  */
-export type EventType = "Dinner only" | "Dinner + party" | "Party only" | "Festival" | "Beach club";
+export type EventType = "Dinner only" | "Dinner + party" | "Party only" | "Festival" | "Beach club" | "Night club";
 
 export type TEvent = {
   date: string; // ISO yyyy-mm-dd

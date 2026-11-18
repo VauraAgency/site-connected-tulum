@@ -56,7 +56,12 @@ function buildHead(meta: AppMeta) {
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:image", content: ogImage },
     ],
-    scripts: [{ children: THEME_BOOT }],
+    scripts: [
+      { children: THEME_BOOT },
+      // Google tag (GTM-P6T3LSNB), installed as given by Google so the ads partner can verify it
+      { src: "https://www.googletagmanager.com/gtm.js?id=GTM-P6T3LSNB", async: true },
+      { children: "window.dataLayer = window.dataLayer || [];\n  function gtag(){dataLayer.push(arguments);}\n  gtag('js', new Date());" },
+    ],
     links: [
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" as const },
