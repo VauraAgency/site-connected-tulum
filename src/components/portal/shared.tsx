@@ -4,6 +4,14 @@ export const todayIso = () => new Date().toLocaleDateString("en-CA");
 export const fmtDay = (iso: string) => new Date(`${iso}T12:00:00`).toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" });
 export const fmtDate = (iso: string) => new Date(`${iso}T12:00:00`).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
 
+/** ISO timestamp -> "Nov 18, 3:15 PM" in the viewer's own time zone */
+export const fmtStamp = (iso: string | null | undefined) => {
+  if (!iso) return "";
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return "";
+  return d.toLocaleString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
+};
+
 /** "22:30" -> "10:30 PM" */
 export const fmtTime = (t: string | null | undefined) => {
   if (!t) return "";

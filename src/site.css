@@ -823,6 +823,7 @@ a:hover .arr, button:hover .arr { transform: translateX(4px); }
 .pt__ov { position: fixed; inset: 0; z-index: 100; background: rgba(0,0,0,.62); display: flex; justify-content: center; align-items: flex-start; padding: 24px 12px; overflow-y: auto; }
 .pt__sheet { width: 100%; max-width: 720px; background: var(--paper); color: var(--ink); border: 1px solid var(--line); border-radius: 22px; padding: 22px; display: flex; flex-direction: column; gap: 18px; }
 .pt__sh { display: flex; align-items: center; justify-content: space-between; }
+.pt__stamp { font-size: 12px; opacity: .7; display: block; }
 .pt__x { font-size: 30px; line-height: 1; background: none; border: 0; color: var(--muted); cursor: pointer; padding: 4px 10px; }
 .pt__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; align-items: end; }
 .pt__full { grid-column: 1 / -1; }

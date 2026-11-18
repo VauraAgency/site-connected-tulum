@@ -10,7 +10,7 @@ import { ThemeToggle } from "../site/ui";
 import { ActionForm, ActionsView } from "./actions";
 import { AgentForm, AgentsView, MyLink, MySales } from "./agents";
 import { ReservationForm, ReservationsView, markCollected, markCompleted, sampleReservation, saveReservationFlow } from "./reservations";
-import { downloadCsv, fmtDay, fmtTime, todayIso } from "./shared";
+import { downloadCsv, fmtDay, fmtStamp, fmtTime, todayIso } from "./shared";
 const statusLabel = (s: Status) => STATUSES.find((x) => x.v === s)?.label || s;
 
 /** Every night on the site, in date order, for the "which events" checkboxes. */
@@ -272,7 +272,8 @@ function Log({ onOut, agent }: { onOut: () => void; agent: AgentRole | null }) {
                 <li key={r.id} className="pt__card pt__row">
                   <button className="pt__rowmain" onClick={() => setEditing({ kind: "entry", data: r })}>
                     <span className="pt__line"><b>{r.name}</b><span className={`pt__pill pt__pill--${r.status}`}>{statusLabel(r.status)}</span>{r.follow_up && <span className="pt__pill pt__pill--fu">Follow up{r.follow_up_date ? ` · ${fmtDay(r.follow_up_date)}` : ""}</span>}{!agent && r.agent_id && <span className="pt__pill pt__pill--ag">via {agentName(r.agent_id) || "agent"}</span>}</span>
-                    <span className="pt__mut">{[r.contact, r.guests ? `${r.guests} guests` : "", r.trip_dates, r.need_date ? `Needs it ${fmtDay(r.need_date)}${r.need_time ? ` at ${fmtTime(r.need_time)}` : ""}` : ""].filter(Boolean).join(" · ") || "No details"}</span>
+                    <span className="pt__mut">{[r.contact, r.guests ? `${r.guests} guests` : "", r.trip_dates, r.need_date || r.need_time ? `Needs it ${[r.need_date ? fmtDay(r.need_date) : "", r.need_time ? `at ${fmtTime(r.need_time)}` : ""].filter(Boolean).join(" ")}` : ""].filter(Boolean).join(" · ") || "No details"}</span>
+                    <span className="pt__mut pt__stamp">Logged {fmtStamp(r.created_at)}</span>
                     <Chips r={r} />
                     {r.notes && <span className="pt__note">{r.notes}</span>}
                   </button>
@@ -351,7 +352,10 @@ function EntryForm({ start, onClose, onSaved, onReserve, agents, forceAgent }: {
     <div className="pt__ov" role="dialog" aria-modal="true" aria-label={f.id ? "Edit entry" : "New entry"} onMouseDown={(e) => { if (e.target === e.currentTarget) onClose(); }}>
       <form className="pt__sheet" onSubmit={submit}>
         <div className="pt__sh">
-          <h2 className="pt__h2">{f.id ? "Edit entry" : "New entry"}</h2>
+          <div>
+            <h2 className="pt__h2">{f.id ? "Edit entry" : "New entry"}</h2>
+            {(start as Partial<Entry>).created_at && <span className="pt__mut pt__stamp">Logged {fmtStamp((start as Partial<Entry>).created_at as string)}</span>}
+          </div>
           <button type="button" className="pt__x" onClick={onClose} aria-label="Close">×</button>
         </div>
 
@@ -360,8 +364,8 @@ function EntryForm({ start, onClose, onSaved, onReserve, agents, forceAgent }: {
           <label className="pt__f">Phone / WhatsApp / email<input value={f.contact} onChange={(e) => set("contact", e.target.value)} /></label>
           <label className="pt__f">Amount of people<input type="number" min={1} inputMode="numeric" value={f.guests ?? ""} onChange={(e) => set("guests", e.target.value ? Number(e.target.value) : null)} /></label>
           <label className="pt__f">Trip dates<input value={f.trip_dates} onChange={(e) => set("trip_dates", e.target.value)} placeholder="Dec 28 to Jan 4" /></label>
-          {!isLegacy() && <label className="pt__f">Date they need the table / booking<input type="date" value={f.need_date || ""} onChange={(e) => setF((p) => ({ ...p, need_date: e.target.value || null, need_time: e.target.value ? p.need_time : null }))} /></label>}
-          {!isLegacy() && <label className="pt__f">Time<input type="time" value={f.need_time ? f.need_time.slice(0, 5) : ""} disabled={!f.need_date} onChange={(e) => set("need_time", e.target.value || null)} /></label>}
+          {!isLegacy() && <label className="pt__f">Day they need the table / booking<input type="date" value={f.need_date || ""} onChange={(e) => set("need_date", e.target.value || null)} /></label>}
+          {!isLegacy() && <label className="pt__f">Arrival time / time of booking<input type="time" value={f.need_time ? f.need_time.slice(0, 5) : ""} onChange={(e) => set("need_time", e.target.value || null)} /></label>}
           {agents.length > 0 && !isLegacy() && (
             <label className="pt__f">Sent by an agent
               <select value={f.agent_id || ""} onChange={(e) => set("agent_id", e.target.value || null)}>

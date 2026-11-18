@@ -394,7 +394,7 @@ const entries = makeStore<Entry>("log_entries", "ct-portal-local", (e) => ({
   follow_up_date: e.follow_up && e.follow_up_date ? e.follow_up_date : null,
   agent_id: nul(e.agent_id),
   need_date: nul(e.need_date),
-  need_time: e.need_date ? hhmm(e.need_time) : null,
+  need_time: hhmm(e.need_time),
 }), ["agent_id", "need_date", "need_time"]);
 
 const reservations = makeStore<Reservation>("reservations", "ct-portal-local-res", (x) => {
@@ -501,6 +501,7 @@ function csv<T>(cols: [string, (r: T) => string | number][], rows: T[]): string 
 
 export const toCsv = (rows: Entry[]) => csv<Entry>([
   ["Date logged", (r) => r.created_at.slice(0, 10)],
+  ["Time logged", (r) => new Date(r.created_at).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" })],
   ["Name", (r) => r.name],
   ["Contact", (r) => r.contact],
   ["Source", (r) => r.source],
