@@ -452,6 +452,47 @@ export const events: TEvent[] = [...rawEvents].sort((a, b) => a.date.localeCompa
 export const readyEvents = events.filter((e) => e.ready);
 export const soonEvents = events.filter((e) => !e.ready);
 
+/* ------------------------------------------------------------------ TABLE MAPS
+ * "View tables" button on the events that have a venue map. Files live in public/assets/tables.
+ *   Zamna: one map + price page per night (every Zamna Tulum event), all nights as the fallback.
+ *   Bagatelle: one page per night, Mahmut's page covers Jan 2 as well as Jan 5.
+ *   &ME: the single Ikal Arena map. */
+export type TableMap = { title: string; pages: { src: string; alt: string }[] };
+const tbl = (name: string) => u(`/assets/tables/${name}.webp`);
+
+const ZAMNA_NIGHTS: Record<string, { key: string; label: string }> = {
+  "2026-12-31": { key: "dec31", label: "Renaissance, Dec 31" },
+  "2027-01-04": { key: "jan4", label: "Anyma, Jan 4" },
+  "2027-01-06": { key: "jan6", label: "Black Coffee, Jan 6" },
+  "2027-01-08": { key: "jan8", label: "Adriatique, Jan 8" },
+  "2027-01-10": { key: "jan10", label: "Adam Port, Jan 10" },
+};
+const zamnaPages = (n: { key: string; label: string }) => [
+  { src: tbl(`zamna-${n.key}-map`), alt: `Zamna Tulum table map, ${n.label}` },
+  { src: tbl(`zamna-${n.key}-packages`), alt: `Zamna Tulum table packages and prices, ${n.label}` },
+];
+
+const BAGATELLE_NIGHTS: Record<string, string> = {
+  "2026-12-31": "dec31", "2027-01-02": "jan5", "2027-01-04": "jan4", "2027-01-05": "jan5", "2027-01-08": "jan8", "2027-01-09": "jan9",
+};
+
+export function tableMapFor(e: TEvent): TableMap | null {
+  if (e.venue === "Zamna Tulum" || e.festival === "zamna") {
+    const n = ZAMNA_NIGHTS[e.date];
+    return n
+      ? { title: `Zamna Tulum tables, ${n.label}`, pages: zamnaPages(n) }
+      : { title: "Zamna Tulum tables, all nights", pages: Object.values(ZAMNA_NIGHTS).flatMap(zamnaPages) };
+  }
+  if (e.venue === "Bagatelle Tulum") {
+    const k = BAGATELLE_NIGHTS[e.date] || "jan5";
+    return { title: "Bagatelle Tulum tables", pages: [{ src: tbl(`bagatelle-${k}`), alt: "Bagatelle Tulum VIP table map and prices" }] };
+  }
+  if (e.venue === "Ikal Arena" && e.title.includes("&ME")) {
+    return { title: "&ME Tulum tables", pages: [{ src: tbl("me-tulum"), alt: "&ME Tulum table map and prices, Ikal Arena" }] };
+  }
+  return null;
+}
+
 /** Where "Get tickets" goes. Returns null when it should be a WhatsApp request (manual or no link yet). */
 export function ticketHref(e: TEvent): string | null {
   if (e.manual && !e.ticketUrl) return null;

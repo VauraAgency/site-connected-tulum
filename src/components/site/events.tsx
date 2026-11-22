@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { events, readyEvents, img, ticketHref, fmtDate, waLink, waTemplate, mxn, type TEvent } from "../../content/site";
+import { createPortal } from "react-dom";
+import { events, readyEvents, img, ticketHref, tableMapFor, fmtDate, waLink, waTemplate, mxn, type TEvent } from "../../content/site";
 import { Arrow } from "./ui";
 
 /* ------------------------------------------------------------------ helpers */
@@ -47,6 +48,45 @@ export function TicketBtn({ e, className = "cta-ticket" }: { e: TEvent; classNam
     <a className={className} href={waLink(waTemplate(`Tickets: ${evName(e)} @ ${e.venue} (${d.long})`))} target="_blank" rel="noopener">
       Get tickets <Arrow />
     </a>
+  );
+}
+
+/** Opens the venue's table map and price pages for this night (Zamna, Bagatelle, &ME). */
+export function ViewTablesBtn({ e, className = "cta-table" }: { e: TEvent; className?: string }) {
+  const map = tableMapFor(e);
+  const [open, setOpen] = useState(false);
+  useEffect(() => {
+    if (!open) return;
+    const k = (ev: KeyboardEvent) => { if (ev.key === "Escape") setOpen(false); };
+    document.addEventListener("keydown", k);
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => { document.removeEventListener("keydown", k); document.body.style.overflow = prev; };
+  }, [open]);
+  if (!map || e.cta === "reserve") return null;
+  const d = fmtDate(e.date);
+  return (
+    <>
+      <button type="button" className={className} onClick={() => setOpen(true)}>View tables</button>
+      {open && createPortal(
+        <div className="tbx" role="dialog" aria-modal="true" aria-label={map.title} onClick={() => setOpen(false)}>
+          <div className="tbx__in" onClick={(ev) => ev.stopPropagation()}>
+            <div className="tbx__h">
+              <div>
+                <p className="mono">{evName(e)} · {d.long}</p>
+                <h3>{map.title}</h3>
+              </div>
+              <button type="button" className="tbx__x" aria-label="Close" onClick={() => setOpen(false)}>&times;</button>
+            </div>
+            <div className="tbx__pages">
+              {map.pages.map((p) => <img key={p.src} src={p.src} alt={p.alt} loading="lazy" decoding="async" />)}
+            </div>
+            <a className="cta-hero tbx__cta" href={waLink(waTemplate(`VIP table: ${evName(e)} @ ${e.venue} (${d.long})`))} target="_blank" rel="noopener">Inquire about a table</a>
+          </div>
+        </div>,
+        document.body,
+      )}
+    </>
   );
 }
 
@@ -131,6 +171,7 @@ export function NightCard({ e }: { e: TEvent }) {
         <Prices e={e} />
         <div className="ev__ctas">
           <TicketBtn e={e} />
+          <ViewTablesBtn e={e} />
           <TableBtn e={e} />
         </div>
       </div>
@@ -187,6 +228,7 @@ export function SeasonScroller() {
           <p className="season__l">{cur.venue}{cur.lineup ? `. ${cur.lineup}` : ""}</p>
           <div className="season__ctas">
             <TicketBtn e={cur} className="cta-hero" />
+            <ViewTablesBtn e={cur} className="cta-table" />
             <TableBtn e={cur} className="cta-table" />
           </div>
         </div>
@@ -306,6 +348,7 @@ export function Calendar() {
             </div>
             <div className="cal__btns">
               {e.ready ? <TicketBtn e={e} className="cta-ticket cta-ticket--sm" /> : <span className="cal__soon mono">Details soon</span>}
+              <ViewTablesBtn e={e} className="cta-table cta-table--sm" />
               <TableBtn e={e} className="cta-table cta-table--sm" />
             </div>
           </div>
