@@ -59,7 +59,7 @@ export const sampleReservation = (): ReservationInput => ({
   customer_contact: "+1 555 0100",
   guests: 6,
   service: "Table",
-  venue: "Casa Jaguar",
+  venue: "Bagatelle",
   details: "Sample table with bottle service",
   reservation_date: addDays(-3),
   reservation_time: "22:00",
@@ -73,7 +73,7 @@ export const sampleReservation = (): ReservationInput => ({
   commission_basis: "percent",
   commission_rate: 15,
   commission_amount: 360,
-  commission_payer: "Casa Jaguar",
+  commission_payer: "Bagatelle",
   commission_status: "invoiced",
   commission_due: addDays(7),
   commission_collected: 0,
@@ -342,7 +342,7 @@ export function ReservationForm({ start, entries, agents, acts, onClose, onSaved
             </select>
           </label>
           <label className="pt__f">Venue / event
-            <input list="pt-venues" value={f.venue} onChange={(e) => set("venue", e.target.value)} placeholder="Casa Jaguar, Bagatelle…" />
+            <input list="pt-venues" value={f.venue} onChange={(e) => set("venue", e.target.value)} placeholder="Bagatelle, Nomade…" />
             <datalist id="pt-venues">{VENUES.map((v) => <option key={v} value={v} />)}</datalist>
           </label>
           <label className="pt__f pt__full">Details<input value={f.details} onChange={(e) => set("details", e.target.value)} placeholder="Table 12, villa name, boat, pickup time…" /></label>

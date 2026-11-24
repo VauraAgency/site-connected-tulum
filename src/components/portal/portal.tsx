@@ -22,7 +22,7 @@ const EVENT_OPTIONS: string[] = (() => {
     .sort((a, b) => a.date.localeCompare(b.date))
     .forEach((e) => {
       const d = new Date(`${e.date}T12:00:00`).toLocaleDateString("en-US", { month: "short", day: "numeric" });
-      const label = e.title === "Casa Jaguar Thursdays" ? "Casa Jaguar Thursdays (every week)" : `${d} · ${e.title}`;
+      const label = `${d} · ${e.title}`;
       if (!seen.has(label)) { seen.add(label); out.push(label); }
     });
   return out;
