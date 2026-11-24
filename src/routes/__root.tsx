@@ -1,4 +1,5 @@
 import { u } from "../lib/url";
+import { useHashScroll } from "../lib/hash-scroll";
 import {
   Outlet,
   createRootRoute,
@@ -136,5 +137,6 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   useEffect(() => { initReferral(); }, []);
+  useHashScroll();
   return <Outlet />;
 }
