@@ -1,8 +1,9 @@
+import { useState } from "react";
 import { u } from "../lib/url";
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import {
-  site, events, festivalPages, landingPages, serviceBySlug, services, villas, fmtDate, waLink, waTemplate, img,
-  type Service, type FestivalPage, type LandingPage, type TEvent,
+  site, events, festivalPages, landingPages, serviceBySlug, services, villas, boats, fmtDate, waLink, waTemplate, img,
+  type Service, type Boat, type FestivalPage, type LandingPage, type TEvent,
 } from "../content/site";
 import { Shell, Eyebrow, H2, Arrow, ClosingCTA, Faq, WaGlyph, Icon, Carousel, useReveal } from "../components/site/ui";
 import { NightCard, Calendar } from "../components/site/events";
@@ -81,6 +82,53 @@ function RestOfTrip({ skip }: { skip: string }) {
   );
 }
 
+/* ================================================================ FLEET (boat charters) */
+function BoatCard({ b }: { b: Boat }) {
+  const [i, setI] = useState(0);
+  return (
+    <article className="boat" data-rise>
+      <div className="boat__ph">
+        <img src={b.photos[i]} alt={`${b.name}, ${b.ft} ft ${b.kind.toLowerCase()}`} loading="lazy" width={800} height={600} />
+        {b.badge && <span className="item__badge mono">{b.badge}</span>}
+        {b.photos.length > 1 && (
+          <div className="boat__th" role="tablist" aria-label={`${b.name} photos`}>
+            {b.photos.map((p, k) => (
+              <button key={p} type="button" role="tab" aria-selected={k === i} aria-label={`Photo ${k + 1}`} className={k === i ? "on" : ""} onClick={() => setI(k)}>
+                <img src={p} alt="" loading="lazy" width={80} height={60} />
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+      <div className="boat__b">
+        <p className="mono boat__k">{b.kind} · {b.ft} ft · Up to {b.maxGuests} guests</p>
+        <h3>{b.name}</h3>
+        <p className="boat__d">{b.blurb}</p>
+        <ul className="boat__f">{b.features.map((f) => <li key={f}>{f}</li>)}</ul>
+        <p className="boat__r">Rate on request</p>
+        <a className="item__go" href={waLink(waTemplate(`Boat charter: ${b.name} (${b.ft} ft)`))} target="_blank" rel="noopener">Inquire <Arrow /></a>
+      </div>
+    </article>
+  );
+}
+
+function Fleet() {
+  const groups: { label: string; kind: Boat["kind"] }[] = [
+    { label: "Catamarans", kind: "Catamaran" },
+    { label: "Motor yachts", kind: "Motor yacht" },
+  ];
+  return (
+    <>
+      {groups.map((g) => (
+        <div key={g.kind} className="fleet">
+          <p className="mono fleet__h">{g.label}</p>
+          <div className="fleet__g">{boats.filter((b) => b.kind === g.kind).map((b) => <BoatCard key={b.slug} b={b} />)}</div>
+        </div>
+      ))}
+    </>
+  );
+}
+
 /* ================================================================ SERVICE */
 function ServicePage({ s }: { s: Service }) {
   return (
@@ -101,6 +149,7 @@ function ServicePage({ s }: { s: Service }) {
 
       <section className="sec sec--tight wrap">
         <H2 a="Choose your" b={s.title.toLowerCase()} />
+        {s.slug === "boats" ? <Fleet /> : (
         <Carousel className="items" label="Options">
           {s.items.map((it) => (
             <article key={it.name} className="item" data-rise>
@@ -114,6 +163,7 @@ function ServicePage({ s }: { s: Service }) {
             </article>
           ))}
         </Carousel>
+        )}
         {s.included.length > 0 && (
           <div className="incl"><span className="mono">Always included</span><p>{s.included.join(" · ")}</p></div>
         )}

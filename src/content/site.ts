@@ -274,6 +274,82 @@ export type IconName =
   | "glass" | "crown" | "boat" | "compass" | "car" | "chef" | "leaf" | "disc"
   | "spark" | "camera" | "bag" | "calendar" | "home" | "ticket" | "moon" | "phone";
 
+/* ------------------------------------------------------------------ FLEET (boat charters)
+ * Rates are NOT stored here on purpose. Every boat is "rate on request" and quotes go through WhatsApp.
+ * Photos live in public/assets/boats/<slug>-<n>.webp (first one is the cover).
+ */
+export type Boat = {
+  slug: string;
+  name: string;
+  kind: "Catamaran" | "Motor yacht";
+  ft: number;
+  guests: number; // included in the base rate
+  maxGuests: number;
+  badge?: string;
+  blurb: string;
+  features: string[];
+  photos: string[];
+};
+
+const bp = (slug: string, n: number) => Array.from({ length: n }, (_, i) => u(`/assets/boats/${slug}-${i + 1}.webp`));
+
+export const boats: Boat[] = [
+  {
+    slug: "lagoon-41", name: "Lagoon 41", kind: "Catamaran", ft: 41, guests: 15, maxGuests: 22, badge: "Top rated",
+    blurb: "Our top rated catamaran. Shaded cockpit, wide trampolines and room to spread out.",
+    features: ["WiFi and Bluetooth audio", "Snorkel gear and paddle boards", "Open bar"],
+    photos: bp("lagoon-41", 3),
+  },
+  {
+    slug: "chapter-two", name: "Chapter Two", kind: "Catamaran", ft: 45, guests: 15, maxGuests: 30, badge: "Premium open bar",
+    blurb: "The largest Lagoon in the fleet. Flybridge helm, big sun pads and a wide teak cockpit.",
+    features: ["Premium open bar", "Fits up to 30 guests", "Reduced rate for small groups"],
+    photos: bp("chapter-two", 3),
+  },
+  {
+    slug: "bang-bang-lulu", name: "Bang Bang Lulu", kind: "Catamaran", ft: 42, guests: 15, maxGuests: 25, badge: "Premium open bar",
+    blurb: "Modern Lagoon 42 with a panoramic salon, a front lounge and nets over the water.",
+    features: ["Premium open bar", "Panoramic salon", "Front sun pads and trampolines"],
+    photos: bp("bang-bang", 3),
+  },
+  {
+    slug: "blue-iris", name: "Blue Iris", kind: "Catamaran", ft: 40, guests: 15, maxGuests: 20, badge: "Premium open bar",
+    blurb: "Lagoon 40 that sails properly. Good for couples and mid size groups.",
+    features: ["Premium open bar", "Sails under full canvas", "Front lounge and trampolines"],
+    photos: bp("blue-iris", 2),
+  },
+  {
+    slug: "leopard-47", name: "Leopard 47", kind: "Catamaran", ft: 47, guests: 15, maxGuests: 35, badge: "Most guests",
+    blurb: "The big group boat. Open front deck, a full salon and space for up to 35.",
+    features: ["Babies free, kids 2 to 6 half price", "Vegetarian and vegan menu", "Fits up to 35 guests"],
+    photos: bp("leopard-47", 3),
+  },
+  {
+    slug: "sea-ray-flybridge-48", name: "Sea Ray Flybridge 48", kind: "Motor yacht", ft: 48, guests: 15, maxGuests: 20, badge: "Flybridge",
+    blurb: "Flybridge cruiser with an upper deck for the best view and a stern made for swimming.",
+    features: ["Upper deck lounge", "Fits up to 20 guests", "Open bar"],
+    photos: bp("flybridge-48", 3),
+  },
+  {
+    slug: "sea-ray-sundancer-48", name: "Sea Ray Sundancer 48", kind: "Motor yacht", ft: 48, guests: 15, maxGuests: 20,
+    blurb: "Sundancer with a wraparound cockpit, a bow sun pad and a cabin below.",
+    features: ["Wraparound cockpit seating", "Fits up to 20 guests", "Open bar"],
+    photos: bp("sundancer-48", 3),
+  },
+  {
+    slug: "aquaman", name: "Aquaman", kind: "Motor yacht", ft: 40, guests: 15, maxGuests: 15,
+    blurb: "Sea Ray 40 for a tighter crew. Anchors close to the beach with a cabin below.",
+    features: ["Cabin with a double bed", "Riviera Maya or Cozumel day trips", "Up to 15 guests"],
+    photos: bp("sea-ray-40", 3),
+  },
+  {
+    slug: "sea-ray-55", name: "Sea Ray 55", kind: "Motor yacht", ft: 55, guests: 12, maxGuests: 22, badge: "Biggest yacht",
+    blurb: "Our largest motor yacht. Lounge seating, a full galley and bunks below.",
+    features: ["Children's menu available", "Coast or Cozumel day trips", "Fits up to 22 guests"],
+    photos: bp("sea-ray-55", 3),
+  },
+];
+
 export const services: Service[] = [
   {
     slug: "tulum-festival-season", num: "01", kicker: "Access", title: "VIP Event Access", icon: "ticket",
@@ -326,18 +402,14 @@ export const services: Service[] = [
   {
     slug: "boats", num: "05", kicker: "Sea", title: "Yachts & Catamarans", icon: "boat",
     short: "Private catamarans and yachts on the Caribbean. Open water, open bar, your crew only.",
-    cardCta: "See the fleet", image: img.boat,
+    cardCta: "See the fleet", image: u("/assets/boats/sundancer-48-1.webp"),
     h1: "Tulum Yacht & Catamaran Charters",
-    intro: "Tell us the group size and the vibe. We match you with the right boat and handle the dock, the bar and the timing.",
-    items: [
-      // PENDING: Hector to send fleet (name, length, capacity, price, link)
-      { name: "Sail Catamaran", meta: "Sail catamaran · Group size on request", badge: "Popular" },
-      { name: "Motor Yacht", meta: "Motor yacht · Group size on request", badge: "Signature" },
-    ],
-    included: ["Captain & crew", "Drinks", "Snorkel gear", "Sound system"],
+    intro: "Nine private boats, from a 40 ft cruiser to a 55 ft yacht and a catamaran for 35. Tell us the date, the headcount and the vibe and we match you with the right one.",
+    items: boats.map((b) => ({ name: b.name, meta: `${b.kind} · ${b.ft} ft · Up to ${b.maxGuests} guests`, badge: b.badge })),
+    included: ["Captain, crew, chef & host", "Open bar", "Snorkel gear & paddle boards", "Photographer with drone"],
     notes: [
-      { label: "Pricing", text: "Rates depend on vessel, group size and season. We quote direct." },
-      { label: "Duration", text: "Half day and full day charters available." },
+      { label: "Pricing", text: "Rates depend on the boat, group size and hours. Send us the date and headcount and we quote direct." },
+      { label: "Duration", text: "Charters run from 3 to 8 hours. Day trips to Cozumel available on select boats." },
     ],
   },
 ];
@@ -399,23 +471,27 @@ const rawEvents: TEvent[] = [
   { date: "2026-12-30", title: "Darco at Bonbonniere", venue: "Bonbonniere Tulum", type: "Night club", time: "10:00 PM", lineup: "Darco, Renê, Gio de Lira", desc: "Renê / Gio de Lira", flyer: u("/assets/flyers/darco.webp"), flyerH: 1600, ready: true, manual: true, bg: img.party },
   { date: "2026-12-31", title: "Le Tropical NYE at Bagatelle", venue: "Bagatelle Tulum", type: "Dinner + party", time: "Doors 10:00 PM", lineup: "Guy Gerber, Kimonos, Monobase, Story Behind", desc: "Guy Gerber / Kimonos", flyer: u("/assets/flyers/le-tropical.webp"), flyerH: 1600, ready: true, manual: true, bg: img.beachClub },
   { date: "2026-12-31", title: "NYE at Ahau", venue: "Ahau Tulum", type: "Dinner + party", time: "10:00 PM", desc: "Ahau's New Year's White Party. Curated by David Graziano, produced by Set Underground. Lineup announced soon", flyer: u("/assets/flyers/ahau-nye.webp"), flyerH: 1200, ready: true, manual: true, ticketUrl: "https://tf.link/zjaeicbn", bg: img.beachClub },
+  { date: "2026-12-26", title: "Gala Ibiza at Bagatelle", venue: "Bagatelle Tulum", type: "Dinner + party", time: "8:00 PM", lineup: "Ibán Mendoza, Marco Norma, Sidartha Siliceo, Ananta", ready: true, manual: true, bg: img.beachClub },
+  { date: "2026-12-27", title: "Pendulum: Steve Lawler at Bagatelle", venue: "Bagatelle Tulum", type: "Dinner + party", time: "Doors 7:00 PM", lineup: "Steve Lawler, Jesse Zotti", flyer: u("/assets/flyers/pendulum.webp"), flyerH: 1600, ready: true, manual: true, bg: img.beachClub },
+  { date: "2026-12-29", title: "Guy Mantzur presents Moments", venue: "Bagatelle Tulum", type: "Dinner + party", time: "8:00 PM", lineup: "Guy Mantzur, Rodriguez Jr., Eli Nissan, Ermakova", ready: true, manual: true, bg: img.beachClub },
+  { date: "2026-12-30", title: "Arodes at Bagatelle", venue: "Bagatelle Tulum", type: "Dinner + party", time: "8:00 PM", lineup: "Arodes, Loen, Negrinm", ready: true, manual: true, bg: img.beachClub },
+  { date: "2026-12-31", title: "NYE at Bonbonniere", venue: "Bonbonniere Tulum", type: "Night club", time: "10:00 PM", lineup: "Cuevas, Xandro", desc: "New Year's Eve, Beyond Temptation", flyer: u("/assets/flyers/bonbonniere-nye.webp"), flyerH: 1600, ready: true, manual: true, bg: img.party },
   // ---- January
   { date: "2027-01-01", title: "Maxi Meraki at Bonbonniere", venue: "Bonbonniere Tulum", type: "Night club", lineup: "Maxi Meraki, Miul, Fer Delgado", desc: "Miul / Fer Delgado", flyer: u("/assets/flyers/maxi-meraki.webp"), flyerH: 1600, ready: true, manual: true, bg: img.party },
-  { date: "2027-01-01", title: "EDM Tulum Network Event", venue: "Kuul Tulum", type: "Beach club", time: "1 PM to 7 PM", desc: "EDM and Connected Tulum event" },
-  { date: "2027-01-02", title: "Amnesia", venue: "Amnesia Tulum", type: "Party only", time: "TBA", tbd: true },
+  { date: "2027-01-01", title: "Tuluminecto", venue: "Kuul Tulum", type: "Beach club", time: "11:00 AM to 7:00 PM", ready: true, manual: true, ticketUrl: "https://tf.link/llw7zbgh", bg: img.beachClub },
+  { date: "2027-01-02", title: "Amnesia 50 Years World Tour", venue: "Zamna Tulum", type: "Festival", time: "10:00 PM", lineup: "Josh Baker, DJ Tennis, Adam Ten, Mar-T, Natalia Roth and more", flyer: u("/assets/flyers/amnesia.webp"), flyerH: 1601, ready: true, festival: "zamna", manual: true, bg: img.festival },
   { date: "2027-01-02", title: "Afrodise Tulum", venue: "Ahau Tulum", type: "Festival", time: "2:00 PM to 1:00 AM", lineup: "Aaron Sevilla", desc: "Aaron Sevilla at Ahau", flyer: u("/assets/flyers/afrodise.webp"), flyerH: 1600, ready: true, manual: true, ticketUrl: "https://tf.link/rxaafes3", bg: img.beachClub },
   { date: "2027-01-02", title: "Por Que No Festival", venue: "Vesica Tulum", type: "Festival", time: "9 AM to 10 PM", lineup: "Indo Warehouse, Eran and more", desc: "Cenote festival, 2 stages", flyer: u("/assets/flyers/por-que-no.webp"), flyerH: 1600, ready: true, manual: true, ticketUrl: "https://www.eventbrite.com/e/1982357459525/?discount=connected20", bg: img.party },
   { date: "2027-01-04", title: "Monolink at Bagatelle", venue: "Bagatelle Tulum", type: "Festival", time: "Doors 7:00 PM", lineup: "Monolink, Gio de Lira, Renatta", desc: "Gio de Lira / Renatta", flyer: u("/assets/flyers/monolink.webp"), flyerH: 1600, ready: true, manual: true, bg: img.beachClub },
-  { date: "2027-01-02", title: "Mahmut Orhan at Bagatelle", venue: "Bagatelle Tulum", type: "Festival", time: "Doors 7:00 PM", lineup: "Mahmut Orhan, Renê, Spinoff", desc: "Plays Jan 2 and Jan 5. Renê / Spinoff", flyer: u("/assets/flyers/mahmut-orhan.webp"), flyerH: 1572, ready: true, manual: true, bg: img.beachClub },
-  { date: "2027-01-05", title: "Mahmut Orhan at Bagatelle", venue: "Bagatelle Tulum", type: "Festival", time: "Doors 7:00 PM", lineup: "Mahmut Orhan, Renê, Spinoff", desc: "Plays Jan 2 and Jan 5. Renê / Spinoff", flyer: u("/assets/flyers/mahmut-orhan.webp"), flyerH: 1572, ready: true, manual: true, bg: img.beachClub },
+  { date: "2027-01-05", title: "Mahmut Orhan at Bagatelle", venue: "Bagatelle Tulum", type: "Festival", time: "Doors 7:00 PM", lineup: "Mahmut Orhan, Renê, Spinoff", desc: "Renê / Spinoff", flyer: u("/assets/flyers/mahmut-orhan.webp"), flyerH: 1572, ready: true, manual: true, bg: img.beachClub },
   { date: "2027-01-05", title: "Iluminal", venue: "Cenote", type: "Festival", time: "6:00 PM to 9:00 AM", lineup: "Traumer", desc: "Cenote festival", flyer: u("/assets/flyers/iluminal.webp"), flyerH: 1600, ready: true, manual: true, ticketUrl: "https://es-mx.ra.co/events/2567024?p=HECTORCONECCTED", bg: img.party },
-  { date: "2027-01-03", title: "Por Que No Festival", venue: "Vesica Tulum", type: "Festival", time: "TBA", tbd: true },
+  { date: "2027-01-03", title: "Por Que No Festival", venue: "Vesica Tulum", type: "Festival", time: "9 AM to 11 PM", lineup: "Améme, Matt Sassari, Savage & Shē and more", desc: "Cenote festival", flyer: u("/assets/flyers/por-que-no-jan3.webp"), flyerH: 1200, ready: true, manual: true, ticketUrl: "https://www.eventbrite.com/e/2001730130706/?discount=connected20", bg: img.party },
   { date: "2027-01-03", title: "&ME Tulum", venue: "Ikal Arena", type: "Festival", time: "8:00 PM", desc: "&ME", ticketUrl: "https://boletomovil.com/evento/and-me-tulum-2027-01-03?rp=AHCT", flyer: u("/assets/flyers/andme.webp"), flyerVideo: u("/assets/flyers/andme.mp4"), flyerH: 1125, ready: true, key: true, bg: img.party,
     prices: [{ label: "General, stage 1", mxn: 2900 }, { label: "Backstage, early bird", mxn: 4800 }] },
-  { date: "2027-01-03", title: "Scenarios", venue: "Papaya Playa Project", type: "Festival" },
+  { date: "2027-01-03", title: "Scenarios", venue: "Papaya Playa Project", type: "Festival", time: "9:00 PM", desc: "Papaya Playa Project presents One Eternal Flow", flyer: u("/assets/flyers/scenarios.webp"), flyerH: 1600, ready: true, manual: true, ticketUrl: "https://tf.link/ixtnvful", bg: img.beachClub },
   { date: "2027-01-04", title: "Anyma presents ÆDEN: The Lost Temple", venue: "Zamna Tulum", type: "Festival", time: "10:00 PM", lineup: "Anyma, CamelPhat, Cassian, Volkoder and more", flyer: u("/assets/flyers/anyma.webp"), flyerH: 1600, ready: true, festival: "zamna", key: true, manual: true, bg: img.party,
     prices: [{ label: "General, phase 1", mxn: 3325 }, { label: "VIP, early", mxn: 7158 }] },
-  { date: "2027-01-05", title: "Cheetah Print", venue: "Papaya Playa Project", type: "Festival", time: "7:00 PM", desc: "Papaya Playa Project and Rafael present", flyer: u("/assets/flyers/cheetah-print.webp"), flyerH: 1600, ready: true, manual: true, bg: img.beachClub },
+  { date: "2027-01-05", title: "Cheetah Print", venue: "Papaya Playa Project", type: "Festival", time: "4:00 PM", desc: "Papaya Playa Project and Rafael present", flyer: u("/assets/flyers/cheetah-print.webp"), flyerH: 1600, ready: true, manual: true, ticketUrl: "https://tf.link/kelwkk5j", bg: img.beachClub },
   { date: "2027-01-05", title: "7 Realms", venue: "Kuul Tulum", type: "Festival", tbd: true },
   { date: "2027-01-06", title: "Black Coffee at Zamna Tulum", venue: "Zamna Tulum", type: "Festival", time: "10:00 PM", lineup: "Black Coffee", flyer: u("/assets/flyers/black-coffee.webp"), flyerH: 1600, ready: true, festival: "zamna", key: true, manual: true, bg: img.festival,
     prices: [{ label: "General, early", mxn: 2520 }, { label: "VIP, early", mxn: 7158 }] },
@@ -432,6 +508,13 @@ const rawEvents: TEvent[] = [
   { date: "2027-01-10", title: "Adam Port, season closing", venue: "Zamna Tulum", type: "Festival", time: "10:00 PM", lineup: "Adam Port", flyer: u("/assets/flyers/adam-port.webp"), flyerH: 1600, ready: true, festival: "zamna", key: true, manual: true, bg: img.festival,
     prices: [{ label: "General, early", mxn: 1925 }, { label: "VIP, early", mxn: 7158 }] },
   { date: "2027-01-11", title: "Giegling", venue: "Papaya Playa Project", type: "Festival", desc: "Giegling" },
+  { date: "2027-01-01", title: "Tripolism at Bagatelle", venue: "Bagatelle Tulum", type: "Dinner + party", time: "8:00 PM", lineup: "Ruben Alegre, Fer Delgado", ready: true, manual: true, bg: img.beachClub },
+  { date: "2027-01-02", title: "Yamagucci at Bagatelle", venue: "Bagatelle Tulum", type: "Beach club", time: "8:00 PM", lineup: "Yamagucci, Dor Danino, Xandro", ready: true, manual: true, bg: img.beachClub },
+  { date: "2027-01-02", title: "Tom & Collins at Bonbonniere", venue: "Bonbonniere Tulum", type: "Night club", time: "10:00 PM", lineup: "Tom & Collins, Cuevas, Xandro", flyer: u("/assets/flyers/tom-collins.webp"), flyerH: 1600, ready: true, manual: true, bg: img.party },
+  { date: "2027-01-03", title: "Lee Burridge presents All Day I Dream", venue: "Bagatelle Tulum", type: "Beach club", time: "8:00 PM", lineup: "Lee Burridge", ready: true, manual: true, bg: img.beachClub },
+  { date: "2027-01-05", title: "Damian Lazarus at Bonbonniere", venue: "Bonbonniere Tulum", type: "Night club", time: "10:00 PM", lineup: "Damian Lazarus, Story Behind, Loen b2b Diaaz", flyer: u("/assets/flyers/damian-lazarus.webp"), flyerH: 1600, ready: true, manual: true, bg: img.party },
+  { date: "2027-01-15", title: "Nevermind by Ten Ibiza", venue: "Bagatelle Tulum", type: "Beach club", time: "10:00 PM", lineup: "Oriol Calvo, Musumeci, Renê", ready: true, manual: true, bg: img.beachClub },
+  { date: "2027-01-16", title: "Kintar presents Summerians", venue: "Bagatelle Tulum", type: "Beach club", time: "10:00 PM", ready: true, manual: true, bg: img.beachClub },
 ];
 
 export const events: TEvent[] = [...rawEvents].sort((a, b) => a.date.localeCompare(b.date));
@@ -448,6 +531,7 @@ const tbl = (name: string) => u(`/assets/tables/${name}.webp`);
 
 const ZAMNA_NIGHTS: Record<string, { key: string; label: string }> = {
   "2026-12-31": { key: "dec31", label: "Renaissance, Dec 31" },
+  "2027-01-02": { key: "jan2", label: "Amnesia, Jan 2" },
   "2027-01-04": { key: "jan4", label: "Anyma, Jan 4" },
   "2027-01-06": { key: "jan6", label: "Black Coffee, Jan 6" },
   "2027-01-08": { key: "jan8", label: "Adriatique, Jan 8" },
