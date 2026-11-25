@@ -944,3 +944,13 @@ a:hover .arr, button:hover .arr { transform: translateX(4px); }
 .vfilter__b.is-on { background: var(--ink); color: var(--bg); border-color: var(--ink); }
 .vfilter__b:focus-visible { outline: 2px solid var(--g-green); outline-offset: 2px; }
 @media (max-width: 640px) { .vfilter { flex-wrap: nowrap; overflow-x: auto; margin-inline: -16px; padding-inline: 16px; scrollbar-width: none; } .vfilter::-webkit-scrollbar { display: none; } .vfilter__b { flex: none; } }
+
+/* homepage featured dates */
+.nt__feat { margin: 56px 0 -14px; font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
+.nt__fgrid { align-items: stretch; }
+.nye-card { display: flex; flex-direction: column; gap: 10px; justify-content: flex-end; min-height: 280px; padding: 26px; border-radius: var(--r); background: var(--black); color: #fff; border: 1px solid rgba(16,240,74,.25); transition: transform .45s var(--ease), box-shadow .45s; }
+.nye-card:hover { transform: translateY(-6px); box-shadow: 0 26px 52px -30px rgba(0,0,0,.6); }
+.nye-card .mono { color: var(--g-green); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; }
+.nye-card strong { font-family: var(--f-display); font-size: 28px; line-height: 1.05; letter-spacing: -.02em; font-weight: 600; }
+.nye-card p { color: rgba(255,255,255,.7); font-size: 14.5px; }
+.nye-card .svc__go { color: var(--g-green); }
