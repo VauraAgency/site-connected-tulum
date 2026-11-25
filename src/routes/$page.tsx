@@ -85,19 +85,26 @@ function RestOfTrip({ skip }: { skip: string }) {
 /* ================================================================ FLEET (boat charters) */
 function BoatCard({ b }: { b: Boat }) {
   const [i, setI] = useState(0);
+  const n = b.photos.length;
+  const go = (k: number) => setI((k + n) % n);
   return (
     <article className="boat" data-rise>
       <div className="boat__ph">
         <img src={b.photos[i]} alt={`${b.name}, ${b.ft} ft ${b.kind.toLowerCase()}`} loading="lazy" width={800} height={600} />
         {b.badge && <span className="item__badge mono">{b.badge}</span>}
-        {b.photos.length > 1 && (
-          <div className="boat__th" role="tablist" aria-label={`${b.name} photos`}>
-            {b.photos.map((p, k) => (
-              <button key={p} type="button" role="tab" aria-selected={k === i} aria-label={`Photo ${k + 1}`} className={k === i ? "on" : ""} onClick={() => setI(k)}>
-                <img src={p} alt="" loading="lazy" width={80} height={60} />
-              </button>
-            ))}
-          </div>
+        {n > 1 && (
+          <>
+            <button type="button" className="boat__nav boat__nav--p" aria-label="Previous photo" onClick={() => go(i - 1)}>‹</button>
+            <button type="button" className="boat__nav boat__nav--n" aria-label="Next photo" onClick={() => go(i + 1)}>›</button>
+            <span className="boat__ct mono">{i + 1} / {n}</span>
+            <div className="boat__th" role="tablist" aria-label={`${b.name} photos`}>
+              {b.photos.map((p, k) => (
+                <button key={p} type="button" role="tab" aria-selected={k === i} aria-label={`Photo ${k + 1}`} className={k === i ? "on" : ""} onClick={() => setI(k)}>
+                  <img src={p} alt="" loading="lazy" width={80} height={60} />
+                </button>
+              ))}
+            </div>
+          </>
         )}
       </div>
       <div className="boat__b">
