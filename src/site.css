@@ -935,3 +935,12 @@ a:hover .arr, button:hover .arr { transform: translateX(4px); }
 @media (max-width: 980px) { .fleet__g { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 640px) { .fleet__g { grid-template-columns: 1fr; } }
 .boat .boat__ph .item__badge { background: rgba(5,7,6,.88) !important; color: var(--g-green); backdrop-filter: blur(4px); }
+
+/* villas area filter */
+.vfilter { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.vfilter__b { padding: 10px 16px; border-radius: 999px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); font: inherit; font-size: 14px; cursor: pointer; transition: background .2s, color .2s, border-color .2s; }
+.vfilter__b small { font-size: 11px; opacity: .6; margin-left: 4px; }
+.vfilter__b:hover { border-color: var(--ink); }
+.vfilter__b.is-on { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+.vfilter__b:focus-visible { outline: 2px solid var(--g-green); outline-offset: 2px; }
+@media (max-width: 640px) { .vfilter { flex-wrap: nowrap; overflow-x: auto; margin-inline: -16px; padding-inline: 16px; scrollbar-width: none; } .vfilter::-webkit-scrollbar { display: none; } .vfilter__b { flex: none; } }

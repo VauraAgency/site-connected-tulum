@@ -2,6 +2,7 @@ import { u } from "../../lib/url";
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import { site, villas, waLink } from "../../content/site";
 import { Shell, Eyebrow, H2, Arrow, WaGlyph } from "../../components/site/ui";
+import { bpLink, trackBP } from "../../lib/beachplease";
 
 export const Route = createFileRoute("/villas/$slug")({
   loader: ({ params }) => {
@@ -45,6 +46,7 @@ function VillaPage() {
           <div><dt className="mono">Style</dt><dd>{v.style}</dd></div>
         </dl>
         <div className="hero__ctas">
+          {bpLink(v) && <a className="cta-hero" href={bpLink(v, "villa-top")!} target="_blank" rel="noopener" onClick={() => trackBP(v.slug, v.name, "villa-top")}>Check dates &amp; book <Arrow /></a>}
           <a className="cta-wa" href={waLink(msg)} target="_blank" rel="noopener"><WaGlyph /> Book on WhatsApp</a>
           {v.bookingUrl && <a className="cta-ghost cta-ghost--dark" href={v.bookingUrl} target="_blank" rel="noopener sponsored">Book online <Arrow /></a>}
         </div>
@@ -71,6 +73,7 @@ function VillaPage() {
           <h2 className="h2 h2--light">{v.name}, <em className="accent">your week</em>.</h2>
           <p className="closing__p">Send your dates. We confirm availability and the direct rate fast.</p>
           <div className="closing__ctas">
+            {bpLink(v) && <a className="cta-hero" href={bpLink(v, "villa-bottom")!} target="_blank" rel="noopener" onClick={() => trackBP(v.slug, v.name, "villa-bottom")}>Check dates &amp; book <Arrow /></a>}
             <a className="cta-wa" href={waLink(msg)} target="_blank" rel="noopener"><WaGlyph /> Book via WhatsApp</a>
             <a className="cta-ghost" href={`mailto:${site.email}?subject=${encodeURIComponent(v.name + " inquiry")}`}>Email the concierge <Arrow /></a>
           </div>

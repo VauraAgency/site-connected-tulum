@@ -1,6 +1,7 @@
 import { u } from "../../lib/url";
 import { createFileRoute } from "@tanstack/react-router";
 import { site, villas, waLink, waTemplate } from "../../content/site";
+import { useState } from "react";
 import { Shell, Eyebrow, H2, ClosingCTA, Arrow, WaGlyph, Carousel, useReveal } from "../../components/site/ui";
 
 export const Route = createFileRoute("/villas/")({
@@ -14,8 +15,13 @@ export const Route = createFileRoute("/villas/")({
   component: VillasPage,
 });
 
+const ZONES = ["Aldea Zama", "La Veleta", "Tankah Bay", "Soliman Bay"];
+const zoneOf = (area: string) => ZONES.find((z) => area.includes(z)) ?? "More Tulum";
+
 function VillasPage() {
   useReveal();
+  const [zone, setZone] = useState("All");
+  const shown = zone === "All" ? villas : villas.filter((v) => zoneOf(v.area) === zone);
   const href = waLink(waTemplate("Villa for high season"));
   return (
     <Shell>
@@ -30,8 +36,18 @@ function VillasPage() {
         </div>
       </section>
       <section className="sec sec--tight wrap">
-        <Carousel className="vgrid" label="Villas">
-          {villas.map((v) => (
+        <div className="vfilter" role="group" aria-label="Filter villas by area">
+          {["All", ...ZONES, "More Tulum"].map((z) => {
+            const n = z === "All" ? villas.length : villas.filter((v) => zoneOf(v.area) === z).length;
+            return (
+              <button key={z} type="button" className={`vfilter__b${zone === z ? " is-on" : ""}`} aria-pressed={zone === z} onClick={() => setZone(z)}>
+                {z} <small>{n}</small>
+              </button>
+            );
+          })}
+        </div>
+        <Carousel key={zone} className="vgrid" label="Villas">
+          {shown.map((v) => (
             <a key={v.slug} href={u(`/villas/${v.slug}`)} className="vcard" data-rise>
               <div className="vcard__img">
                 <img src={v.images[0]} alt={v.name} loading="lazy" width={800} height={660} />
