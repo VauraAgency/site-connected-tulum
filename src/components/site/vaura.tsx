@@ -34,7 +34,10 @@ const stars = Array.from({ length: 34 }, (_, i) => ({
   d: r1((i % 9) * 0.6),
 }));
 
-export function VauraBeams() {
+export function VauraBeams({ home = false }: { home?: boolean }) {
+  const href = home
+    ? "https://vauraagency.com/?utm_source=connectedtulum&utm_medium=referral&utm_campaign=home-banner"
+    : "https://vauraagency.com";
   const beams = [
     { rib: 0, line: 10, dur: 7.5, delay: 0 },
     { rib: 1, line: 20, dur: 9, delay: 2.2 },
@@ -43,7 +46,7 @@ export function VauraBeams() {
     { rib: 1, line: 6, dur: 8.5, delay: 3.4 },
   ];
   return (
-    <section className="vb" aria-labelledby="vb-h">
+    <section className={`vb${home ? " vb--home" : ""}`} aria-labelledby="vb-h">
       <svg className="vb__svg" viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="xMidYMid slice" aria-hidden="true" focusable="false">
         <defs>
           <linearGradient id="vb-a" x1="0" x2="1" y1="0" y2="0">
@@ -83,11 +86,17 @@ export function VauraBeams() {
       <div className="vb__in">
         <img className="vb__logo" src={u("/assets/vaura-logo.png")} alt="VAURA" width={560} height={367} />
         <p className="mono vb__k">Built by VAURA</p>
-        <h3 id="vb-h" className="vb__h">Want a site like this <em className="accent">for your brand?</em></h3>
+        {home ? (
+          <h2 id="vb-h" className="vb__h">Like this site? <em className="accent">We build them.</em></h2>
+        ) : (
+          <h3 id="vb-h" className="vb__h">Want a site like this <em className="accent">for your brand?</em></h3>
+        )}
+        {home && <p className="vb__p">Connected Tulum runs on a custom site from VAURA. Websites, branding and ads for nightlife, hospitality and local brands, built to turn visitors into bookings.</p>}
         <ul className="vb__chips" aria-label="What VAURA does">
           <li>Websites</li><li>Branding</li><li>Marketing</li><li>Photo &amp; video</li>
         </ul>
-        <a className="cta-hero" href="https://vauraagency.com" target="_blank" rel="noopener">Visit VAURA <Arrow /></a>
+        <a className="cta-hero" href={href} target="_blank" rel="noopener">{home ? "Get a site like this" : "Visit VAURA"} <Arrow /></a>
+        {home && <a className="vb__url mono" href={href} target="_blank" rel="noopener">vauraagency.com</a>}
       </div>
     </section>
   );

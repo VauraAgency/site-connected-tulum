@@ -5,6 +5,7 @@ import {
   site, img, services, villas, readyEvents, marquee, team, reviews, faqs, steps, waLink, waTemplate,
 } from "../content/site";
 import { Shell, Eyebrow, H2, Icon, Arrow, ClosingCTA, Faq, WaGlyph, LogoAnim, Carousel, useReveal } from "../components/site/ui";
+import { VauraBeams } from "../components/site/vaura";
 import { VillaSearch } from "../components/site/villasearch";
 import { SeasonScroller, Calendar, NightCard, useToday, daysUntil } from "../components/site/events";
 
@@ -229,6 +230,7 @@ function Home() {
     <Shell overlay>
       <Hero />
       <Marquee />
+      <div className="vb-wrap"><VauraBeams home /></div>
       <SeasonScroller />
       <Nights />
       <Calendar_ />

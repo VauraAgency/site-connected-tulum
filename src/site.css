@@ -997,3 +997,13 @@ a:hover .arr, button:hover .arr { transform: translateX(4px); }
   .mcar--row .mcar__ui { display: flex; justify-content: flex-end; padding-top: 14px; }
   .mcar--row .mcar__dots { display: none; }
 }
+
+/* VAURA banner right under the marquee: same moving ribbons as contact, bigger and full width */
+.vb-wrap { padding: 28px 0 8px; background: #070a08; }
+.vb--home { width: min(1280px, calc(100% - 32px)); min-height: clamp(500px, 46vw, 600px); box-shadow: 0 0 0 1px rgba(16,240,74,.18), 0 30px 90px -30px rgba(16,240,74,.45); }
+.vb--home .vb__in { max-width: 720px; gap: 16px; }
+.vb--home .vb__h { font-size: clamp(34px, 5.4vw, 64px); }
+.vb--home .vb__logo { width: clamp(130px, 16vw, 190px); }
+.vb__url { font-size: 12px; letter-spacing: .14em; color: rgba(233,255,230,.6); }
+.vb__url:hover { color: var(--g-green); }
+@media (max-width: 640px) { .vb-wrap { padding-top: 20px; } .vb--home { min-height: 520px; } }
