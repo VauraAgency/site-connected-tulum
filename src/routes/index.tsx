@@ -109,7 +109,7 @@ function Nights() {
       </div>
       <p className="mono nt__off"><span aria-hidden="true">●</span> Official Zamna ticket seller</p>
       <p className="sub">Tap a flyer's Get tickets for the ticket link. Want a table or VIP? Inquire and we reply on WhatsApp.</p>
-      <Carousel className="evgrid evgrid--8" label="Upcoming nights" viewAllHref={u("/tulum-festival-season")} viewAllLabel="View all nights">{list.map((e, i) => <NightCard key={i} e={e} />)}</Carousel>
+      <Carousel desktopRow className="evgrid evgrid--8" label="Upcoming nights" viewAllHref={u("/tulum-festival-season")} viewAllLabel="View all nights">{list.map((e, i) => <NightCard key={i} e={e} />)}</Carousel>
     </section>
   );
 }

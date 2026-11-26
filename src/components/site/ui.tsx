@@ -342,12 +342,15 @@ export function LogoAnim({ loop = false, className = "" }: { loop?: boolean; cla
  * Desktop/tablet keep whatever grid `className` gives. Wrap lists with this, never stack them on mobile.
  */
 export function Carousel({
-  className = "", children, viewAllHref, viewAllLabel = "View all", label = "Carousel", as: Tag = "div",
+  className = "", children, viewAllHref, viewAllLabel = "View all", label = "Carousel", as: Tag = "div", desktopRow = false,
 }: {
   className?: string; children: ReactNode; viewAllHref?: string; viewAllLabel?: string; label?: string; as?: "div" | "ol" | "ul";
+  /** desktop: one scrolling row (4 across) with arrows instead of a wrapping grid */
+  desktopRow?: boolean;
 }) {
   const ref = useRef<HTMLElement | null>(null);
   const [on, setOn] = useState(0);
+  const [edge, setEdge] = useState({ start: true, end: false });
   const n = Children.count(children);
   useEffect(() => {
     const el = ref.current;
@@ -364,11 +367,31 @@ export function Carousel({
         if (dist < d) { d = dist; best = i; }
       });
       setOn(best);
+      setEdge({ start: el.scrollLeft < 4, end: el.scrollLeft + el.clientWidth >= el.scrollWidth - 4 });
+      // desktop row: size the row to the cards actually in view, not the tallest card in the list
+      if (desktopRow) {
+        if (window.innerWidth < 761) { el.style.height = ""; return; }
+        const r = el.getBoundingClientRect();
+        let h = 0;
+        kids.forEach((k) => {
+          const kr = k.getBoundingClientRect();
+          if (kr.right > r.left + 40 && kr.left < r.right - 40) h = Math.max(h, k.offsetHeight);
+        });
+        if (h) el.style.height = `${h + 4}px`;
+      }
     };
     const onScroll = () => { if (!raf) raf = requestAnimationFrame(calc); };
     el.addEventListener("scroll", onScroll, { passive: true });
-    return () => { el.removeEventListener("scroll", onScroll); if (raf) cancelAnimationFrame(raf); };
-  }, []);
+    window.addEventListener("resize", onScroll);
+    const ro = desktopRow && typeof ResizeObserver !== "undefined" ? new ResizeObserver(onScroll) : null;
+    if (ro) Array.from(el.children).forEach((k) => ro.observe(k));
+    calc();
+    return () => { ro?.disconnect(); el.removeEventListener("scroll", onScroll); window.removeEventListener("resize", onScroll); if (raf) cancelAnimationFrame(raf); };
+  }, [desktopRow]);
+  const page = (dir: 1 | -1) => {
+    const el = ref.current;
+    if (el) el.scrollBy({ left: dir * (el.clientWidth + 18), behavior: "smooth" });
+  };
   const go = (i: number) => {
     const el = ref.current;
     const k = el?.children[i] as HTMLElement | undefined;
@@ -376,7 +399,13 @@ export function Carousel({
   };
   const T = Tag as "div";
   return (
-    <div className="mcar">
+    <div className={`mcar${desktopRow ? " mcar--row" : ""}`}>
+      {desktopRow && n > 4 && (
+        <>
+          <button type="button" className="mcar__arrow mcar__arrow--prev" aria-label="Previous nights" disabled={edge.start} onClick={() => page(-1)}><Arrow /></button>
+          <button type="button" className="mcar__arrow mcar__arrow--next" aria-label="Next nights" disabled={edge.end} onClick={() => page(1)}><Arrow /></button>
+        </>
+      )}
       <T ref={ref as never} className={`mcar__track ${className}`} role="group" aria-roledescription="carousel" aria-label={label} tabIndex={0}>
         {children}
       </T>
