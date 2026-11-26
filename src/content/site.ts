@@ -993,12 +993,6 @@ export const boats: Boat[] = [
     photos: bp("sundancer-48", 7),
   },
   {
-    slug: "aquaman", name: "Aquaman", kind: "Motor yacht", ft: 40, guests: 15, maxGuests: 15,
-    blurb: "Sea Ray 40 for a tighter crew. Anchors close to the beach with a cabin below.",
-    features: ["Cabin with a double bed", "Riviera Maya or Cozumel day trips", "Up to 15 guests"],
-    photos: bp("sea-ray-40", 5),
-  },
-  {
     slug: "sea-ray-55", name: "Sea Ray 55", kind: "Motor yacht", ft: 55, guests: 12, maxGuests: 22, badge: "Biggest yacht",
     blurb: "Our largest motor yacht. Lounge seating, a full galley and bunks below.",
     features: ["Children's menu available", "Coast or Cozumel day trips", "Fits up to 22 guests"],
@@ -1060,7 +1054,7 @@ export const services: Service[] = [
     short: "Private catamarans and yachts on the Caribbean. Open water, open bar, your crew only.",
     cardCta: "See the fleet", image: u("/assets/boats/leopard-47-1.webp"),
     h1: "Tulum Yacht & Catamaran Charters",
-    intro: "Nine private boats, from a 40 ft cruiser to a 55 ft yacht and a catamaran for 35. Tell us the date, the headcount and the vibe and we match you with the right one.",
+    intro: "Eight private boats, from a 40 ft catamaran to a 55 ft yacht and a catamaran for 35. Tell us the date, the headcount and the vibe and we match you with the right one.",
     items: boats.map((b) => ({ name: b.name, meta: `${b.kind} · ${b.ft} ft · Up to ${b.maxGuests} guests`, badge: b.badge })),
     included: ["Captain, crew, chef & host", "Open bar", "Snorkel gear & paddle boards", "Photographer with drone"],
     notes: [
