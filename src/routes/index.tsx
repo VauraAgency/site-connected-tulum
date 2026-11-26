@@ -97,8 +97,6 @@ function Calendar_() {
 }
 
 function Nights() {
-  // every night with a flyer, strictly by date
-  const list = readyEvents.filter((e) => e.flyer && !e.skipGrid).sort((a, b) => a.date.localeCompare(b.date));
   // Hector's pinned dates: 1/1 Tuluminecto and 1/5 Rafael (Cheetah Print). 12/31 is the NYE card.
   const featured = ["Tuluminecto", "Cheetah Print"].map((t) => readyEvents.find((e) => e.title === t)).filter((e): e is NonNullable<typeof e> => !!e);
   return (
@@ -111,7 +109,7 @@ function Nights() {
       <p className="mono nt__off"><span aria-hidden="true">●</span> Official Zamna ticket seller</p>
       <p className="sub">Tap a flyer's Get tickets for the ticket link. Want a table or VIP? Inquire and we reply on WhatsApp.</p>
       <h3 className="mono nt__feat">Featured dates</h3>
-      <Carousel className="evgrid nt__fgrid" label="Featured dates">
+      <Carousel className="evgrid nt__fgrid" label="Featured dates" viewAllHref={u("/tulum-festival-season")} viewAllLabel="View all nights">
         <a href={u("/nye-2027")} className="nye-card" data-rise>
           <span className="mono">Thu · Dec 31</span>
           <strong>New Year's Eve in Tulum</strong>
@@ -120,8 +118,6 @@ function Nights() {
         </a>
         {featured.map((e) => <NightCard key={e.title} e={e} />)}
       </Carousel>
-      <h3 className="mono nt__feat">All nights</h3>
-      <Carousel className="evgrid evgrid--8" label="Upcoming nights" viewAllHref={u("/tulum-festival-season")} viewAllLabel="View all nights">{list.map((e, i) => <NightCard key={i} e={e} />)}</Carousel>
     </section>
   );
 }
