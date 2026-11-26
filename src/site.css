@@ -954,3 +954,27 @@ a:hover .arr, button:hover .arr { transform: translateX(4px); }
 .nye-card strong { font-family: var(--f-display); font-size: 28px; line-height: 1.05; letter-spacing: -.02em; font-weight: 600; }
 .nye-card p { color: rgba(255,255,255,.7); font-size: 14.5px; }
 .nye-card .svc__go { color: var(--g-green); }
+
+/* villa date search */
+.vsearch { display: grid; grid-template-columns: 1.2fr 1.2fr .6fr auto; gap: 10px; align-items: end; margin-top: 24px; padding: 14px; border: 1px solid var(--line); border-radius: 20px; background: var(--paper); max-width: 820px; }
+.vsearch__f { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.vsearch__f span { font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.vsearch__f input, .vsearch__f select { width: 100%; min-height: 48px; padding: 0 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); font: inherit; font-size: 15px; }
+.vsearch__f input:focus, .vsearch__f select:focus { outline: 2px solid var(--g-green); outline-offset: 1px; }
+.vsearch__go { justify-content: center; white-space: nowrap; min-height: 48px; padding: 0 22px; }
+.vsearch__err { grid-column: 1 / -1; margin: 0; font-size: 13px; color: #b3261e; }
+.vsearch--dark { background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.18); }
+.vsearch--dark .vsearch__f span { color: rgba(255,255,255,.7); }
+.vsearch--dark .vsearch__f input, .vsearch--dark .vsearch__f select { background: rgba(0,0,0,.35); border-color: rgba(255,255,255,.2); color: #fff; color-scheme: dark; }
+@media (max-width: 720px) {
+  .vsearch { grid-template-columns: 1fr 1fr; }
+  .vsearch__f--g { grid-column: 1 / -1; }
+  .vsearch__go { grid-column: 1 / -1; }
+}
+.vsearch__note { margin: 10px 0 0; font-size: 12px; color: var(--muted); }
+.vstrip__t .vsearch { margin-top: 20px; grid-template-columns: 1fr 1fr; }
+.vstrip__t .vsearch__f--g, .vstrip__t .vsearch__go { grid-column: 1 / -1; }
+.vstrip__all { margin-top: 14px; }
+@media (max-width: 720px) {
+  .vsearch__f input[type="date"] { padding: 0 8px; font-size: 13.5px; }
+}

@@ -484,7 +484,7 @@ export const villas: Villa[] = [
   },
   {
     slug: "panoramic-105b",
-    bpPage: "panoramic-105b",
+    gid: "656a42109468590011fc507d",
     name: "Panoramic 105B",
     area: "Tulum · La Veleta",
     style: "Studio",
@@ -576,7 +576,7 @@ export const villas: Villa[] = [
   },
   {
     slug: "casa-arcana",
-    bpPage: "casa-arcana",
+    gid: "6aece62fb907ef00628a9f13",
     name: "Casa Arcana",
     area: "Tulum",
     style: "Five bedroom villa",

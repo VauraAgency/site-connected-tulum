@@ -3,6 +3,7 @@ import { createFileRoute, notFound } from "@tanstack/react-router";
 import { site, villas, waLink } from "../../content/site";
 import { Shell, Eyebrow, H2, Arrow, WaGlyph } from "../../components/site/ui";
 import { bpLink, trackBP } from "../../lib/beachplease";
+import { VillaSearch } from "../../components/site/villasearch";
 
 export const Route = createFileRoute("/villas/$slug")({
   loader: ({ params }) => {
@@ -45,8 +46,9 @@ function VillaPage() {
           <div><dt className="mono">Bathrooms</dt><dd>{spec(v.bathrooms)}</dd></div>
           <div><dt className="mono">Style</dt><dd>{v.style}</dd></div>
         </dl>
+        {v.gid && <VillaSearch villa={v} placement="villa-top" />}
         <div className="hero__ctas">
-          {bpLink(v) && <a className="cta-hero" href={bpLink(v, "villa-top")!} target="_blank" rel="noopener" onClick={() => trackBP(v.slug, v.name, "villa-top")}>Check dates &amp; book <Arrow /></a>}
+          {bpLink(v) && !v.gid && <a className="cta-hero" href={bpLink(v, "villa-top")!} target="_blank" rel="noopener" onClick={() => trackBP(v.slug, v.name, "villa-top")}>Check dates &amp; book <Arrow /></a>}
           <a className="cta-wa" href={waLink(msg)} target="_blank" rel="noopener"><WaGlyph /> Book on WhatsApp</a>
           {v.bookingUrl && <a className="cta-ghost cta-ghost--dark" href={v.bookingUrl} target="_blank" rel="noopener sponsored">Book online <Arrow /></a>}
         </div>

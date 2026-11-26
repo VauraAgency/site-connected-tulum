@@ -5,6 +5,7 @@ import {
   site, img, services, villas, readyEvents, marquee, team, reviews, faqs, steps, waLink, waTemplate,
 } from "../content/site";
 import { Shell, Eyebrow, H2, Icon, Arrow, ClosingCTA, Faq, WaGlyph, LogoAnim, Carousel, useReveal } from "../components/site/ui";
+import { VillaSearch } from "../components/site/villasearch";
 import { SeasonScroller, Calendar, NightCard, useToday, daysUntil } from "../components/site/events";
 
 export const Route = createFileRoute("/")({
@@ -144,7 +145,8 @@ function VillaStrip() {
           <Eyebrow>Villas</Eyebrow>
           <div id="vs-h"><H2 a="Stay close" b="to the nights" /></div>
           <p className="sub">Browse private villas for the season. We'll line up tickets, tables and rides around your dates.</p>
-          <a className="cta-hero" href={href}>Browse villas <Arrow /></a>
+          <VillaSearch placement="home" className="vsearch--wide" />
+          <a className="cta-ghost cta-ghost--dark vstrip__all" href={href}>Browse all villas <Arrow /></a>
         </div>
       </div>
     </section>

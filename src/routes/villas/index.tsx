@@ -2,6 +2,7 @@ import { u } from "../../lib/url";
 import { createFileRoute } from "@tanstack/react-router";
 import { site, villas, waLink, waTemplate } from "../../content/site";
 import { useState } from "react";
+import { VillaSearch } from "../../components/site/villasearch";
 import { Shell, Eyebrow, H2, ClosingCTA, Arrow, WaGlyph, Carousel, useReveal } from "../../components/site/ui";
 
 export const Route = createFileRoute("/villas/")({
@@ -30,9 +31,10 @@ function VillasPage() {
         <Eyebrow>The collection</Eyebrow>
         <h1 className="h1">Villas in Tulum, <em className="accent">handled</em>.</h1>
         <p className="sub">Private villas for high season. Tell us your dates and group size, then let us line up the nights, the rides and the tables around your stay.</p>
+        <VillaSearch placement="villas-page" />
+        <p className="vsearch__note mono">Pick your dates here. You land on the villas that are free, with the total price.</p>
         <div className="hero__ctas">
-          <a className="cta-hero" href={href} target="_blank" rel="noopener">Ask for villas <Arrow /></a>
-          <a className="cta-wa" href={waLink(waTemplate("Villa for high season"))} target="_blank" rel="noopener"><WaGlyph /> WhatsApp {site.whatsappDisplay}</a>
+          <a className="cta-wa" href={href} target="_blank" rel="noopener"><WaGlyph /> Ask us for a villa</a>
         </div>
       </section>
       <section className="sec sec--tight wrap">
