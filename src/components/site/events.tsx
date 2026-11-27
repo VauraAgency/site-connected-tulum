@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { events, readyEvents, img, ticketHref, tableMapFor, fmtDate, waLink, waTemplate, mxn, type TEvent } from "../../content/site";
+import { events, readyEvents, img, ticketHref, tableMapFor, fmtDate, mxn, type TEvent } from "../../content/site";
 import { Arrow } from "./ui";
+import { InquireBtn } from "./inquiry";
 
 /* ------------------------------------------------------------------ helpers */
 const pad = (n: number) => String(n).padStart(2, "0");
@@ -26,7 +27,6 @@ export function daysUntil(iso: string, from: Date) {
 /* ------------------------------------------------------------------ buttons */
 export function TicketBtn({ e, className = "cta-ticket" }: { e: TEvent; className?: string }) {
   const href = ticketHref(e);
-  const d = fmtDate(e.date);
   if (e.cta === "reserve" && e.ticketUrl) {
     return (
       <a className={className} href={e.ticketUrl} target="_blank" rel="noopener sponsored">
@@ -36,18 +36,18 @@ export function TicketBtn({ e, className = "cta-ticket" }: { e: TEvent; classNam
   }
   if (e.cta === "reserve") {
     return (
-      <a className={className} href={waLink(waTemplate(`Reservation: ${evName(e)} @ ${e.venue} (${d.long})`))} target="_blank" rel="noopener">
+      <InquireBtn className={className} ctx={{ kind: "reservation", title: evName(e), venue: e.venue, date: e.date }}>
         Request a reservation <Arrow />
-      </a>
+      </InquireBtn>
     );
   }
   if (href) {
     return <a className={className} href={href} target="_blank" rel="noopener sponsored">Get tickets <Arrow /></a>;
   }
   return (
-    <a className={className} href={waLink(waTemplate(`Tickets: ${evName(e)} @ ${e.venue} (${d.long})`))} target="_blank" rel="noopener">
+    <InquireBtn className={className} ctx={{ kind: "tickets", title: evName(e), venue: e.venue, date: e.date }}>
       Get tickets <Arrow />
-    </a>
+    </InquireBtn>
   );
 }
 
@@ -81,7 +81,7 @@ export function ViewTablesBtn({ e, className = "cta-table" }: { e: TEvent; class
             <div className="tbx__pages">
               {map.pages.map((p) => <img key={p.src} src={p.src} alt={p.alt} loading="lazy" decoding="async" />)}
             </div>
-            <a className="cta-hero tbx__cta" href={waLink(waTemplate(`VIP table: ${evName(e)} @ ${e.venue} (${d.long})`))} target="_blank" rel="noopener">Inquire about a table</a>
+            <InquireBtn className="cta-hero tbx__cta" ctx={{ kind: "table", title: evName(e), venue: e.venue, date: e.date }}>Inquire about a table</InquireBtn>
           </div>
         </div>,
         document.body,
@@ -91,12 +91,11 @@ export function ViewTablesBtn({ e, className = "cta-table" }: { e: TEvent; class
 }
 
 export function TableBtn({ e, className = "cta-table" }: { e: TEvent; className?: string }) {
-  const d = fmtDate(e.date);
   if (e.cta === "reserve") return null;
   return (
-    <a className={className} href={waLink(waTemplate(`VIP table: ${evName(e)} @ ${e.venue} (${d.long})`))} target="_blank" rel="noopener">
+    <InquireBtn className={className} ctx={{ kind: "table", title: evName(e), venue: e.venue, date: e.date }}>
       Inquire about a table
-    </a>
+    </InquireBtn>
   );
 }
 

@@ -1,5 +1,6 @@
 import { u } from "../../lib/url";
 import { Link } from "@tanstack/react-router";
+import { InquiryHost } from "./inquiry";
 import { useEffect, useRef, useState, Children, type ReactNode } from "react";
 import {
   site, waLink, waTemplate, footerPlan, footerExplore, type IconName,
@@ -278,6 +279,7 @@ export function Shell({ children, overlay = false }: { children: ReactNode; over
       <Footer />
       <FloatDock />
       <NotifyModal />
+      <InquiryHost />
     </>
   );
 }

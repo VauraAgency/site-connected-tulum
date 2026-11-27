@@ -1007,3 +1007,64 @@ a:hover .arr, button:hover .arr { transform: translateX(4px); }
 .vb__url { font-size: 12px; letter-spacing: .14em; color: rgba(233,255,230,.6); }
 .vb__url:hover { color: var(--g-green); }
 @media (max-width: 640px) { .vb-wrap { padding-top: 20px; } .vb--home { min-height: 520px; } }
+
+/* ---------- inquiry pop up: range calendar, people, name + email, message drafted for WhatsApp */
+.inq { position: fixed; inset: 0; z-index: 130; background: rgba(0,0,0,.72); backdrop-filter: blur(6px); display: grid; place-items: center; padding: 16px; overflow-y: auto; }
+.inq__card { width: min(760px, 100%); max-height: calc(100dvh - 32px); display: flex; flex-direction: column; background: var(--paper); color: var(--ink); border: 1px solid var(--line); border-radius: 26px; box-shadow: 0 40px 120px -30px rgba(0,0,0,.7); overflow: hidden; }
+.inq__h { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; padding: 22px 24px 8px; }
+.inq__h h3 { margin: 4px 0 0; font-family: var(--f-display); font-size: clamp(24px, 3vw, 32px); letter-spacing: -.02em; }
+.inq__k { margin: 0; font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.inq__x { flex: none; width: 44px; height: 44px; border-radius: 50%; border: 1px solid var(--line); background: transparent; color: var(--ink); font-size: 28px; line-height: 1; cursor: pointer; }
+.inq__body { padding: 4px 24px 18px; overflow-y: auto; -webkit-overflow-scrolling: touch; display: flex; flex-direction: column; gap: 10px; }
+.inq__sub { margin: 0 0 4px; color: var(--muted); font-size: 15px; line-height: 1.5; }
+.inq__l { margin: 12px 0 0; font-weight: 600; font-size: 14px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.inq__l b { font-weight: 600; color: var(--g-deep); }
+.inq__clear { border: 0; background: none; color: var(--muted); text-decoration: underline; cursor: pointer; font: inherit; font-size: 13px; font-weight: 400; }
+.inq__step { display: inline-flex; align-items: center; gap: 4px; padding: 5px; border: 1px solid var(--line); border-radius: 999px; align-self: flex-start; background: var(--bg); }
+.inq__step button { width: 44px; height: 44px; border-radius: 50%; border: 0; background: var(--paper); color: var(--ink); font-size: 24px; cursor: pointer; box-shadow: 0 0 0 1px var(--line); }
+.inq__step button:disabled { opacity: .35; cursor: default; }
+.inq__step output { min-width: 110px; text-align: center; font-size: 16px; }
+.inq__row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.inq label { display: flex; flex-direction: column; gap: 6px; font-size: 13px; color: var(--muted); }
+.inq input, .inq textarea { width: 100%; min-height: 48px; padding: 12px 14px; border-radius: 12px; border: 1px solid var(--line); background: var(--bg); color: var(--ink); font: inherit; font-size: 16px; }
+.inq textarea { resize: vertical; min-height: 64px; }
+.inq input:focus, .inq textarea:focus { outline: 2px solid var(--g-green); outline-offset: 1px; }
+.inq__peek { align-self: flex-start; border: 0; background: none; padding: 6px 0; color: var(--muted); text-decoration: underline; cursor: pointer; font-size: 12px; letter-spacing: .06em; }
+.inq__msg { margin: 0; padding: 14px; border-radius: 14px; background: var(--bg); border: 1px dashed var(--line); font: 13px/1.55 var(--f-mono); white-space: pre-wrap; word-break: break-word; color: var(--ink-2); }
+.inq__bar { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding: 14px 24px calc(14px + env(safe-area-inset-bottom)); border-top: 1px solid var(--line); background: var(--paper); }
+.inq__send { flex: 1 1 260px; justify-content: center; background: #0d1a12; }
+.inq__send:not(.is-off) { background: var(--g-green); color: #04140a; border-color: transparent; font-weight: 600; }
+.inq__mail { display: inline-flex; align-items: center; gap: 8px; padding: 14px 18px; border-radius: 999px; border: 1px solid var(--line); color: var(--ink); font-size: 14px; }
+.inq__mail.is-off, .inq__send.is-off { opacity: .55; }
+.inq__need { flex-basis: 100%; margin: 0; font-size: 12px; color: var(--muted); }
+
+.rcal { border: 1px solid var(--line); border-radius: 18px; padding: 12px 14px 10px; background: var(--bg); position: relative; }
+.rcal__nav { position: absolute; top: 10px; left: 14px; right: 14px; display: flex; justify-content: space-between; pointer-events: none; }
+.rcal__b { pointer-events: auto; width: 40px; height: 40px; border-radius: 50%; border: 1px solid var(--line); background: var(--paper); color: var(--ink); font-size: 22px; cursor: pointer; line-height: 1; }
+.rcal__b:disabled { opacity: .3; cursor: default; }
+.rcal__ms { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; }
+.rcal__t { margin: 0 0 8px; text-align: center; font-weight: 600; font-size: 15px; line-height: 40px; }
+.rcal__g { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px 0; }
+.rcal__w { text-align: center; font-size: 11px; color: var(--muted); padding: 4px 0; font-family: var(--f-mono); }
+.rcal__d { position: relative; height: 40px; border: 0; background: none; color: var(--ink); font: inherit; font-size: 14px; cursor: pointer; border-radius: 0; }
+.rcal__d:disabled { color: var(--muted); opacity: .35; cursor: default; }
+.rcal__d.in { background: rgba(16,240,74,.2); }
+.rcal__d.s { border-radius: 999px 0 0 999px; }
+.rcal__d.e { border-radius: 0 999px 999px 0; }
+.rcal__d.s.e { border-radius: 999px; }
+.rcal__d.edge { background: var(--g-green); color: #04140a; font-weight: 700; }
+.rcal__d:not(:disabled):not(.in):hover { background: rgba(16,240,74,.14); border-radius: 999px; }
+.rcal__d.ev::after { content: ""; position: absolute; left: 50%; bottom: 4px; width: 5px; height: 5px; margin-left: -2.5px; border-radius: 50%; background: #ff4d8d; }
+.rcal__hint { margin: 8px 0 0; font-size: 11.5px; letter-spacing: .02em; color: var(--muted); display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.rcal__evdot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: #ff4d8d; }
+@media (max-width: 640px) {
+  .inq { padding: 0; place-items: end stretch; }
+  .inq__card { width: 100%; max-height: 100dvh; height: 100dvh; border-radius: 0; border-inline: 0; }
+  .inq__h { padding: 16px 16px 4px; }
+  .inq__body { padding: 4px 16px 14px; }
+  .inq__row { grid-template-columns: 1fr; }
+  .rcal__ms { grid-template-columns: 1fr; }
+  .rcal__m--2 { display: none; }
+  .inq__bar { padding-inline: 16px; }
+  .inq__mail { flex: 1 1 100%; justify-content: center; }
+}

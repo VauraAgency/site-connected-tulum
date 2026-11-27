@@ -5,6 +5,7 @@ import {
   site, img, services, villas, readyEvents, marquee, team, reviews, faqs, steps, waLink, waTemplate,
 } from "../content/site";
 import { Shell, Eyebrow, H2, Icon, Arrow, ClosingCTA, Faq, WaGlyph, LogoAnim, Carousel, useReveal } from "../components/site/ui";
+import { InquireBtn } from "../components/site/inquiry";
 import { VauraBeams } from "../components/site/vaura";
 import { VillaSearch } from "../components/site/villasearch";
 import { SeasonScroller, Calendar, NightCard, useToday, daysUntil } from "../components/site/events";
@@ -64,7 +65,7 @@ function Hero() {
         </p>
         <div className="hero__ctas">
           <a className="cta-hero" href="#season">See every night <Arrow /></a>
-          <a className="cta-wa" href={waLink(waTemplate("VIP table, High Season 2027"))} target="_blank" rel="noopener"><WaGlyph /> Inquire about a table</a>
+          <InquireBtn className="cta-wa" ctx={{ kind: "table", title: "High Season 2027" }}><WaGlyph /> Inquire about a table</InquireBtn>
         </div>
         <ul className="hero__trust mono">
           <li>Zamna</li><li>Tehmplo</li><li>Day Zero</li><li>Transport</li><li>24/7</li>

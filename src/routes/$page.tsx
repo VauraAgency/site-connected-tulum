@@ -1,3 +1,4 @@
+import { InquireBtn } from "../components/site/inquiry";
 import { useState } from "react";
 import { u } from "../lib/url";
 import { createFileRoute, notFound } from "@tanstack/react-router";
@@ -206,7 +207,7 @@ function Festival({ p }: { p: FestivalPage }) {
           <p className="fhero__lead">{p.lead}</p>
           <div className="hero__ctas">
             <a className="cta-hero" href="#nights">See the nights <Arrow /></a>
-            <a className="cta-wa" href={waLink(waTemplate(p.h1a + " VIP table"))} target="_blank" rel="noopener"><WaGlyph /> Inquire about a table</a>
+            <InquireBtn className="cta-wa" ctx={{ kind: "table", title: p.h1a }}><WaGlyph /> Inquire about a table</InquireBtn>
           </div>
         </div>
       </section>
