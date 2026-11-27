@@ -91,7 +91,7 @@ export function VauraBeams({ home = false }: { home?: boolean }) {
         ) : (
           <h3 id="vb-h" className="vb__h">Want a site like this <em className="accent">for your brand?</em></h3>
         )}
-        {home && <p className="vb__p">Connected Tulum runs on a custom site from VAURA. Websites, branding and ads for nightlife, hospitality and local brands, built to turn visitors into bookings.</p>}
+        {home && <p className="vb__p">Websites, branding and ads for nightlife, hospitality and local brands, built to turn visitors into bookings.</p>}
         <ul className="vb__chips" aria-label="What VAURA does">
           <li>Websites</li><li>Branding</li><li>Marketing</li><li>Photo &amp; video</li>
         </ul>
